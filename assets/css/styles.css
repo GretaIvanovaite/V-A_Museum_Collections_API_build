@@ -75,6 +75,16 @@
 
 
 
-header {
+header,
+header li button {
   background-color: var(--color-primary-teal);
+  color: var(--color-text-white);
+}
+
+.nav-list li a:hover,
+.nav-list li a:focus-visible,
+.nav-list li button:hover,
+.nav-list li button:focus-visible {
+  background-color: var(--color-primary-teal-hover);
+  outline: none;
 }
