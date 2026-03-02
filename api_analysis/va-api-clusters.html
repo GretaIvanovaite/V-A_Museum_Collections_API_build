@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>V&A API Clusters</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #f7fafc;
+        }
+        h1 {
+            color: #1f2632;
+        }
+        .cluster {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .cluster h2 {
+            color: #2c7a7b;
+            margin-top: 0;
+            border-bottom: 2px solid #2c7a7b;
+            padding-bottom: 10px;
+        }
+        .term {
+            padding: 8px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .term:last-child {
+            border-bottom: none;
+        }
+        .term-name {
+            font-weight: 600;
+            color: #1f2632;
+        }
+        .term-count {
+            color: #3d4552;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+        .term-id {
+            color: #8f4a32;
+            font-size: 12px;
+            font-family: monospace;
+            margin-left: 10px;
+        }
+        button {
+            background: #2c7a7b;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        button:hover {
+            background: #234e52;
+        }
+        button:disabled {
+            background: #e2e8f0;
+            cursor: not-allowed;
+        }
+        #status {
+            padding: 12px;
+            background: #fff;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2c7a7b;
+        }
+        .loading {
+            color: #2c7a7b;
+        }
+        .error {
+            color: #e53e3e;
+        }
+        .success {
+            color: #38a169;
+        }
+    </style>
+</head>
+<body>
+    <h1>V&A API Clusters Explorer</h1>
+    
+    <button id="fetchBtn" onclick="fetchClusters()">Fetch All Clusters</button>
+    <button id="fetchImagesBtn" onclick="fetchClusters(true)">Fetch Objects with Images Only</button>
+    <button id="downloadBtn" onclick="downloadJSON()" style="display:none;">Download JSON</button>
+    
+    <div id="status"></div>
+    <div id="results"></div>
+
+    <script src="va-api-clusters.js"></script>
+</body>
+</html>

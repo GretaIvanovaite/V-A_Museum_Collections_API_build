@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>V&A API - Place Associations</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #f7fafc;
+        }
+        h1 {
+            color: #1f2632;
+        }
+        .info {
+            background: #e6f7f7;
+            border-left: 4px solid #2c7a7b;
+            padding: 16px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        button {
+            background: #2c7a7b;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        button:hover {
+            background: #234e52;
+        }
+        button:disabled {
+            background: #e2e8f0;
+            cursor: not-allowed;
+        }
+        #status {
+            padding: 12px;
+            background: #fff;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2c7a7b;
+        }
+        .loading {
+            color: #2c7a7b;
+        }
+        .error {
+            color: #e53e3e;
+        }
+        .success {
+            color: #38a169;
+        }
+        .results-box {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .association-item {
+            padding: 8px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .association-item:last-child {
+            border-bottom: none;
+        }
+        .count {
+            color: #3d4552;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <h1>V&A API - Place Association Types</h1>
+    
+    <div class="info">
+        <strong>What this does:</strong> Randomly samples objects across the entire V&A collection 
+        to find all unique "association" values from the placesOfOrigin field 
+        (like "made", "designed", "published", etc.). This ensures we capture rare association types!
+    </div>
+    
+    <div style="background: white; padding: 20px; margin: 20px 0; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+        <h3 style="margin-top: 0;">Sampling Settings</h3>
+        
+        <div style="margin-bottom: 15px;">
+            <label for="samplesPerRange" style="display: block; margin-bottom: 5px; font-weight: bold;">
+                Samples per range:
+            </label>
+            <input type="number" id="samplesPerRange" value="5" min="1" max="50" 
+                   style="padding: 8px; width: 100px; border: 1px solid #e2e8f0; border-radius: 4px;">
+            <span style="color: #3d4552; font-size: 14px; margin-left: 10px;">
+                (Recommended: 3-10)
+            </span>
+        </div>
+        
+        <div style="margin-bottom: 15px;">
+            <label for="rangeSize" style="display: block; margin-bottom: 5px; font-weight: bold;">
+                Range size (pages):
+            </label>
+            <input type="number" id="rangeSize" value="2000" min="500" max="5000" step="500"
+                   style="padding: 8px; width: 100px; border: 1px solid #e2e8f0; border-radius: 4px;">
+            <span style="color: #3d4552; font-size: 14px; margin-left: 10px;">
+                (Smaller = more ranges = more objects)
+            </span>
+        </div>
+        
+        <div style="background: #f7fafc; padding: 12px; border-radius: 4px; margin-bottom: 15px;">
+            <strong>Estimated total objects:</strong> 
+            <span id="estimatedTotal" style="color: #2c7a7b; font-size: 18px;">~125</span>
+            <br>
+            <span style="font-size: 12px; color: #3d4552;">
+                (Based on ~730k objects with images in V&A API)
+            </span>
+        </div>
+        
+        <button id="fetchBtn" onclick="fetchAssociations()">Start Analysis</button>
+        <button id="downloadBtn" onclick="downloadJSON()" style="display:none;">Download JSON</button>
+    </div>
+    
+    <div id="status"></div>
+    <div id="results"></div>
+
+    <script src="va-api-associations.js"></script>
+</body>
+</html>
