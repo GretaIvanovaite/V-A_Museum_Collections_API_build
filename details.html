@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Object Title | Collections & Archives</title>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="logo">
+      <img src="logo.avif" alt="Collections & Archives Logo" width="180" height="50">
+    </div>
+
+    <nav aria-label="Main navigation">
+      <ul class="nav-list">
+        <li><a href="/">Home</a></li>
+        <li><a href="/browse">Browse</a></li>
+        <li>
+          <button type="button" anchor-name="--coll-menu">Collections</button>
+          <ul id="coll-menu" class="dropdown">
+            <li><a href="/coll/pdp">Prints, Drawings & Paintings</a></li>
+            <li><a href="/coll/tp">Theatre and Performance</a></li>
+            <li><a href="/coll/tf">Textiles and Fashion</a></li>
+            <li><a href="/coll/ea">East Asia</a></li>
+            <li><a href="/coll/cer">Ceramics</a></li>
+            <li><hr></li>
+            <li><a href="/collections">See all collections</a></li>
+          </ul>
+        </li>
+        <li>
+          <button type="button" anchor-name="--cat-menu">Categories</button>
+          <ul id="cat-menu" class="dropdown">
+            <li><a href="/cat/prints">Prints</a></li>
+            <li><a href="/cat/designs">Designs</a></li>
+            <li><a href="/cat/drawings">Drawings</a></li>
+            <li><a href="/cat/photographs">Photographs</a></li>
+            <li><a href="/cat/textiles">Textiles</a></li>
+            <li><hr></li>
+            <li><a href="/categories">See all categories</a></li>
+          </ul>
+        </li>
+        <li>
+          <button type="button" anchor-name="--mat-menu">Materials</button>
+          <ul id="mat-menu" class="dropdown">
+            <li><a href="/mat/paper">Paper</a></li>
+            <li><a href="/mat/pencil">Pencil</a></li>
+            <li><a href="/mat/ink">Ink</a></li>
+            <li><a href="/mat/photo-paper">Photographic Paper</a></li>
+            <li><a href="/mat/printing-ink">Printing Ink</a></li>
+            <li><hr></li>
+            <li><a href="/materials">See all materials</a></li>
+          </ul>
+        </li>
+        <li>
+          <button type="button" anchor-name="--org-menu">Origins</button>
+          <ul id="org-menu" class="dropdown">
+            <li><a href="/place/gb">Great Britain</a></li>
+            <li><a href="/place/london">London</a></li>
+            <li><a href="/place/england">England</a></li>
+            <li><a href="/place/japan">Japan</a></li>
+            <li><a href="/place/paris">Paris</a></li>
+            <li><hr></li>
+            <li><a href="/origins">See all origins</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <nav aria-label="Breadcrumb" class="breadcrumb-nav">
+    <ol>
+      <li><a href="/">Home</a></li>
+      <li><a href="/collections/photography">Photography</a></li>
+      <li aria-current="page">Object Title</li>
+    </ol>
+  </nav>
+
+  <main class="detail-container">
+    <div class="column-left">
+      <section class="image-gallery">
+        <figure class="main-display">
+          <picture>
+            <source srcset="object-large.avif" type="image/avif">
+            <img src="object-large.jpg" alt="Detailed view of the artifact">
+          </picture>
+        </figure>
+        <div class="thumbnail-strip">
+          <button type="button"><img src="thumb1.jpg" alt="Angle 1" loading="lazy"></button>
+          <button type="button"><img src="thumb2.jpg" alt="Angle 2" loading="lazy"></button>
+          <button type="button"><img src="thumb3.jpg" alt="Angle 3" loading="lazy"></button>
+          <button type="button"><img src="thumb4.jpg" alt="Angle 4" loading="lazy"></button>
+        </div>
+      </section>
+
+      <section class="description-section">
+        <h2>Description</h2>
+        <p class="brief-desc">A brief overview of the object's history and significance.</p>
+        <p class="summary-desc">Detailed summary providing context on the craftsmanship and usage.</p>
+        <details class="historical-context">
+          <summary>Historical Context</summary>
+          <div class="expandable-content">
+            <p>In-depth historical details about the period and provenance of this specific object.</p>
+          </div>
+        </details>
+      </section>
+
+      <section class="physical-characteristics">
+        <h2>Physical Characteristics</h2>
+        <dl>
+          <dt>Materials</dt>
+          <dd>Paper, Ink</dd>
+          <dt>Techniques</dt>
+          <dd>Photography, Albumen process</dd>
+          <dt>Dimensions</dt>
+          <dd>Height: 20cm, Width: 15cm</dd>
+        </dl>
+      </section>
+
+      <section class="museum-info">
+        <h2>Museum Information</h2>
+        <dl>
+          <dt>Library Number</dt>
+          <dd>PH.123-2026</dd>
+          <dt>Other Numbers</dt>
+          <dd>Inventory: 456789</dd>
+        </dl>
+      </section>
+
+      <section class="related-objects">
+        <h2>Related Objects</h2>
+        <div class="objects-grid">
+          <article class="object-card">
+            <picture>
+              <source srcset="related1.avif" type="image/avif">
+              <img src="related1.jpg" alt="Related artifact" loading="lazy">
+            </picture>
+            <div class="hover-overlay">
+              <h3>Related Title</h3>
+              <p>London, UK</p>
+            </div>
+          </article>
+        </div>
+      </section>
+    </div>
+
+    <aside class="column-right">
+      <article class="quick-facts">
+        <h2>Object Title</h2>
+        <dl>
+          <dt>Object Type</dt>
+          <dd>Photograph</dd>
+          <dt>Artist/Maker</dt>
+          <dd>Unknown (Photographer)</dd>
+          <dt>Date</dt>
+          <dd><time datetime="1860">ca. 1860</time></dd>
+          <dt>Place</dt>
+          <dd>London, England</dd>
+          <dt>Categories</dt>
+          <dd><a href="/cat/photographs">Photographs</a></dd>
+          <dt>Collection</dt>
+          <dd><a href="/coll/pdp">Prints, Drawings & Paintings</a></dd>
+        </dl>
+      </article>
+
+      <section class="explore-sidebar">
+        <h2>Explore More</h2>
+        <a href="/coll/pdp" class="explore-card">
+          <img src="coll-thumb.jpg" alt="" aria-hidden="true">
+          <span class="label">Collection</span>
+          <span class="title">Prints, Drawings & Paintings</span>
+        </a>
+        <a href="/cat/photographs" class="explore-card">
+          <img src="cat-thumb.jpg" alt="" aria-hidden="true">
+          <span class="label">Category</span>
+          <span class="title">Photographs</span>
+        </a>
+      </section>
+    </aside>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Collections & Archives</p>
+  </footer>
+
+  <button type="button" class="chat-toggle" popovertarget="ai-chat" aria-label="Open support chat">
+    Chat
+  </button>
+
+  <dialog id="ai-chat" popover="manual" class="chat-overlay">
+    <div class="chat-container">
+      <header class="chat-header">
+        <h2>Ask about this object</h2>
+        <button type="button" popovertarget="ai-chat" popovertargetaction="hide" aria-label="Close chat">
+          &times;
+        </button>
+      </header>
+
+      <section class="messages-area" role="log" aria-live="polite">
+        <div class="message system">
+          <p>Welcome! I can help you explore the history and details of this archive object.</p>
+        </div>
+      </section>
+
+      <footer class="input-area">
+        <p class="ai-warning">AI-generated responses may be inaccurate. Please verify historical facts with the museum records.</p>
+        <form method="dialog" class="chat-form">
+          <label for="chat-input" class="visually-hidden">Your question</label>
+          <input type="text" id="chat-input" name="question" placeholder="Ask a question..." required autofocus>
+          <button type="submit" class="btn-send">Send</button>
+        </form>
+      </footer>
+    </div>
+  </dialog>
+
+</body>
+</html>

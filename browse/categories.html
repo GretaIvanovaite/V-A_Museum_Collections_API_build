@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Categories | Categories & Archives</title>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="logo">
+      <img src="logo.avif" alt="Categories & Archives Logo" width="180" height="50">
+    </div>
+
+    <nav aria-label="Main navigation">
+      <ul class="nav-list">
+        <li><a href="/">Home</a></li>
+        <li><a href="/browse">Browse</a></li>
+        <li>
+          <button type="button" anchor-name="--coll-menu">Categories</button>
+          <ul id="coll-menu" class="dropdown">
+            <li><a href="/coll/pdp">Prints, Drawings & Paintings</a></li>
+            <li><a href="/coll/tp">Theatre and Performance</a></li>
+            <li><a href="/coll/tf">Textiles and Fashion</a></li>
+            <li><a href="/coll/ea">East Asia</a></li>
+            <li><a href="/coll/cer">Ceramics</a></li>
+            <li><hr></li>
+            <li><a href="/Categories">See all Categories</a></li>
+          </ul>
+        </li>
+        <li>
+          <button type="button" anchor-name="--cat-menu">Categories</button>
+          <ul id="cat-menu" class="dropdown">
+            <li><a href="/cat/prints">Prints</a></li>
+            <li><a href="/cat/designs">Designs</a></li>
+            <li><a href="/cat/drawings">Drawings</a></li>
+            <li><a href="/cat/photographs">Photographs</a></li>
+            <li><a href="/cat/textiles">Textiles</a></li>
+            <li><hr></li>
+            <li><a href="/categories">See all categories</a></li>
+          </ul>
+        </li>
+        <li>
+          <button type="button" anchor-name="--mat-menu">Materials</button>
+          <ul id="mat-menu" class="dropdown">
+            <li><a href="/mat/paper">Paper</a></li>
+            <li><a href="/mat/pencil">Pencil</a></li>
+            <li><a href="/mat/ink">Ink</a></li>
+            <li><a href="/mat/photo-paper">Photographic Paper</a></li>
+            <li><a href="/mat/printing-ink">Printing Ink</a></li>
+            <li><hr></li>
+            <li><a href="/materials">See all materials</a></li>
+          </ul>
+        </li>
+        <li>
+          <button type="button" anchor-name="--org-menu">Origins</button>
+          <ul id="org-menu" class="dropdown">
+            <li><a href="/place/gb">Great Britain</a></li>
+            <li><a href="/place/london">London</a></li>
+            <li><a href="/place/england">England</a></li>
+            <li><a href="/place/japan">Japan</a></li>
+            <li><a href="/place/paris">Paris</a></li>
+            <li><hr></li>
+            <li><a href="/origins">See all origins</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <nav aria-label="Breadcrumb" class="breadcrumb-nav">
+    <ol>
+      <li><a href="/">Home</a></li>
+      <li aria-current="page">Categories</li>
+    </ol>
+  </nav>
+
+  <main>
+    <h1>Categories</h1>
+
+    <section class="objects-grid">
+      <article class="object-card">
+        <div class="image-wrapper">
+          <picture>
+            <source srcset="collection-item.avif" type="image/avif">
+            <img src="collection-item.jpg" alt="Historical artifact" loading="lazy">
+          </picture>
+        </div>
+        <div class="hover-overlay">
+          <h3>Artifact Title</h3>
+          <p><time datetime="2026-03-02">2 March 2026</time></p>
+          <p>Location Name</p>
+        </div>
+      </article>
+    </section>
+
+    <div class="pagination">
+      <button type="button" class="btn-load">Load More</button>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Categories & Archives</p>
+  </footer>
+
+  <button type="button" class="chat-toggle" aria-label="Open support chat">
+    Chat
+  </button>
+
+</body>
+</html>

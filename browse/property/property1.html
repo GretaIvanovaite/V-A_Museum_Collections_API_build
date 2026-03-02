@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prints, Drawings & Paintings | Collections & Archives</title>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="logo">
+      <img src="logo.avif" alt="Collections & Archives Logo" width="180" height="50">
+    </div>
+
+    <nav aria-label="Main navigation">
+      <ul class="nav-list">
+        <li><a href="/">Home</a></li>
+        <li><a href="/browse">Browse</a></li>
+        <li>
+          <button type="button" anchor-name="--coll-menu">Collections</button>
+          <ul id="coll-menu" class="dropdown">
+            <li><a href="/coll/pdp">Prints, Drawings & Paintings</a></li>
+            <li><a href="/coll/tp">Theatre and Performance</a></li>
+            <li><a href="/coll/tf">Textiles and Fashion</a></li>
+            <li><a href="/coll/ea">East Asia</a></li>
+            <li><a href="/coll/cer">Ceramics</a></li>
+            <li><hr></li>
+            <li><a href="/collections">See all collections</a></li>
+          </ul>
+        </li>
+        <li><button type="button" anchor-name="--cat-menu">Categories</button></li>
+        <li><button type="button" anchor-name="--mat-menu">Materials</button></li>
+        <li><button type="button" anchor-name="--org-menu">Origins</button></li>
+      </ul>
+    </nav>
+  </header>
+
+  <nav aria-label="Breadcrumb" class="breadcrumb-nav">
+    <ol>
+      <li><a href="/">Home</a></li>
+      <li><a href="/browse">Browse</a></li>
+      <li><a href="/collections">Collections</a></li>
+      <li aria-current="page">Prints, Drawings & Paintings</li>
+    </ol>
+  </nav>
+
+  <main class="filtered-browse-container">
+    <aside class="filter-sidebar">
+      <h2>Refine Search</h2>
+      
+      <details open>
+        <summary>Materials</summary>
+        <ul>
+          <li><label><input type="checkbox"> Paper</label></li>
+          <li><label><input type="checkbox"> Pencil</label></li>
+          <li><label><input type="checkbox"> Ink</label></li>
+        </ul>
+      </details>
+
+      <details>
+        <summary>Categories</summary>
+        <ul>
+          <li><label><input type="checkbox"> Prints</label></li>
+          <li><label><input type="checkbox"> Designs</label></li>
+          <li><label><input type="checkbox"> Drawings</label></li>
+        </ul>
+      </details>
+    </aside>
+
+    <div class="main-content">
+      <h1>Prints, Drawings & Paintings</h1>
+
+      <section class="active-filters" aria-label="Active filters">
+        <div class="filter-tag">
+          <span>Collection: Prints, Drawings & Paintings</span>
+          <button type="button" aria-label="Remove filter">&times;</button>
+        </div>
+      </section>
+
+      <section class="objects-grid">
+        <article class="object-card">
+          <div class="image-wrapper">
+            <picture>
+              <source srcset="pdp-item.avif" type="image/avif">
+              <img src="pdp-item.jpg" alt="Historical print" loading="lazy">
+            </picture>
+          </div>
+          <div class="hover-overlay">
+            <h3>Artwork Title</h3>
+            <p>London, UK</p>
+          </div>
+        </article>
+      </section>
+
+      <div class="pagination">
+        <button type="button" class="btn-load">Load More</button>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Collections & Archives</p>
+  </footer>
+
+  <button type="button" class="chat-toggle" popovertarget="ai-chat" aria-label="Open AI assistant">
+    Chat
+  </button>
+
+  <dialog id="ai-chat" popover="manual" class="chat-overlay">
+    <div class="chat-container">
+      <header class="chat-header">
+        <h2>Ask about this object</h2>
+        <button type="button" popovertarget="ai-chat" popovertargetaction="hide" aria-label="Close chat">
+          &times;
+        </button>
+      </header>
+      <section class="messages-area" role="log" aria-live="polite">
+        <div class="message system">
+          <p>Welcome! I can help you find items in the Prints, Drawings & Paintings collection.</p>
+        </div>
+      </section>
+      <footer class="input-area">
+        <form method="dialog" class="chat-form">
+          <input type="text" placeholder="Ask a question..." required autofocus>
+          <button type="submit">Send</button>
+        </form>
+      </footer>
+    </div>
+  </dialog>
+
+</body>
+</html>

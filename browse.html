@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Browse | Collections & Archives</title>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="logo">
+      <img src="logo.avif" alt="Collections & Archives Logo" width="180" height="50">
+    </div>
+    <nav aria-label="Main navigation">
+      <ul class="nav-list">
+        <li><a href="/">Home</a></li>
+        <li><a href="/browse">Browse</a></li>
+        <li><button type="button" anchor-name="--coll-menu">Collections</button></li>
+        <li><button type="button" anchor-name="--cat-menu">Categories</button></li>
+        <li><button type="button" anchor-name="--mat-menu">Materials</button></li>
+        <li><button type="button" anchor-name="--org-menu">Origins</button></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Browse</h1>
+    <section class="browse-section">
+      <h2>Collections</h2>
+      <div class="cards-container">
+        <article class="browse-card">
+          <picture><source srcset="pdp.avif" type="image/avif"><img src="pdp.jpg" alt="Prints, Drawings & Paintings" loading="lazy"></picture>
+          <h3>Prints, Drawings & Paintings</h3>
+        </article>
+        <a href="/collections" class="browse-card view-all-card">
+          <picture><source srcset="placeholder.avif" type="image/avif"><img src="placeholder.jpg" alt="" aria-hidden="true" loading="lazy"></picture>
+          <h3>View All Collections</h3>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Collections & Archives</p>
+  </footer>
+
+  <button type="button" class="chat-toggle" popovertarget="ai-chat">Chat</button>
+
+  <dialog id="ai-chat" popover="manual" class="chat-overlay">
+    <div class="chat-container">
+      <header class="chat-header">
+        <h2>Ask about this object</h2>
+        <button type="button" popovertarget="ai-chat" popovertargetaction="hide">&times;</button>
+      </header>
+      <section class="messages-area" role="log" aria-live="polite">
+        <div class="message system"><p>Welcome! I can help you explore the archive.</p></div>
+      </section>
+      <footer class="input-area">
+        <form method="dialog" class="chat-form">
+          <input type="text" placeholder="Ask a question..." required autofocus>
+          <button type="submit">Send</button>
+        </form>
+      </footer>
+    </div>
+  </dialog>
+
+</body>
+</html>
