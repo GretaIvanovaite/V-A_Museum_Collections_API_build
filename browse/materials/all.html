@@ -4,7 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <script src="../../assets/js/app.js" defer></script>
-  <title>Collections | Collections & Archives</title>
+  <link rel="stylesheet" href="../../assets/css/layout.css">
+  <link rel="stylesheet" href="../../assets/css/styles.css">
+  <title>All Materials | Collections & Archives</title>
 </head>
 <body>
 
@@ -70,27 +72,42 @@
 
   <nav aria-label="Breadcrumb" class="breadcrumb-nav">
     <ol>
-      <li><a href="/">Home</a></li>
-      <li aria-current="page">Collections</li>
+      <li><a href="../../index.html">Home</a></li>
+      <li><a href="../../browse.html">Browse</a></li>
+      <li aria-current="page">Materials</li>
     </ol>
   </nav>
 
   <main>
-    <h1>Collections</h1>
-    <section class="objects-grid">
-      <article class="object-card">
-        <div class="image-wrapper">
-          <picture><source srcset="item.avif" type="image/avif"><img src="item.jpg" alt="Archive object" loading="lazy"></picture>
-        </div>
-        <div class="hover-overlay">
-          <h3>Artifact Title</h3>
-          <p>London, UK</p>
-        </div>
-      </article>
+    <h1>Browse by Material</h1>
+    <section class="browse-section">
+      <div class="cards-container">
+
+        <a href="property.html?id=x30308" class="browse-card">
+          <div class="card-label-wrapper"><span class="label-text">Paper</span></div>
+          <picture>
+            <source srcset="../../images/material1.avif" type="image/avif">
+            <img src="../../images/material1.jpg" alt="" aria-hidden="true" loading="lazy">
+          </picture>
+        </a>
+
+        <a href="property.html?id=x30347" class="browse-card">
+          <div class="card-label-wrapper"><span class="label-text">Pencil</span></div>
+          <picture>
+            <source srcset="../../images/material2.avif" type="image/avif">
+            <img src="../../images/material2.jpg" alt="" aria-hidden="true" loading="lazy">
+          </picture>
+        </a>
+
+        <a href="property.html?id=AAT15012" class="browse-card">
+          <div class="card-label-wrapper"><span class="label-text">Ink</span></div>
+          <picture>
+            <source srcset="../../images/material3.avif" type="image/avif">
+            <img src="../../images/material3.jpg" alt="" aria-hidden="true" loading="lazy">
+          </picture>
+        </a>
+      </div>
     </section>
-    <div class="pagination">
-      <button type="button" class="btn-load">Load More</button>
-    </div>
   </main>
 
   <footer>

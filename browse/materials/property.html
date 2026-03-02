@@ -4,11 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <script src="../../assets/js/app.js" defer></script>
-  <title>Collections | Collections & Archives</title>
+  <link rel="stylesheet" href="../../assets/css/layout.css">
+  <link rel="stylesheet" href="../../assets/css/styles.css">
+  <title>Selected Property | Collections & Archives</title>
 </head>
 <body>
 
-  <header class="site-header">
+    <header class="site-header">
     <div class="logo">
       <img src="../../logo.avif" alt="Collections & Archives Logo" width="180" height="50">
     </div>
@@ -70,24 +72,20 @@
 
   <nav aria-label="Breadcrumb" class="breadcrumb-nav">
     <ol>
-      <li><a href="/">Home</a></li>
-      <li aria-current="page">Collections</li>
+      <li><a href="../../index.html">Home</a></li>
+      <li><a href="../../browse.html">Browse</a></li>
+      <li><a href="all.html" id="breadcrumb-parent">Property</a></li>
+      <li id="breadcrumb-current" aria-current="page">Loading Filter...</li>
     </ol>
   </nav>
 
   <main>
-    <h1>Collections</h1>
-    <section class="objects-grid">
-      <article class="object-card">
-        <div class="image-wrapper">
-          <picture><source srcset="item.avif" type="image/avif"><img src="item.jpg" alt="Archive object" loading="lazy"></picture>
-        </div>
-        <div class="hover-overlay">
-          <h3>Artifact Title</h3>
-          <p>London, UK</p>
-        </div>
-      </article>
+    <h1 id="page-title">Loading Results...</h1>
+    
+    <section class="objects-grid" id="api-grid">
+        
     </section>
+
     <div class="pagination">
       <button type="button" class="btn-load">Load More</button>
     </div>

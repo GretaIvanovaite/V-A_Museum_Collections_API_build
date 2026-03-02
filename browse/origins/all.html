@@ -4,10 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <script src="../../assets/js/app.js" defer></script>
-  <title>Collections | Collections & Archives</title>
+  <link rel="stylesheet" href="../../assets/css/layout.css">
+  <link rel="stylesheet" href="../../assets/css/styles.css">
+  <title>All Origins | Collections & Archives</title>
 </head>
 <body>
-
   <header class="site-header">
     <div class="logo">
       <img src="../../logo.avif" alt="Collections & Archives Logo" width="180" height="50">
@@ -70,27 +71,30 @@
 
   <nav aria-label="Breadcrumb" class="breadcrumb-nav">
     <ol>
-      <li><a href="/">Home</a></li>
-      <li aria-current="page">Collections</li>
+      <li><a href="../../index.html">Home</a></li>
+      <li><a href="../../browse.html">Browse</a></li>
+      <li aria-current="page">Origins</li>
     </ol>
   </nav>
 
   <main>
-    <h1>Collections</h1>
-    <section class="objects-grid">
-      <article class="object-card">
-        <div class="image-wrapper">
-          <picture><source srcset="item.avif" type="image/avif"><img src="item.jpg" alt="Archive object" loading="lazy"></picture>
-        </div>
-        <div class="hover-overlay">
-          <h3>Artifact Title</h3>
-          <p>London, UK</p>
-        </div>
-      </article>
+    <h1>Browse by Origin</h1>
+    <section class="browse-section">
+      <div class="cards-container">
+        <a href="property.html?id=x32019" class="browse-card">
+          <div class="card-label-wrapper"><span class="label-text">Great Britain</span></div>
+          <picture><img src="../../images/origin1.jpg" alt="" aria-hidden="true" loading="lazy"></picture>
+        </a>
+        <a href="property.html?id=x28980" class="browse-card">
+          <div class="card-label-wrapper"><span class="label-text">London</span></div>
+          <picture><img src="../../images/origin2.jpg" alt="" aria-hidden="true" loading="lazy"></picture>
+        </a>
+        <a href="property.html?id=x28826" class="browse-card">
+          <div class="card-label-wrapper"><span class="label-text">England</span></div>
+          <picture><img src="../../images/origin3.jpg" alt="" aria-hidden="true" loading="lazy"></picture>
+        </a>
+      </div>
     </section>
-    <div class="pagination">
-      <button type="button" class="btn-load">Load More</button>
-    </div>
   </main>
 
   <footer>
