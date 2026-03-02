@@ -84,7 +84,10 @@ header li button {
 .nav-list li a:hover,
 .nav-list li a:focus-visible,
 .nav-list li button:hover,
-.nav-list li button:focus-visible {
+.nav-list li button:focus-visible,
+header a img:hover,
+header a img:focus-visible {
   background-color: var(--color-primary-teal-hover);
   outline: none;
 }
+
