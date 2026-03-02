@@ -1,0 +1,77 @@
+/* VARIABLES */
+
+:root {
+  /* Grid */
+  --grid-columns-default: 6;
+  --grid-columns-compact: 4;
+  --grid-columns-dense: 8;
+  --grid-columns-browse: 4;
+  
+  /* Z-index */
+  --z-header: 100;
+  --z-dropdown: 200;
+  --z-modal-backdrop: 900;
+  --z-modal: 1000;
+  --z-chat-button: 1100;
+}
+
+
+/* RESET */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-family-primary);
+  background: var(--color-bg-main);
+  color: var(--color-text-primary);
+  line-height: var(--line-height-body);
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  background: none;
+  border: none;
+  font: inherit;
+  cursor: pointer;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+/* STYLES */
+
+.dropdown {
+  position: absolute;
+  position-anchor: --coll-btn;
+  top: anchor(bottom);
+  left: anchor(left);
+  margin: 0;
+  padding: 1rem;
+}
