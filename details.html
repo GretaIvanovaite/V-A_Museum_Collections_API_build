@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="assets/js/app.js" defer></script>
   <title>Object Title | Collections & Archives</title>
 </head>
 <body>
@@ -11,57 +12,56 @@
     <div class="logo">
       <img src="logo.avif" alt="Collections & Archives Logo" width="180" height="50">
     </div>
-
     <nav aria-label="Main navigation">
       <ul class="nav-list">
-        <li><a href="/">Home</a></li>
-        <li><a href="/browse">Browse</a></li>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="browse.html">Browse</a></li>
         <li>
           <button type="button" anchor-name="--coll-menu">Collections</button>
           <ul id="coll-menu" class="dropdown">
-            <li><a href="/coll/pdp">Prints, Drawings & Paintings</a></li>
-            <li><a href="/coll/tp">Theatre and Performance</a></li>
-            <li><a href="/coll/tf">Textiles and Fashion</a></li>
-            <li><a href="/coll/ea">East Asia</a></li>
-            <li><a href="/coll/cer">Ceramics</a></li>
-            <li><hr></li>
-            <li><a href="/collections">See all collections</a></li>
+            <li><a href="browse/collections/all.html">See all collections</a></li>
+            <hr>
+            <li><a href="browse/collections/selected_property.html?id=THES48595">Prints, Drawings & Paintings</a></li>
+            <li><a href="browse/collections/selected_property.html?id=THES48602">Theatre and Performance</a></li>
+            <li><a href="browse/collections/selected_property.html?id=THES48601">Textiles and Fashion</a></li>
+            <li><a href="browse/collections/selected_property.html?id=THES48596">East Asia</a></li>
+            <li><a href="browse/collections/selected_property.html?id=THES48594">Ceramics</a></li>
           </ul>
         </li>
         <li>
           <button type="button" anchor-name="--cat-menu">Categories</button>
           <ul id="cat-menu" class="dropdown">
-            <li><a href="/cat/prints">Prints</a></li>
-            <li><a href="/cat/designs">Designs</a></li>
-            <li><a href="/cat/drawings">Drawings</a></li>
-            <li><a href="/cat/photographs">Photographs</a></li>
-            <li><a href="/cat/textiles">Textiles</a></li>
-            <li><hr></li>
-            <li><a href="/categories">See all categories</a></li>
+            <li><a href="browse/categories/all.html">See all categories</a></li>
+            <hr>
+            <li><a href="browse/categories/selected_property.html?id=THES48903">Prints</a></li>
+            <li><a href="browse/categories/selected_property.html?id=THES48968">Designs</a></li>
+            <li><a href="browse/categories/selected_property.html?id=THES48966">Drawings</a></li>
+            <li><a href="browse/categories/selected_property.html?id=THES48910">Photographs</a></li>
+            <li><a href="browse/categories/selected_property.html?id=THES48885">Textiles</a></li>
           </ul>
         </li>
         <li>
           <button type="button" anchor-name="--mat-menu">Materials</button>
           <ul id="mat-menu" class="dropdown">
-            <li><a href="/mat/paper">Paper</a></li>
-            <li><a href="/mat/pencil">Pencil</a></li>
-            <li><a href="/mat/ink">Ink</a></li>
-            <li><a href="/mat/photo-paper">Photographic Paper</a></li>
-            <li><a href="/mat/printing-ink">Printing Ink</a></li>
-            <li><hr></li>
-            <li><a href="/materials">See all materials</a></li>
+            <li><a href="browse/materials/all.html">See all materials</a></li>
+            <hr>
+            <li><a href="browse/materials/selected_property.html?id=x30308">Paper</a></li>
+            <li><a href="browse/materials/selected_property.html?id=x30347">Pencil</a></li>
+            <li><a href="browse/materials/selected_property.html?id=AAT15012">Ink</a></li>
+            <li><a href="browse/materials/selected_property.html?id=AAT14190">Photographic paper</a></li>
+            <li><a href="browse/materials/selected_property.html?id=AAT187371">Printing ink</a></li>
           </ul>
         </li>
         <li>
           <button type="button" anchor-name="--org-menu">Origins</button>
           <ul id="org-menu" class="dropdown">
-            <li><a href="/place/gb">Great Britain</a></li>
-            <li><a href="/place/london">London</a></li>
-            <li><a href="/place/england">England</a></li>
-            <li><a href="/place/japan">Japan</a></li>
-            <li><a href="/place/paris">Paris</a></li>
-            <li><hr></li>
-            <li><a href="/origins">See all origins</a></li>
+            <li><a href="browse/origins/all.html">See all origins</a></li>
+            <hr>
+            <li><a href="browse/origins/selected_property.html?id=x32019">Great Britain</a></li>
+            <li><a href="browse/origins/selected_property.html?id=x28980">London</a></li>
+            <li><a href="browse/origins/selected_property.html?id=x28826">England</a></li>
+            <li><a href="browse/origins/selected_property.html?id=x29399">Japan</a></li>
+            <li><a href="browse/origins/selected_property.html?id=x29068">Paris</a></li>
           </ul>
         </li>
       </ul>
@@ -165,15 +165,10 @@
 
       <section class="explore-sidebar">
         <h2>Explore More</h2>
-        <a href="/coll/pdp" class="explore-card">
-          <img src="coll-thumb.jpg" alt="" aria-hidden="true">
-          <span class="label">Collection</span>
-          <span class="title">Prints, Drawings & Paintings</span>
-        </a>
-        <a href="/cat/photographs" class="explore-card">
-          <img src="cat-thumb.jpg" alt="" aria-hidden="true">
-          <span class="label">Category</span>
-          <span class="title">Photographs</span>
+        <a href="/related-path" class="explore-card">
+          <span class="title-text">Photography</span>
+          <img src="thumb.avif" alt="" aria-hidden="true" loading="lazy">
+          <span class="type-badge">Category</span>
         </a>
       </section>
     </aside>

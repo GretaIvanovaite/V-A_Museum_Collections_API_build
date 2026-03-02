@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="assets/js/app.js" defer></script>
   <title>Browse | Collections & Archives</title>
 </head>
 <body>
@@ -13,12 +14,56 @@
     </div>
     <nav aria-label="Main navigation">
       <ul class="nav-list">
-        <li><a href="/">Home</a></li>
-        <li><a href="/browse">Browse</a></li>
-        <li><button type="button" anchor-name="--coll-menu">Collections</button></li>
-        <li><button type="button" anchor-name="--cat-menu">Categories</button></li>
-        <li><button type="button" anchor-name="--mat-menu">Materials</button></li>
-        <li><button type="button" anchor-name="--org-menu">Origins</button></li>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="browse.html">Browse</a></li>
+        <li>
+          <button type="button" anchor-name="--coll-menu">Collections</button>
+          <ul id="coll-menu" class="dropdown">
+            <li><a href="browse/collections/all.html">See all collections</a></li>
+            <hr>
+            <li><a href="browse/collections/selected_property.html?id=THES48595">Prints, Drawings & Paintings</a></li>
+            <li><a href="browse/collections/selected_property.html?id=THES48602">Theatre and Performance</a></li>
+            <li><a href="browse/collections/selected_property.html?id=THES48601">Textiles and Fashion</a></li>
+            <li><a href="browse/collections/selected_property.html?id=THES48596">East Asia</a></li>
+            <li><a href="browse/collections/selected_property.html?id=THES48594">Ceramics</a></li>
+          </ul>
+        </li>
+        <li>
+          <button type="button" anchor-name="--cat-menu">Categories</button>
+          <ul id="cat-menu" class="dropdown">
+            <li><a href="browse/categories/all.html">See all categories</a></li>
+            <hr>
+            <li><a href="browse/categories/selected_property.html?id=THES48903">Prints</a></li>
+            <li><a href="browse/categories/selected_property.html?id=THES48968">Designs</a></li>
+            <li><a href="browse/categories/selected_property.html?id=THES48966">Drawings</a></li>
+            <li><a href="browse/categories/selected_property.html?id=THES48910">Photographs</a></li>
+            <li><a href="browse/categories/selected_property.html?id=THES48885">Textiles</a></li>
+          </ul>
+        </li>
+        <li>
+          <button type="button" anchor-name="--mat-menu">Materials</button>
+          <ul id="mat-menu" class="dropdown">
+            <li><a href="browse/materials/all.html">See all materials</a></li>
+            <hr>
+            <li><a href="browse/materials/selected_property.html?id=x30308">Paper</a></li>
+            <li><a href="browse/materials/selected_property.html?id=x30347">Pencil</a></li>
+            <li><a href="browse/materials/selected_property.html?id=AAT15012">Ink</a></li>
+            <li><a href="browse/materials/selected_property.html?id=AAT14190">Photographic paper</a></li>
+            <li><a href="browse/materials/selected_property.html?id=AAT187371">Printing ink</a></li>
+          </ul>
+        </li>
+        <li>
+          <button type="button" anchor-name="--org-menu">Origins</button>
+          <ul id="org-menu" class="dropdown">
+            <li><a href="browse/origins/all.html">See all origins</a></li>
+            <hr>
+            <li><a href="browse/origins/selected_property.html?id=x32019">Great Britain</a></li>
+            <li><a href="browse/origins/selected_property.html?id=x28980">London</a></li>
+            <li><a href="browse/origins/selected_property.html?id=x28826">England</a></li>
+            <li><a href="browse/origins/selected_property.html?id=x29399">Japan</a></li>
+            <li><a href="browse/origins/selected_property.html?id=x29068">Paris</a></li>
+          </ul>
+        </li>
       </ul>
     </nav>
   </header>
@@ -29,8 +74,14 @@
       <h2>Collections</h2>
       <div class="cards-container">
         <article class="browse-card">
-          <picture><source srcset="pdp.avif" type="image/avif"><img src="pdp.jpg" alt="Prints, Drawings & Paintings" loading="lazy"></picture>
-          <h3>Prints, Drawings & Paintings</h3>
+          <div class="card-label-wrapper">
+            <span class="label-text">Prints, Drawings & Paintings</span>
+          </div>
+          <picture>
+            <source srcset="category-bg.avif" type="image/avif">
+            <img src="category-bg.jpg" alt="" aria-hidden="true" loading="lazy">
+          </picture>
+          <div class="overlay-gradient"></div>
         </article>
         <a href="/collections" class="browse-card view-all-card">
           <picture><source srcset="placeholder.avif" type="image/avif"><img src="placeholder.jpg" alt="" aria-hidden="true" loading="lazy"></picture>
