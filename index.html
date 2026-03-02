@@ -9,18 +9,25 @@
   <title>Home | Collections & Archives</title>
 </head>
 <body>
-  <a href="#main-content" class="skip-link">Skip to main content</a>
+  <a href="#main-content" id="skip-link">Skip to main content</a>
   <header class="site-header">
     <a class="logo" href="/">
-      <img src="images/Logo.png" alt="Collections & Archives Logo" width="167" height="88">
+      <object data="images/Logo.svg" type="image/svg+xml" aria-label="Toggle Menu" class="nav-icon" width="167" height="88" alt="Collections & Archives Logo">
+        <span class="fallback-text">Collections & Archives</span>
+      </object>
     </a>
     <nav aria-label="Main navigation">
       <ul class="nav-list">
         <li><a href="index.html">Home</a></li>
         <li><a href="browse.html">Browse</a></li>
         <li>
-          <button type="button" popovertarget="coll-menu" anchor-name="--coll-btn">Collections</button>
-          <ul id="coll-menu" popover class="dropdown"">
+          <button type="button" popovertarget="coll-menu">
+            Collections
+            <object data="images/angle-down-solid.svg" type="image/svg+xml" class="nav-icon" width="20">
+              <span class="fallback-symbol" aria-hidden="true">&#x26DB;</span>
+            </object>
+          </button>
+          <ul id="coll-menu" popover class="dropdown">
             <li><a href="browse/collections/property.html?id=THES48595">Prints, Drawings & Paintings</a></li>
             <li><a href="browse/collections/property.html?id=THES48602">Theatre and Performance</a></li>
             <li><a href="browse/collections/property.html?id=THES48601">Textiles and Fashion</a></li>
@@ -31,8 +38,13 @@
           </ul>
         </li>
         <li>
-          <button type="button" popovertarget="cat-menu" anchor-name="--cat-btn">Categories</button>
-          <ul id="cat-menu" popover class="dropdown" style="position-anchor: --cat-btn;">
+          <button type="button" popovertarget="cat-menu">
+            Categories
+            <object data="images/angle-down-solid.svg" type="image/svg+xml" class="nav-icon" width="20">
+              <span class="fallback-symbol" aria-hidden="true">&#x26DB;</span>
+            </object>
+          </button>
+          <ul id="cat-menu" popover class="dropdown">
             <li><a href="browse/categories/property.html?id=THES48903">Prints</a></li>
             <li><a href="browse/categories/property.html?id=THES48968">Designs</a></li>
             <li><a href="browse/categories/property.html?id=THES48966">Drawings</a></li>
@@ -43,8 +55,13 @@
           </ul>
         </li>
         <li>
-          <button type="button" popovertarget="mat-menu" anchor-name="--mat-btn">Materials</button>
-          <ul id="mat-menu" popover class="dropdown" style="position-anchor: --mat-btn;">
+          <button type="button" popovertarget="mat-menu">
+            Materials
+            <object data="images/angle-down-solid.svg" type="image/svg+xml" class="nav-icon" width="20">
+              <span class="fallback-symbol" aria-hidden="true">&#x26DB;</span>
+            </object>
+          </button>
+          <ul id="mat-menu" popover class="dropdown">
             <li><a href="browse/materials/property.html?id=x30308">Paper</a></li>
             <li><a href="browse/materials/property.html?id=x30347">Pencil</a></li>
             <li><a href="browse/materials/property.html?id=AAT15012">Ink</a></li>
@@ -55,8 +72,13 @@
           </ul>
         </li>
         <li>
-          <button type="button" popovertarget="org-menu" anchor-name="--org-btn">Origins</button>
-          <ul id="org-menu" popover class="dropdown" style="position-anchor: --org-btn;">
+          <button type="button" popovertarget="org-menu">
+            Origins
+            <object data="images/angle-down-solid.svg" type="image/svg+xml" class="nav-icon" width="20">
+              <span class="fallback-symbol" aria-hidden="true">&#x26DB;</span>
+            </object>
+          </button>
+          <ul id="org-menu" popover class="dropdown">
             <li><a href="browse/origins/property.html?id=x32019">Great Britain</a></li>
             <li><a href="browse/origins/property.html?id=x28980">London</a></li>
             <li><a href="browse/origins/property.html?id=x28826">England</a></li>

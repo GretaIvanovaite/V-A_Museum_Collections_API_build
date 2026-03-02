@@ -74,7 +74,6 @@
 }
 
 
-
 header,
 header li button {
   background-color: var(--color-primary-teal);
@@ -85,9 +84,30 @@ header li button {
 .nav-list li a:focus-visible,
 .nav-list li button:hover,
 .nav-list li button:focus-visible,
-header a img:hover,
-header a img:focus-visible {
+header a:hover,
+header a:focus-visible {
   background-color: var(--color-primary-teal-hover);
   outline: none;
+  border-radius: 5%;
 }
 
+#skip-link {
+  color: var(--color-text-white);
+  font-weight: var(--font-weight-bold);
+  background-color: var(--color-primary-teal-hover);
+}
+
+#arrow-down {
+  font-size: var(--font-size-small);
+}
+
+.dropdown {
+  background-color: var(--color-primary-teal);
+  color: var(--color-text-white);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+}
+
+hr {
+  border: 0.1rem solid var(--color-divider-main);
+}
