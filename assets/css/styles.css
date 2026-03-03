@@ -57,9 +57,9 @@
   --letter-spacing-wide: 0.03em;
   
   /* Border Radius */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
+  --radius-sm: 5%;
+  --radius-md: 10%;
+  --radius-lg: 15%;
   --radius-full: 50%;
   
   /* Shadows */
@@ -73,6 +73,17 @@
   
 }
 
+body {
+  font-family: var(--font-family-primary);
+  background: var(--color-bg-main);
+  color: var(--color-text-primary);
+  line-height: var(--line-height-body);
+}
+
+footer {
+  background-color: var(--color-bg-slider);
+  border-top: 1px soilid var(--color-divider-main);
+}
 
 header,
 header li button {
@@ -88,7 +99,7 @@ header a:hover,
 header a:focus-visible {
   background-color: var(--color-primary-teal-hover);
   outline: none;
-  border-radius: 5%;
+  border-radius: var(--radius-sm);
 }
 
 #skip-link {
@@ -110,4 +121,39 @@ header a:focus-visible {
 
 hr {
   border: 0.1rem solid var(--color-divider-main);
+}
+
+.density-controls {
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+  letter-spacing: 0.03rem;
+}
+
+.object-card {
+  border-radius: var(--radius-md);
+  background-color: var(--color-bg-card);
+  box-shadow: 0.2rem 0.2rem var(--color-shadow);
+}
+
+.object-card:hover {
+  background-color: var(--color-bg-clickable);
+  box-shadow: 0.4rem 0.4rem var(--color-shadow);
+}
+
+.object-card dt {
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-bold);
+  justify-self: left;
+}
+
+.object-card dd {
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-regular);
+  text-align: right;
+}
+
+.object-card picture img {
+  border-radius: var(--radius-sm);
 }

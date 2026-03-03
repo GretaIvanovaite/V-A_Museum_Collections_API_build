@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="assets/js/app.js" defer></script>
   <link rel="stylesheet" href="assets/css/layout.css">
   <link rel="stylesheet" href="assets/css/styles.css">
   <title>Home | Collections & Archives</title>
@@ -96,10 +97,70 @@
       <label for="density-slider">Fewer Objects</label>
       <input type="range" id="density-slider" min="1" max="3" value="2" step="1">
       <label for="density-slider">More Objects</label>
-      <p id="density-status" class="visually-hidden" aria-live="polite"></p>
     </section>
 
     <section class="objects-grid">
+      <article class="object-card" tabindex="0">
+        <h3>Book</h3>
+        <picture>
+          <source srcset="images\artefact1920.jpg" type="image/avif">
+          <img src="images\artefact1920.jpg" loading="lazy" alt="Floral ceramic vase, ca. 1880">
+        </picture>
+        <dl class="metadata">
+          <dt>Collection</dt> <dd>National Art Library</dd>
+          <hr aria-hidden="true">
+          <dt>Categories</dt> <dd>Archaeology</dd>
+          <dd>Botanical Art</dd>
+          <hr aria-hidden="true">
+          <dt>Origin</dt> <dd>London, UK</dd>
+        </dl>
+
+        <section class="description">
+          <p class="date"><time datetime="1880">ca. 1880</time></p>
+          <p>A finely glazed Victorian earthenware vase with intricate floral motifs.</p>
+          <a href="details.html" class="btn-details">View Details</a>
+        </section>
+      </article>
+      <article class="object-card">
+        <h3>Book</h3>
+        <picture>
+          <source srcset="images/vase.avif" type="image/avif">
+          <img src="images/vase.jpg" loading="lazy" alt="Floral ceramic vase, ca. 1880">
+        </picture>
+        <dl class="metadata">
+          <dt>Collection</dt> <dd>National Art Library</dd>
+          <hr aria-hidden="true">
+          <dt>Categories</dt> <dd>Archaeology;</dd>
+          <hr aria-hidden="true">
+          <dt>Origin</dt> <dd>London, UK</dd>
+        </dl>
+
+        <section class="description">
+          <p class="date"><time datetime="1880">ca. 1880</time></p>
+          <p>A finely glazed Victorian earthenware vase with intricate floral motifs.</p>
+          <a href="details.html" class="btn-details">View Details</a>
+        </section>
+      </article>
+      <article class="object-card">
+        <h3>Book</h3>
+        <picture>
+          <source srcset="images/vase.avif" type="image/avif">
+          <img src="images/vase.jpg" loading="lazy" alt="Floral ceramic vase, ca. 1880">
+        </picture>
+        <dl class="metadata">
+          <dt>Collection</dt> <dd>National Art Library</dd>
+          <hr aria-hidden="true">
+          <dt>Categories</dt> <dd>Archaeology;</dd>
+          <hr aria-hidden="true">
+          <dt>Origin</dt> <dd>London, UK</dd>
+        </dl>
+
+        <section class="description">
+          <p class="date"><time datetime="1880">ca. 1880</time></p>
+          <p>A finely glazed Victorian earthenware vase with intricate floral motifs.</p>
+          <a href="details.html" class="btn-details">View Details</a>
+        </section>
+      </article>
     </section>
 
     <div class="pagination">
@@ -112,8 +173,6 @@
     <p>Data retrieved via Victoria and Albert Museum Collections API</p>
     <p>This prototype is part of an Edge Hill University Undergraduate Research and Development project</p>
   </footer>
-
-  <script src="assets/js/app.js"></script>
 <!--
   <button type="button" class="chat-toggle" popovertarget="ai-chat" aria-label="Open support chat">
     Chat

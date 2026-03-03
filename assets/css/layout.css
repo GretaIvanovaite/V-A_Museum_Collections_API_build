@@ -2,7 +2,7 @@
 
 :root {
   /* Grid */
-  --grid-columns-default: 6;
+  --grid-columns-default: 2;
   --grid-columns-compact: 4;
   --grid-columns-dense: 8;
   --grid-columns-browse: 4;
@@ -15,7 +15,7 @@
   --z-chat-button: 1100;
 }
 
-
+/*##########################################*/
 /* RESET */
 
 * {
@@ -27,13 +27,6 @@
 html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-body {
-  font-family: var(--font-family-primary);
-  background: var(--color-bg-main);
-  color: var(--color-text-primary);
-  line-height: var(--line-height-body);
 }
 
 ul,
@@ -65,9 +58,25 @@ select {
   font: inherit;
 }
 
-/* STYLES */
+/*##########################################*/
+/* Generic styles */
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  margin: 0;
+}
 
+main {
+  flex: 1;
+  width: 90%;
+  margin: 0 auto;
+}
 
+footer {
+  width: 100%;
+  padding: 2rem 5% 3rem;
+}
 
 #skip-link {
   position: absolute;
@@ -81,6 +90,8 @@ select {
   top: 1rem;
 }
 
+/*##########################################*/
+/* Header and nav */
 header {
   display: flex;
   justify-content: space-between;
@@ -116,14 +127,13 @@ object * {
   pointer-events: none;
 }
 
-
-/* Register each unique anchor button */
+/* Anchor buttons */
 button[popovertarget="coll-menu"] { anchor-name: --coll-btn; }
 button[popovertarget="cat-menu"] { anchor-name: --cat-btn; }
 button[popovertarget="mat-menu"] { anchor-name: --mat-btn; }
 button[popovertarget="org-menu"] { anchor-name: --org-btn; }
 
-/* Tether the unique dropdowns to their specific anchors */
+/* Dropdowns connected to anchor buttons */
 #coll-menu { position-anchor: --coll-btn; }
 #cat-menu { position-anchor: --cat-btn; }
 #mat-menu { position-anchor: --mat-btn; }
@@ -148,5 +158,54 @@ button[popovertarget="org-menu"] { anchor-name: --org-btn; }
   padding: 1rem 2rem;
 }
 
+/*##########################################*/
+/* Homepage object grid */
 
+.objects-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-columns-default), 1fr);
+  grid-template-rows: masonry;
+  gap: 1.5rem;
+  padding: 2rem 0;
+}
+
+.objects-grid.compact {
+  grid-template-columns: repeat(var(--grid-columns-compact), 1fr);
+}
+
+.objects-grid.dense {
+  grid-template-columns: repeat(var(--grid-columns-dense), 1fr);
+}
+
+.object-card {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+  padding: 1rem;
+}
+
+.object-card picture {
+  grid-column: 1;
+  height: 100%;
+}
+
+.object-card picture img {
+  min-width: 8rem;
+  object-fit: cover;
+}
+
+.object-card h3 {
+  grid-column: 1 / span 2;
+  grid-row: 2;
+  padding-top: 1rem;
+}
+
+.object-card .description {
+  grid-column: 1 / span 2;
+}
+
+.object-card dl {
+  grid-column: 2;
+  padding-left: 1rem;
+}
 
