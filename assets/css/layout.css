@@ -184,10 +184,14 @@ button[popovertarget="org-menu"] { anchor-name: --org-btn; }
   flex-direction: column;
   padding: 0.5rem;
   overflow: hidden;
+  transition: padding var(--transition-normal),
+              grid-column var(--transition-normal),
+              grid-row var(--transition-normal);
 }
 
 .object-card picture {
   width: 100%;
+  transition: margin-bottom var(--transition-normal);
 }
 
 .object-card picture img {
@@ -200,6 +204,10 @@ button[popovertarget="org-menu"] { anchor-name: --org-btn; }
 .object-card .description,
 .object-card dl {
   display: none;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity var(--transition-slow) var(--transition-normal),
+              transform var(--transition-slow) var(--transition-normal);
 }
 
 .object-card:hover,
@@ -217,6 +225,8 @@ button[popovertarget="org-menu"] { anchor-name: --org-btn; }
 .object-card:hover h3,
 .object-card:focus-within h3 {
   display: block;
+  opacity: 1;
+  transform: translateY(0);
   padding-top: 0;
   margin-bottom: 0.25rem;
   order: 1;
@@ -225,22 +235,31 @@ button[popovertarget="org-menu"] { anchor-name: --org-btn; }
 .object-card:hover .date,
 .object-card:focus-within .date {
   display: block;
+  opacity: 1;
+  transform: translateY(0);
   margin-bottom: 0.5rem;
   order: 2;
+  transition-delay: 0.05s;
 }
 
 .object-card:hover .description,
 .object-card:focus-within .description {
   display: block;
+  opacity: 1;
+  transform: translateY(0);
   margin-bottom: 0.5rem;
   order: 3;
+  transition-delay: 0.1s;
 }
 
 .object-card:hover dl,
 .object-card:focus-within dl {
   display: block;
+  opacity: 1;
+  transform: translateY(0);
   padding-top: 0;
   order: 4;
+  transition-delay: 0.15s;
 }
 
 /* TABLET & DESKTOP */
@@ -306,6 +325,7 @@ button[popovertarget="org-menu"] { anchor-name: --org-btn; }
   .object-card:hover,
   .object-card:focus-within {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: auto auto auto auto;
     grid-column: span 2;
     grid-row: span 2;
     padding: 1rem;
