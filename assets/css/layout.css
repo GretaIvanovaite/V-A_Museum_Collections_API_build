@@ -95,7 +95,7 @@ header {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0.5rem 1rem;
+  padding: 0 1rem;
 }
 
 .nav-list {
@@ -157,6 +157,29 @@ button[popovertarget="org-menu"] { anchor-name: --org-btn; }
   width: 100%;
   height: 100%;
   padding: 0.75rem 1rem;
+}
+
+.density-controls {
+  margin: 0.5rem;
+  justify-self: center;
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  max-width: 90%;
+}
+
+.density-controls label {
+  max-width: 35%;
+  overflow-wrap: break-word;
+}
+
+.density-controls .less {
+  text-align: right;
+}
+
+.density-controls .more {
+  text-align: left;
 }
 
 /* GRIDS */
@@ -280,7 +303,7 @@ button[popovertarget="org-menu"] { anchor-name: --org-btn; }
     flex-direction: row;
     justify-content: space-between;
     align-items: flex-end;
-    padding: 0.5rem 2rem 0 1rem;
+    padding: 0 1rem;
   }
 
   .nav-list {
@@ -298,6 +321,12 @@ button[popovertarget="org-menu"] { anchor-name: --org-btn; }
 
   .dropdown > li > a {
     padding: 1rem 2rem;
+  }
+
+  .density-controls {
+    margin: 2rem 1rem;
+    justify-self: center;
+    padding: 1rem;
   }
 
   .objects-grid {
