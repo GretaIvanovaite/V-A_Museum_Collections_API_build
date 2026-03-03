@@ -22,13 +22,9 @@ async function fetchObjects() {
       const randomPage = getRandomPage();
       const url = `${API_BASE}/objects/search?has_image=1&page_size=${pageSize}&page=${randomPage}`;
       
-      // Use allorigins without /raw - returns {contents: "..."}
-      const proxiedUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
-      
       pagePromises.push(
-        fetch(proxiedUrl)
+        fetch(url)
           .then(res => res.json())
-          .then(data => JSON.parse(data.contents)) // Parse the contents field
       );
     }
 
