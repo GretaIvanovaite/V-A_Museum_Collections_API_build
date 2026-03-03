@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script src="assets/js/app.js" defer></script>
   <link rel="stylesheet" href="assets/css/layout.css">
   <link rel="stylesheet" href="assets/css/styles.css">
   <title>Home | Collections & Archives</title>
@@ -97,23 +96,10 @@
       <label for="density-slider">Fewer Objects</label>
       <input type="range" id="density-slider" min="1" max="3" value="2" step="1">
       <label for="density-slider">More Objects</label>
+      <p id="density-status" class="visually-hidden" aria-live="polite"></p>
     </section>
 
     <section class="objects-grid">
-      <article class="object-card">
-        <h3>Artifact Title</h3>
-        <div class="image-wrapper">
-          <picture>
-            <source srcset="object.avif" type="image/avif">
-            <img src="object.jpg" alt="Historical artifact" loading="lazy">
-          </picture>
-        </div>
-        <div class="hover-overlay">
-          <p><time datetime="1880">ca. 1880</time></p>
-          <p>Location Name</p>
-          <a href="/object-id" class="btn-detail">View Details</a>
-        </div>
-      </article>
     </section>
 
     <div class="pagination">
@@ -123,8 +109,12 @@
 
   <footer>
     <p>&copy; 2026 Collections & Archives</p>
+    <p>Data retrieved via Victoria and Albert Museum Collections API</p>
+    <p>This prototype is part of an Edge Hill University Undergraduate Research and Development project</p>
   </footer>
 
+  <script src="assets/js/app.js"></script>
+<!--
   <button type="button" class="chat-toggle" popovertarget="ai-chat" aria-label="Open support chat">
     Chat
   </button>
@@ -147,6 +137,6 @@
       </footer>
     </div>
   </dialog>
-
+-->
 </body>
 </html>
