@@ -57,234 +57,235 @@ select {
   font: inherit;
 }
 
-/* LAYOUT */
+@media (min-width: 0) {
+  /* LAYOUT */
 
-body {
-  display: flex;
-  flex-direction: column;
-  min-height: 100dvh;
-  margin: 0;
+  body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100dvh;
+    margin: 0;
+  }
+
+  main {
+    flex: 1;
+    width: 95%;
+    margin: 0 auto;
+  }
+
+  footer {
+    width: 100%;
+    padding: 2rem 5% 3rem;
+  }
+
+  #skip-link {
+    position: absolute;
+    left: -20rem;
+    padding: 0.5rem;
+  }
+
+  #skip-link:focus-visible {
+    position: absolute;
+    left: 1rem;
+    top: 1rem;
+  }
+
+  /* HEADER */
+
+  header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 1rem;
+  }
+
+  .nav-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .nav-list li {
+    min-width: 5rem;
+    width: fit-content;
+  }
+
+  .nav-list > li > a,
+  .nav-list > li > button {
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    padding: 0.75rem 0.5rem;
+  }
+
+  .nav-list button > * {
+    align-self: flex-end;
+    vertical-align: text-bottom;
+  }
+
+  object,
+  object * {
+    pointer-events: none;
+  }
+
+  /* DROPDOWNS */
+
+  button[popovertarget="coll-menu"] { anchor-name: --coll-btn; }
+  button[popovertarget="cat-menu"] { anchor-name: --cat-btn; }
+  button[popovertarget="mat-menu"] { anchor-name: --mat-btn; }
+  button[popovertarget="org-menu"] { anchor-name: --org-btn; }
+
+  #coll-menu { position-anchor: --coll-btn; }
+  #cat-menu { position-anchor: --cat-btn; }
+  #mat-menu { position-anchor: --mat-btn; }
+  #org-menu { position-anchor: --org-btn; }
+
+  .dropdown {
+    position: absolute;
+    top: anchor(bottom);
+    left: anchor(left);
+    min-width: 12rem;
+  }
+
+  .dropdown > li {
+    display: block;
+    width: 100%;
+  }
+
+  .dropdown > li > a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 0.75rem 1rem;
+  }
+
+  .density-controls {
+    margin: 0.5rem;
+    justify-self: center;
+    padding: 1rem;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    max-width: 90%;
+  }
+
+  .density-controls label {
+    max-width: 35%;
+    overflow-wrap: break-word;
+  }
+
+  .density-controls .less {
+    text-align: right;
+  }
+
+  .density-controls .more {
+    text-align: left;
+  }
+
+  /* GRIDS */
+
+  .objects-grid {
+    display: grid;
+    grid-template-columns: repeat(var(--grid-columns-default), 1fr);
+    grid-template-rows: masonry;
+    gap: 1rem;
+    padding: 1rem 0;
+  }
+
+  .objects-grid.compact {
+    grid-template-columns: repeat(var(--grid-columns-compact), 1fr);
+  }
+
+  .objects-grid.dense {
+    grid-template-columns: repeat(var(--grid-columns-dense), 1fr);
+  }
+
+  /* OBJECT CARD */
+
+  .object-card {
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem;
+    overflow: hidden;
+    transition: padding var(--transition-normal),
+                grid-column var(--transition-normal),
+                grid-row var(--transition-normal);
+  }
+
+  .object-card picture {
+    width: 100%;
+    transition: margin-bottom var(--transition-normal);
+  }
+
+  .object-card picture img {
+    width: 100%;
+    object-fit: cover;
+  }
+
+  .object-card h3,
+  .object-card .date,
+  .object-card .description,
+  .object-card dl {
+    display: none;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity var(--transition-slow) var(--transition-normal),
+                transform var(--transition-slow) var(--transition-normal);
+  }
+
+  .object-card:hover,
+  .object-card:focus-within {
+    grid-column: 1/ span 2;
+    grid-row: span 2;
+    padding: 1rem;
+  }
+
+  .object-card:hover picture,
+  .object-card:focus-within picture {
+    margin-bottom: 0.75rem;
+  }
+
+  .object-card:hover h3,
+  .object-card:focus-within h3 {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+    padding-top: 0;
+    margin-bottom: 0.25rem;
+    order: 1;
+  }
+
+  .object-card:hover .date,
+  .object-card:focus-within .date {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+    margin-bottom: 0.5rem;
+    order: 2;
+    transition-delay: 0.05s;
+  }
+
+  .object-card:hover .description,
+  .object-card:focus-within .description {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+    margin-bottom: 0.5rem;
+    order: 3;
+    transition-delay: 0.1s;
+  }
+
+  .object-card:hover dl,
+  .object-card:focus-within dl {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+    padding-top: 0;
+    order: 4;
+    transition-delay: 0.15s;
+  }
 }
-
-main {
-  flex: 1;
-  width: 95%;
-  margin: 0 auto;
-}
-
-footer {
-  width: 100%;
-  padding: 2rem 5% 3rem;
-}
-
-#skip-link {
-  position: absolute;
-  left: -20rem;
-  padding: 0.5rem;
-}
-
-#skip-link:focus-visible {
-  position: absolute;
-  left: 1rem;
-  top: 1rem;
-}
-
-/* HEADER */
-
-header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 0 1rem;
-}
-
-.nav-list {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.nav-list li {
-  min-width: 5rem;
-  width: fit-content;
-}
-
-.nav-list > li > a,
-.nav-list > li > button {
-  display: block;
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  padding: 0.75rem 0.5rem;
-}
-
-.nav-list button > * {
-  align-self: flex-end;
-  vertical-align: text-bottom;
-}
-
-object,
-object * {
-  pointer-events: none;
-}
-
-/* DROPDOWNS */
-
-button[popovertarget="coll-menu"] { anchor-name: --coll-btn; }
-button[popovertarget="cat-menu"] { anchor-name: --cat-btn; }
-button[popovertarget="mat-menu"] { anchor-name: --mat-btn; }
-button[popovertarget="org-menu"] { anchor-name: --org-btn; }
-
-#coll-menu { position-anchor: --coll-btn; }
-#cat-menu { position-anchor: --cat-btn; }
-#mat-menu { position-anchor: --mat-btn; }
-#org-menu { position-anchor: --org-btn; }
-
-.dropdown {
-  position: absolute;
-  top: anchor(bottom);
-  left: anchor(left);
-  min-width: 12rem;
-}
-
-.dropdown > li {
-  display: block;
-  width: 100%;
-}
-
-.dropdown > li > a {
-  display: block;
-  width: 100%;
-  height: 100%;
-  padding: 0.75rem 1rem;
-}
-
-.density-controls {
-  margin: 0.5rem;
-  justify-self: center;
-  padding: 1rem;
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  max-width: 90%;
-}
-
-.density-controls label {
-  max-width: 35%;
-  overflow-wrap: break-word;
-}
-
-.density-controls .less {
-  text-align: right;
-}
-
-.density-controls .more {
-  text-align: left;
-}
-
-/* GRIDS */
-
-.objects-grid {
-  display: grid;
-  grid-template-columns: repeat(var(--grid-columns-default), 1fr);
-  grid-template-rows: masonry;
-  gap: 1rem;
-  padding: 1rem 0;
-}
-
-.objects-grid.compact {
-  grid-template-columns: repeat(var(--grid-columns-compact), 1fr);
-}
-
-.objects-grid.dense {
-  grid-template-columns: repeat(var(--grid-columns-dense), 1fr);
-}
-
-/* OBJECT CARD */
-
-.object-card {
-  display: flex;
-  flex-direction: column;
-  padding: 0.5rem;
-  overflow: hidden;
-  transition: padding var(--transition-normal),
-              grid-column var(--transition-normal),
-              grid-row var(--transition-normal);
-}
-
-.object-card picture {
-  width: 100%;
-  transition: margin-bottom var(--transition-normal);
-}
-
-.object-card picture img {
-  width: 100%;
-  object-fit: cover;
-}
-
-.object-card h3,
-.object-card .date,
-.object-card .description,
-.object-card dl {
-  display: none;
-  opacity: 0;
-  transform: translateY(-10px);
-  transition: opacity var(--transition-slow) var(--transition-normal),
-              transform var(--transition-slow) var(--transition-normal);
-}
-
-.object-card:hover,
-.object-card:focus-within {
-  grid-column: span 2;
-  grid-row: span 2;
-  padding: 1rem;
-}
-
-.object-card:hover picture,
-.object-card:focus-within picture {
-  margin-bottom: 0.75rem;
-}
-
-.object-card:hover h3,
-.object-card:focus-within h3 {
-  display: block;
-  opacity: 1;
-  transform: translateY(0);
-  padding-top: 0;
-  margin-bottom: 0.25rem;
-  order: 1;
-}
-
-.object-card:hover .date,
-.object-card:focus-within .date {
-  display: block;
-  opacity: 1;
-  transform: translateY(0);
-  margin-bottom: 0.5rem;
-  order: 2;
-  transition-delay: 0.05s;
-}
-
-.object-card:hover .description,
-.object-card:focus-within .description {
-  display: block;
-  opacity: 1;
-  transform: translateY(0);
-  margin-bottom: 0.5rem;
-  order: 3;
-  transition-delay: 0.1s;
-}
-
-.object-card:hover dl,
-.object-card:focus-within dl {
-  display: block;
-  opacity: 1;
-  transform: translateY(0);
-  padding-top: 0;
-  order: 4;
-  transition-delay: 0.15s;
-}
-
 /* TABLET & DESKTOP */
 
 @media (min-width: 768px) {
