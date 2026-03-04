@@ -11,10 +11,6 @@ function getRandomPage() {
   return Math.floor(Math.random() * 100) + 1;
 }
 
-function getRandomNumber(min, max) {
-  return Math.floor(Math.random() * (max - min)) + min;
-}
-
 async function loadHomepage() {
   try {
     const pagePromises = [];
@@ -27,31 +23,31 @@ async function loadHomepage() {
     const results = await Promise.all(pagePromises);
     const allRecords = results.flatMap(data => data.records);
     
-    const selectedItems = [];
+    const selectedIds = [];
     const chunkSize = 12;
     
     for (let i = 0; i < allRecords.length; i += chunkSize) {
       const chunk = allRecords.slice(i, i + chunkSize);
       
-      let attempts = 0;
-      while (attempts < chunk.length) {
-        const randomIndex = getRandomNumber(0, chunk.length);
-        const item = chunk[randomIndex];
-        
-        if (item._primaryImageId) {
-          selectedItems.push(item);
+      for (let attempt = 0; attempt < 5; attempt++) {
+        const randomItem = chunk[Math.floor(Math.random() * chunk.length)];
+        if (randomItem?._primaryImageId) {
+          selectedIds.push(randomItem.systemNumber);
           break;
         }
-        attempts++;
       }
     }
 
-    console.log("Total items fetched:", allRecords.length);
-    console.log("Items selected:", selectedItems.length);
+    const detailPromises = selectedIds.map(id => 
+      fetch(`${API_BASE}/object/${id}`)
+        .then(res => res.json())
+        .then(data => data.record)
+    );
     
+    const detailedObjects = await Promise.all(detailPromises);
+
     grid.innerHTML = '';
-    
-    selectedItems.forEach(object => {
+    detailedObjects.forEach(object => {
       const card = createCard(object);
       grid.appendChild(card);
     });
@@ -66,9 +62,28 @@ function createCard(object) {
   article.className = 'object-card';
   
   const title = object._primaryTitle || object.objectType || 'Untitled';
-  const imageId = object._primaryImageId;
-  const imageUrl = `https://framemark.vam.ac.uk/collections/${imageId}/full/!800,800/0/default.jpg`;
+  const imageUrl = `https://framemark.vam.ac.uk/collections/${object._primaryImageId}/full/!800,800/0/default.jpg`;
   const date = object._primaryDate || 'Date unknown';
+  const maker = object._primaryMaker?.name || 'Maker unknown';
+  
+
+  let metadata = '';
+  
+  if (object.objectType) {
+    metadata += `<dt>Type</dt><dd>${object.objectType}</dd>`;
+  }
+  
+  if (object.collectionCode) {
+    metadata += `<dt>Collection</dt><dd>${object.collectionCode}</dd>`;
+  }
+  
+  if (object.categories?.[0]) {
+    metadata += `<dt>Category</dt><dd>${object.categories[0].text}</dd>`;
+  }
+  
+  if (object.placesOfOrigin?.[0]) {
+    metadata += `<dt>Origin</dt><dd>${object.placesOfOrigin[0].place.text}</dd>`;
+  }
   
   article.innerHTML = `
     <picture>
@@ -76,11 +91,8 @@ function createCard(object) {
     </picture>
     <h3>${title}</h3>
     <p class="date">${date}</p>
-    <p class="description">${object._primaryMaker?.name || 'Maker unknown'}</p>
-    <dl>
-      <dt>Type</dt>
-      <dd>${object.objectType || 'Unknown'}</dd>
-    </dl>
+    <p class="description">${maker}</p>
+    <dl>${metadata}</dl>
   `;
   
   return article;
