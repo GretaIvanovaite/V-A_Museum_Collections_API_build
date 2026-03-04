@@ -62,11 +62,15 @@ function createCard(object) {
   article.className = 'object-card';
   
   const title = object._primaryTitle || object.objectType || 'Untitled';
-  const imageUrl = `https://framemark.vam.ac.uk/collections/${object._primaryImageId}/full/!800,800/0/default.jpg`;
+  
+  // FIX: Get image ID from full object structure
+  const imageId = object._images?._primary_thumbnail || object._images?._iiif_image;
+  const imageUrl = `https://framemark.vam.ac.uk/collections/${imageId}/full/!800,800/0/default.jpg`;
+  
   const date = object._primaryDate || 'Date unknown';
   const maker = object._primaryMaker?.name || 'Maker unknown';
   
-
+  // Build metadata - only add if available
   let metadata = '';
   
   if (object.objectType) {
