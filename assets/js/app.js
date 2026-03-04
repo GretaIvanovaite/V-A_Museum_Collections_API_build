@@ -4,7 +4,7 @@ const loadBtn = document.querySelector(".btn-load");
 const slider = document.getElementById("density-slider");
 
 let pageSize = 100;
-let numPagesToFetch = 5; // Reduced from 10
+let numPagesToFetch = 10;
 
 function getRandomPage() {
   return Math.floor(Math.random() * 20) + 1;
@@ -17,7 +17,6 @@ function delay(ms) {
 
 async function loadHomepage() {
   try {
-    // Fetch pages ONE AT A TIME with delays
     const allRecords = [];
     for (let i = 0; i < numPagesToFetch; i++) {
       const randomPage = getRandomPage();
@@ -32,26 +31,18 @@ async function loadHomepage() {
       } catch (err) {
         console.warn(`Skipping page ${randomPage}`);
       }
-      
-      // Wait 1 second between requests (rate limit compliance)
-      if (i < numPagesToFetch - 1) {
-        await delay(1000);
-      }
     }
     
     console.log(`Fetched ${allRecords.length} total records`);
     
-    // Filter items with images
     const itemsWithImages = allRecords.filter(item => item._primaryImageId);
     
-    // Shuffle and take 40 (instead of 90 to reduce API calls)
     const shuffled = itemsWithImages.sort(() => Math.random() - 0.5);
     const selected = shuffled.slice(0, 40);
     const selectedIds = selected.map(item => item.systemNumber);
     
     console.log(`Selected ${selectedIds.length} objects`);
 
-    // Fetch details ONE AT A TIME with delays
     const detailedObjects = [];
     for (let i = 0; i < selectedIds.length; i++) {
       try {
@@ -61,14 +52,8 @@ async function loadHomepage() {
       } catch (err) {
         console.warn(`Failed to load object ${selectedIds[i]}`);
       }
-      
-      // Wait 1 second between requests
-      if (i < selectedIds.length - 1) {
-        await delay(1000);
-      }
     }
 
-    // Display cards
     grid.innerHTML = '';
     detailedObjects.forEach(object => {
       const card = createCard(object);
@@ -84,6 +69,7 @@ async function loadHomepage() {
 }
 
 function createCard(object) {
+  console.log(object);
   const article = document.createElement('article');
   article.className = 'object-card';
   
