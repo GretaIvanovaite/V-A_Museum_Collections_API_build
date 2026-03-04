@@ -1,0 +1,243 @@
+{
+  "summary": {
+    "objectsAnalyzed": 400,
+    "objectsWithOrigin": 347,
+    "percentageWithOrigin": "86.8",
+    "uniqueAssociations": 13
+  },
+  "associations": {
+    "made": {
+      "count": 193,
+      "id": "x28654",
+      "examples": [
+        {
+          "objectTitle": "Untitled",
+          "place": "great britain",
+          "systemNumber": "O938864"
+        },
+        {
+          "objectTitle": "Untitled",
+          "place": "england",
+          "systemNumber": "O777129"
+        },
+        {
+          "objectTitle": "Untitled",
+          "place": "italy",
+          "systemNumber": "O929697"
+        }
+      ]
+    },
+    "Printed and published": {
+      "count": 2,
+      "id": "x35383",
+      "examples": [
+        {
+          "objectTitle": "Oeuvres diverses de Lalonde décorateur et dessinateur",
+          "place": "Paris",
+          "systemNumber": "O748446"
+        },
+        {
+          "objectTitle": "Oeuvres diverses de Lalonde décorateur et dessinateur",
+          "place": "Paris",
+          "systemNumber": "O780849"
+        }
+      ]
+    },
+    "Published": {
+      "count": 4,
+      "id": "x30682",
+      "examples": [
+        {
+          "objectTitle": "A New Book of Chinese Designs Calculated to Improve the present Taste etc.",
+          "place": "London",
+          "systemNumber": "O853724"
+        },
+        {
+          "objectTitle": "A New Book of Chinese Designs Calculated to Improve the present Taste etc.",
+          "place": "London",
+          "systemNumber": "O853804"
+        },
+        {
+          "objectTitle": "A New Book Of Ornaments",
+          "place": "London",
+          "systemNumber": "O933982"
+        }
+      ]
+    },
+    "drawn": {
+      "count": 15,
+      "id": "x30545",
+      "examples": [
+        {
+          "objectTitle": "Untitled",
+          "place": "Europe",
+          "systemNumber": "O772800"
+        },
+        {
+          "objectTitle": "untitled",
+          "place": "York",
+          "systemNumber": "O782376"
+        },
+        {
+          "objectTitle": "India. Original Sketches made in the Years 1859-60-61-62.",
+          "place": "India",
+          "systemNumber": "O892440"
+        }
+      ]
+    },
+    "published": {
+      "count": 11,
+      "id": "x35383",
+      "examples": [
+        {
+          "objectTitle": "Études de Chevaux",
+          "place": "Nuremberg",
+          "systemNumber": "O938944"
+        },
+        {
+          "objectTitle": "Gallerie europäischer Städte, Nach der Natur gezeichnet, gestochen und herausgeben von J. G. F. Poppel und M. Kurz, Munich, 1845",
+          "place": "Munich",
+          "systemNumber": "O755267"
+        },
+        {
+          "objectTitle": "Voyage Pittoresque et Historique de l'Istrie et de la Dalmatie",
+          "place": "Paris",
+          "systemNumber": "O895256"
+        }
+      ]
+    },
+    "designed": {
+      "count": 6,
+      "id": "x29338",
+      "examples": [
+        {
+          "objectTitle": "Untitled",
+          "place": "England",
+          "systemNumber": "O801962"
+        },
+        {
+          "objectTitle": "Untitled",
+          "place": "England",
+          "systemNumber": "O801951"
+        },
+        {
+          "objectTitle": "Untitled",
+          "place": "England",
+          "systemNumber": "O801610"
+        }
+      ]
+    },
+    "manufactured": {
+      "count": 1,
+      "id": "x29350",
+      "examples": [
+        {
+          "objectTitle": "Wallpaper",
+          "place": "England",
+          "systemNumber": "O180468"
+        }
+      ]
+    },
+    "painted": {
+      "count": 3,
+      "id": "x30138",
+      "examples": [
+        {
+          "objectTitle": "Tehran with the Cusr Kayar",
+          "place": "Iran",
+          "systemNumber": "O152881"
+        },
+        {
+          "objectTitle": "Cavalry under Capt.[sic] Broadwood marching from Wady Halfa to Sarras.",
+          "place": "Sudan",
+          "systemNumber": "O146341"
+        },
+        {
+          "objectTitle": "Achimenis [sic] sp.",
+          "place": "Great Britain",
+          "systemNumber": "O88252"
+        }
+      ]
+    },
+    "printed": {
+      "count": 15,
+      "id": "x46159",
+      "examples": [
+        {
+          "objectTitle": "Nothing Was As It Seemed IV",
+          "place": "UK",
+          "systemNumber": "O1465245"
+        },
+        {
+          "objectTitle": "Souvenirs De La Commune Par Léonce Schérer",
+          "place": "Paris",
+          "systemNumber": "O1029306"
+        },
+        {
+          "objectTitle": "Les Folies De La Commune",
+          "place": "Paris",
+          "systemNumber": "O1029334"
+        }
+      ]
+    },
+    "worn": {
+      "count": 1,
+      "id": "x34724",
+      "examples": [
+        {
+          "objectTitle": "Untitled",
+          "place": "Lapland",
+          "systemNumber": "O136692"
+        }
+      ]
+    },
+    "issued": {
+      "count": 1,
+      "id": "x45592",
+      "examples": [
+        {
+          "objectTitle": "Keep Death off the Road",
+          "place": "Great Britain",
+          "systemNumber": "O1029862"
+        }
+      ]
+    },
+    "photographed": {
+      "count": 102,
+      "id": "x30151",
+      "examples": [
+        {
+          "objectTitle": "Capital from the Hall of the Ambassadors (detail with scale of 1 meter) (Alhambra)",
+          "place": "Granada",
+          "systemNumber": "O1065395"
+        },
+        {
+          "objectTitle": "Capital from the Hall of the Ambassadors (detail with scale of 1 meter) (Alhambra)",
+          "place": "Alhambra",
+          "systemNumber": "O1065395"
+        },
+        {
+          "objectTitle": "Portion of a wall in the Hall of the Ambassadors (Alhambra)",
+          "place": "Granada",
+          "systemNumber": "O1065398"
+        }
+      ]
+    },
+    "designed and printed": {
+      "count": 2,
+      "id": "x37573",
+      "examples": [
+        {
+          "objectTitle": "Vote For Me! Hungarian Democratic Forum",
+          "place": "Hungary",
+          "systemNumber": "O191114"
+        },
+        {
+          "objectTitle": "Dr. Victor Orbán",
+          "place": "Hungary",
+          "systemNumber": "O191129"
+        }
+      ]
+    }
+  }
+}
