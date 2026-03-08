@@ -53,7 +53,6 @@ const PLACES = {
   "united kingdom": "United Kingdom",
   "london": "London",
   "york": "York",
-  
   "europe": "Europe",
   "france": "France",
   "paris": "Paris",
@@ -67,14 +66,11 @@ const PLACES = {
   "spain": "Spain",
   "portugal": "Portugal",
   "hungary": "Hungary",
-  
   "iran": "Iran",
   "sudan": "Sudan",
-  
   "china": "China",
   "japan": "Japan",
   "india": "India",
-  
   "lapland": "Lapland",
   "granada": "Granada",
   "alhambra": "Alhambra"
@@ -95,7 +91,6 @@ const ASSOCIATIONS = {
   "designed and printed": "Designed and printed"
 };
 
-// Helper functions
 function normalizeCollection(code) {
   return COLLECTIONS[code] || code;
 }

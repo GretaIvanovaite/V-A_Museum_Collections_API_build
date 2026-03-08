@@ -1,19 +1,10 @@
 const API_BASE = "https://api.vam.ac.uk/v2";
-const grid = document.querySelector(".objects-grid");
-const loadBtn = document.querySelector(".btn-load");
+const grid = document.getElementById("objects-grid");
+const loadBtn = document.getElementById("load_more");
 const slider = document.getElementById("density-slider");
 
 let pageSize = 100;
 let numPagesToFetch = 10;
-
-function getRandomPage() {
-  return Math.floor(Math.random() * 20) + 1;
-}
-
-// Helper: delay function
-function delay(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
 
 async function loadHomepage() {
   try {
