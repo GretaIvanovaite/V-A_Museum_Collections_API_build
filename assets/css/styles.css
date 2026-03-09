@@ -169,7 +169,8 @@
     box-shadow: 0.4rem 0.4rem var(--color-shadow);
   }
 
-  .object-card .date {
+  .object-card .date,
+  .object-card .description {
     font-size: var(--font-size-small);
     color: var(--color-text-secondary);
     font-weight: var(--font-weight-regular);
