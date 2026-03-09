@@ -2,19 +2,6 @@ const API_BASE = "https://api.vam.ac.uk/v2";
 const grid = document.getElementById("objects-grid");
 
 async function loadHomepage() {
-  const res = await fetch(`${API_BASE}/objects/search?images_exist=1&page_size=1&page=1`);
-  const data = await res.json();
-  const item = data.records[0];
-
-  const detailRes = await fetch(`${API_BASE}/object/${item.systemNumber}`);
-  const detailData = await detailRes.json();
-  console.log(detailData);
-
-  grid.innerHTML = '';
-  grid.appendChild(createCard(detailData.record));
-}
-
-async function loadHomepage() {
   try {
 
     const res = await fetch(`${API_BASE}/objects/search?images_exist=1&page_size=6&page=1`);
@@ -40,7 +27,7 @@ function createCard(object) {
   const article = document.createElement('article');
   article.className = 'object-card';
 
-  const title = object.titles?.[0] || object.objectType || 'Untitled';
+  const title = object.titles?.[0]?.title || object.objectType || 'Untitled';
   const imageId = object.images?.[0];
   const date = object.productionDates?.[0]?.date?.text || 'Date unknown';
   const maker = object.artistMakerPerson?.[0]?.name?.text || 'Maker unknown';
