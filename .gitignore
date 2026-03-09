@@ -1,0 +1,12 @@
+Standards/
+api_analysis/
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# macOS (if ever opened on a Mac)
+.DS_Store
+
+# VSCode
+.vscode/

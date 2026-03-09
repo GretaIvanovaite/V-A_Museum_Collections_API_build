@@ -63,6 +63,7 @@ select {
   body {
     display: flex;
     flex-direction: column;
+    min-height: 100vh;
     min-height: 100dvh;
     margin: 0;
   }
@@ -131,21 +132,28 @@ select {
 
   /* DROPDOWNS */
 
-  button[popovertarget="coll-menu"] { anchor-name: --coll-btn; }
-  button[popovertarget="cat-menu"] { anchor-name: --cat-btn; }
-  button[popovertarget="mat-menu"] { anchor-name: --mat-btn; }
-  button[popovertarget="org-menu"] { anchor-name: --org-btn; }
-
-  #coll-menu { position-anchor: --coll-btn; }
-  #cat-menu { position-anchor: --cat-btn; }
-  #mat-menu { position-anchor: --mat-btn; }
-  #org-menu { position-anchor: --org-btn; }
-
   .dropdown {
     position: absolute;
-    top: anchor(bottom);
-    left: anchor(left);
+    top: 100%;
+    left: 0;
     min-width: 12rem;
+  }
+
+  @supports (anchor-name: --a) {
+    button[popovertarget="coll-menu"] { anchor-name: --coll-btn; }
+    button[popovertarget="cat-menu"] { anchor-name: --cat-btn; }
+    button[popovertarget="mat-menu"] { anchor-name: --mat-btn; }
+    button[popovertarget="org-menu"] { anchor-name: --org-btn; }
+
+    #coll-menu { position-anchor: --coll-btn; }
+    #cat-menu { position-anchor: --cat-btn; }
+    #mat-menu { position-anchor: --mat-btn; }
+    #org-menu { position-anchor: --org-btn; }
+
+    .dropdown {
+      top: anchor(bottom);
+      left: anchor(left);
+    }
   }
 
   .dropdown > li {
@@ -188,9 +196,14 @@ select {
   .objects-grid {
     display: grid;
     grid-template-columns: repeat(var(--grid-columns-default), 1fr);
-    grid-template-rows: masonry;
     gap: 1rem;
     padding: 1rem 0;
+  }
+
+  @supports (grid-template-rows: masonry) {
+    .objects-grid {
+      grid-template-rows: masonry;
+    }
   }
 
   .objects-grid.compact {
