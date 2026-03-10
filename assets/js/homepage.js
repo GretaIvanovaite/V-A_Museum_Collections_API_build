@@ -3,18 +3,14 @@ const grid = document.getElementById("objects-grid");
 
 async function loadHomepage() {
   try {
-
     const res = await fetch(`${API_BASE}/objects/search?images_exist=1&page_size=6&page=1`);
     const data = await res.json();
     
     grid.innerHTML = '';
 
-
     for (const item of data.records) {
       const detailRes = await fetch(`${API_BASE}/object/${item.systemNumber}`);
       const detailData = await detailRes.json();
-      
-
       grid.appendChild(createCard(detailData.record));
     }
   } catch (error) {
@@ -32,12 +28,10 @@ function createCard(object) {
   const date = object.productionDates?.[0]?.date?.text || 'Date unknown';
   const maker = object.artistMakerPerson?.[0]?.name?.text || 'Maker unknown';
 
-
   const baseUrl = `https://framemark.vam.ac.uk/collections/${imageId}/full`;
   const imgMobile = `${baseUrl}/!400,400/0/default.jpg`;
   const imgDesktop = `${baseUrl}/!800,800/0/default.jpg`;
   const imgLarge = `${baseUrl}/!1200,1200/0/default.jpg`;
-
 
   article.innerHTML = `
     <picture>
