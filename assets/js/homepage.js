@@ -9,78 +9,78 @@ const TIER_MAP = { 1: 20, 2: 30, 3: 40 };
 const GROUPS = [
   {
     name: 'Photography and media',
-    slug: 'photography',
+    class: 'photography',
     subcategories: [
-      { name: 'Photographs',        id: 'THES48910',  minTier: 20 },
-      { name: 'Posters',            id: 'THES252963', minTier: 20 },
-      { name: 'Prints',             id: 'THES48903',  minTier: 20 },
-      { name: 'Books',              id: 'THES48986',  minTier: 20 },
-      { name: 'Advertising',        id: 'THES49001',  minTier: 20 },
-      { name: 'Manuscripts',        id: 'THES48922',  minTier: 30 },
-      { name: 'Ephemera',           id: 'THES252985', minTier: 30 },
-      { name: 'Ornament prints',    id: 'THES49038',  minTier: 40 },
-      { name: 'The RPS Collection', id: 'THES281081', minTier: 40 },
-      { name: 'Albums',             id: 'THES288636', minTier: 40 },
+      {name: 'Photographs',        id: 'THES48910',  minTier: 20 },
+      {name: 'Posters',            id: 'THES252963', minTier: 20 },
+      {name: 'Prints',             id: 'THES48903',  minTier: 20 },
+      {name: 'Books',              id: 'THES48986',  minTier: 20 },
+      {name: 'Advertising',        id: 'THES49001',  minTier: 20 },
+      {name: 'Manuscripts',        id: 'THES48922',  minTier: 30 },
+      {name: 'Ephemera',           id: 'THES252985', minTier: 30 },
+      {name: 'Ornament prints',    id: 'THES49038',  minTier: 40 },
+      {name: 'The RPS Collection', id: 'THES281081', minTier: 40 },
+      {name: 'Albums',             id: 'THES288636', minTier: 40 },
     ]
   },
   {
     name: 'Art and design',
-    slug: 'art',
+    class: 'art',
     subcategories: [
-      { name: 'Paintings',              id: 'THES48917',  minTier: 20 },
-      { name: 'Portraits',              id: 'THES48906',  minTier: 20 },
-      { name: 'Drawings',               id: 'THES48966',  minTier: 20 },
-      { name: 'Sculpture',              id: 'THES48896',  minTier: 20 },
-      { name: 'Illustration',           id: 'THES48938',  minTier: 30 },
-      { name: 'Caricatures & Cartoons', id: 'THES48983',  minTier: 30 },
-      { name: 'Topography',             id: 'THES252988', minTier: 40 },
-      { name: 'Plaster Cast',           id: 'THES270451', minTier: 40 },
+      {name: 'Paintings',              id: 'THES48917',  minTier: 20 },
+      {name: 'Portraits',              id: 'THES48906',  minTier: 20 },
+      {name: 'Drawings',               id: 'THES48966',  minTier: 20 },
+      {name: 'Sculpture',              id: 'THES48896',  minTier: 20 },
+      {name: 'Illustration',           id: 'THES48938',  minTier: 30 },
+      {name: 'Caricatures & Cartoons', id: 'THES48983',  minTier: 30 },
+      {name: 'Topography',             id: 'THES252988', minTier: 40 },
+      {name: 'Plaster Cast',           id: 'THES270451', minTier: 40 },
     ]
   },
   {
     name: 'Fashion and textiles',
-    slug: 'fashion',
+    class: 'fashion',
     subcategories: [
-      { name: 'Fashion',       id: 'THES48957', minTier: 20 },
-      { name: 'Jewellery',     id: 'THES48930', minTier: 20 },
-      { name: 'Textiles',      id: 'THES48885', minTier: 20 },
-      { name: 'Accessories',   id: 'THES48998', minTier: 30 },
-      { name: 'Embroidery',    id: 'THES48960', minTier: 30 },
-      { name: 'Lace',          id: 'THES48926', minTier: 40 },
-      { name: "Men's clothes", id: 'THES49043', minTier: 40 },
+      {name: 'Fashion',       id: 'THES48957', minTier: 20 },
+      {name: 'Jewellery',     id: 'THES48930', minTier: 20 },
+      {name: 'Textiles',      id: 'THES48885', minTier: 20 },
+      {name: 'Accessories',   id: 'THES48998', minTier: 30 },
+      {name: 'Embroidery',    id: 'THES48960', minTier: 30 },
+      {name: 'Lace',          id: 'THES48926', minTier: 40 },
+      {name: "Men's clothes", id: 'THES49043', minTier: 40 },
     ]
   },
   {
     name: 'Applied art and crafts',
-    slug: 'applied-art',
+    class: 'applied-art',
     subcategories: [
-      { name: 'Ceramics',                id: 'THES48982',  minTier: 20 },
-      { name: 'Metalwork',               id: 'THES48920',  minTier: 20 },
-      { name: 'Glass',                   id: 'THES48946',  minTier: 20 },
-      { name: 'Arms & Armour',           id: 'THES48992',  minTier: 30 },
-      { name: 'V&A Wedgwood Collection', id: 'THES276060', minTier: 40 },
+      {name: 'Ceramics',                id: 'THES48982',  minTier: 20 },
+      {name: 'Metalwork',               id: 'THES48920',  minTier: 20 },
+      {name: 'Glass',                   id: 'THES48946',  minTier: 20 },
+      {name: 'Arms & Armour',           id: 'THES48992',  minTier: 30 },
+      {name: 'V&A Wedgwood Collection', id: 'THES276060', minTier: 40 },
     ]
   },
   {
     name: 'Performance and leisure',
-    slug: 'performance',
+    class: 'performance',
     subcategories: [
-      { name: 'Theatre',                 id: 'THES250537', minTier: 20 },
-      { name: 'Music',                   id: 'THES253065', minTier: 20 },
-      { name: 'Entertainment & Leisure', id: 'THES48959',  minTier: 20 },
-      { name: 'Games',                   id: 'THES48947',  minTier: 30 },
-      { name: 'Children & Childhood',    id: 'THES48980',  minTier: 30 },
-      { name: 'Fashion plates',          id: 'THES48956',  minTier: 40 },
+      {name: 'Theatre',                 id: 'THES250537', minTier: 20 },
+      {name: 'Music',                   id: 'THES253065', minTier: 20 },
+      {name: 'Entertainment & Leisure', id: 'THES48959',  minTier: 20 },
+      {name: 'Games',                   id: 'THES48947',  minTier: 30 },
+      {name: 'Children & Childhood',    id: 'THES48980',  minTier: 30 },
+      {name: 'Fashion plates',          id: 'THES48956',  minTier: 40 },
     ]
   },
   {
     name: 'Architecture and spaces',
-    slug: 'architecture',
+    class: 'architecture',
     subcategories: [
-      { name: 'Furniture',    id: 'THES48948', minTier: 20 },
-      { name: 'Architecture', id: 'THES48993', minTier: 20 },
-      { name: 'Interiors',    id: 'THES48933', minTier: 30 },
-      { name: 'Tiles',        id: 'THES48884', minTier: 40 },
+      {name: 'Furniture',    id: 'THES48948', minTier: 20 },
+      {name: 'Architecture', id: 'THES48993', minTier: 20 },
+      {name: 'Interiors',    id: 'THES48933', minTier: 30 },
+      {name: 'Tiles',        id: 'THES48884', minTier: 40 },
     ]
   },
 ];
@@ -95,10 +95,13 @@ const BATCH_DELAY = 150; // ms between batches
 
 async function fetchSubcategory(sub) {
   const res = await fetch(
-    `${API_BASE}/objects/search?id_category=${sub.id}&images_exist=1&page_size=1`
+    `${API_BASE}/objects/search?id_category=${sub.id}&images_exist=1&page_size=10`
   );
   const data = await res.json();
-  cache[sub.id] = data.records?.[0] || null;
+  const records = data.records || [];
+  cache[sub.id] = records.length
+    ? records[Math.floor(Math.random() * records.length)]
+    : null;
 }
 
 async function loadAllSubcategories() {
@@ -121,10 +124,10 @@ function extractYear(dateStr) {
   return match ? match[0] : '';
 }
 
-function createCard(record, groupSlug) {
+function createCard(record, groupClass) {
   const article = document.createElement('article');
-  article.className = `object-card group-${groupSlug}`;
-  article.dataset.group = groupSlug;
+  article.className = `object-card group-${groupClass}`;
+  article.dataset.group = groupClass;
   article.tabIndex = 0;
 
   const title = record._primaryTitle || record.objectType || 'Untitled';
@@ -223,7 +226,7 @@ function renderTier(tier) {
     const visibleSubs = group.subcategories.filter(sub => sub.minTier <= tier);
     for (const sub of visibleSubs) {
       const record = cache[sub.id];
-      if (record) grid.appendChild(createCard(record, group.slug));
+      if (record) grid.appendChild(createCard(record, group.class));
     }
   }
 }
