@@ -304,12 +304,6 @@ select {
     transition-delay: 0.15s;
   }
 
-  /* MOBILE FIX: Right column expands LEFT */
-  .objects-grid .object-card:nth-child(2n):hover,
-  .objects-grid .object-card:nth-child(2n):focus-within {
-    grid-column: 1 / 3;
-    transform-origin: top right;
-  }
 }
 
 /* TABLET & DESKTOP */
@@ -432,58 +426,6 @@ select {
     margin-bottom: 0.25rem;
   }
 
-  /* 3-COLUMN FIX: Col 1→RIGHT, Cols 2-3→LEFT */
-  .objects-grid .object-card:nth-child(3n+1):hover,
-  .objects-grid .object-card:nth-child(3n+1):focus-within {
-    grid-column: span 2;
-    transform-origin: top left;
-  }
-
-  .objects-grid .object-card:nth-child(3n+2):hover,
-  .objects-grid .object-card:nth-child(3n+2):focus-within {
-    grid-column: 1 / 3;
-    transform-origin: top right;
-  }
-
-  .objects-grid .object-card:nth-child(3n):hover,
-  .objects-grid .object-card:nth-child(3n):focus-within {
-    grid-column: 2 / 4;
-    transform-origin: top right;
-  }
-
-  /* COMPACT 2-COLUMN FIX */
-  .objects-grid.compact .object-card:nth-child(2n+1):hover,
-  .objects-grid.compact .object-card:nth-child(2n+1):focus-within {
-    grid-column: span 2;
-    transform-origin: top left;
-  }
-
-  .objects-grid.compact .object-card:nth-child(2n):hover,
-  .objects-grid.compact .object-card:nth-child(2n):focus-within {
-    grid-column: 1 / 3;
-    transform-origin: top right;
-  }
-
-  /* DENSE 4-COLUMN FIX: Cols 1-2→RIGHT, Cols 3-4→LEFT */
-  .objects-grid.dense .object-card:nth-child(4n+1):hover,
-  .objects-grid.dense .object-card:nth-child(4n+1):focus-within,
-  .objects-grid.dense .object-card:nth-child(4n+2):hover,
-  .objects-grid.dense .object-card:nth-child(4n+2):focus-within {
-    grid-column: span 2;
-    transform-origin: top left;
-  }
-
-  .objects-grid.dense .object-card:nth-child(4n+3):hover,
-  .objects-grid.dense .object-card:nth-child(4n+3):focus-within {
-    grid-column: 2 / 4;
-    transform-origin: top right;
-  }
-
-  .objects-grid.dense .object-card:nth-child(4n):hover,
-  .objects-grid.dense .object-card:nth-child(4n):focus-within {
-    grid-column: 3 / 5;
-    transform-origin: top right;
-  }
 
   #skip-link:focus-visible {
     left: 10rem;
@@ -498,90 +440,4 @@ select {
     --grid-columns-browse: 4;
   }
 
-  /* 6-COLUMN FIX: Cols 1-3→RIGHT, Cols 4-6→LEFT */
-  .objects-grid .object-card:nth-child(6n+1):hover,
-  .objects-grid .object-card:nth-child(6n+1):focus-within,
-  .objects-grid .object-card:nth-child(6n+2):hover,
-  .objects-grid .object-card:nth-child(6n+2):focus-within,
-  .objects-grid .object-card:nth-child(6n+3):hover,
-  .objects-grid .object-card:nth-child(6n+3):focus-within {
-    grid-column: span 2;
-    transform-origin: top left;
-  }
-
-  .objects-grid .object-card:nth-child(6n+4):hover,
-  .objects-grid .object-card:nth-child(6n+4):focus-within {
-    grid-column: 3 / 5;
-    transform-origin: top right;
-  }
-
-  .objects-grid .object-card:nth-child(6n+5):hover,
-  .objects-grid .object-card:nth-child(6n+5):focus-within {
-    grid-column: 4 / 6;
-    transform-origin: top right;
-  }
-
-  .objects-grid .object-card:nth-child(6n):hover,
-  .objects-grid .object-card:nth-child(6n):focus-within {
-    grid-column: 5 / 7;
-    transform-origin: top right;
-  }
-
-  /* COMPACT 4-COLUMN FIX: Cols 1-2→RIGHT, Cols 3-4→LEFT */
-  .objects-grid.compact .object-card:nth-child(4n+1):hover,
-  .objects-grid.compact .object-card:nth-child(4n+1):focus-within,
-  .objects-grid.compact .object-card:nth-child(4n+2):hover,
-  .objects-grid.compact .object-card:nth-child(4n+2):focus-within {
-    grid-column: span 2;
-    transform-origin: top left;
-  }
-
-  .objects-grid.compact .object-card:nth-child(4n+3):hover,
-  .objects-grid.compact .object-card:nth-child(4n+3):focus-within {
-    grid-column: 2 / 4;
-    transform-origin: top right;
-  }
-
-  .objects-grid.compact .object-card:nth-child(4n):hover,
-  .objects-grid.compact .object-card:nth-child(4n):focus-within {
-    grid-column: 3 / 5;
-    transform-origin: top right;
-  }
-
-  /* DENSE 8-COLUMN FIX: Cols 1-4→RIGHT, Cols 5-8→LEFT */
-  .objects-grid.dense .object-card:nth-child(8n+1):hover,
-  .objects-grid.dense .object-card:nth-child(8n+1):focus-within,
-  .objects-grid.dense .object-card:nth-child(8n+2):hover,
-  .objects-grid.dense .object-card:nth-child(8n+2):focus-within,
-  .objects-grid.dense .object-card:nth-child(8n+3):hover,
-  .objects-grid.dense .object-card:nth-child(8n+3):focus-within,
-  .objects-grid.dense .object-card:nth-child(8n+4):hover,
-  .objects-grid.dense .object-card:nth-child(8n+4):focus-within {
-    grid-column: span 2;
-    transform-origin: top left;
-  }
-
-  .objects-grid.dense .object-card:nth-child(8n+5):hover,
-  .objects-grid.dense .object-card:nth-child(8n+5):focus-within {
-    grid-column: 4 / 6;
-    transform-origin: top right;
-  }
-
-  .objects-grid.dense .object-card:nth-child(8n+6):hover,
-  .objects-grid.dense .object-card:nth-child(8n+6):focus-within {
-    grid-column: 5 / 7;
-    transform-origin: top right;
-  }
-
-  .objects-grid.dense .object-card:nth-child(8n+7):hover,
-  .objects-grid.dense .object-card:nth-child(8n+7):focus-within {
-    grid-column: 6 / 8;
-    transform-origin: top right;
-  }
-
-  .objects-grid.dense .object-card:nth-child(8n):hover,
-  .objects-grid.dense .object-card:nth-child(8n):focus-within {
-    grid-column: 7 / 9;
-    transform-origin: top right;
-  }
 }
