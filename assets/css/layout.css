@@ -243,10 +243,6 @@ select {
   .object-card .description,
   .object-card dl {
     display: none;
-    opacity: 0;
-    transform: translateY(-10px);
-    transition: opacity var(--transition-slow) var(--transition-normal),
-                transform var(--transition-slow) var(--transition-normal);
   }
 
   .object-card:hover,

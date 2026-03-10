@@ -163,9 +163,8 @@ function createCard(record, groupClass) {
     </dl>
     <section class="description">
       <p class="date">${date ? `<time datetime="${year}">${date}</time>` : 'Date unknown'}</p>
-      ${maker ? `<p class="creator">${maker}${association ? ` (${association})` : ''}</p>` : ''}
+      ${maker ? `<p class="creator">${association ? `${association}: ` : ''}${maker}</p>` : ''}
       <p class="detail-text"></p>
-      <a href="details.html?id=${record.systemNumber}" class="btn-details">View Details</a>
     </section>
   `;
 

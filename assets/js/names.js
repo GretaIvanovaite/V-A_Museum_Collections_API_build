@@ -217,6 +217,7 @@ const ASSOCIATIONS = {
   "illustrated": "Illustrated",
   "sculpted": "Sculpted",
   "patented": "Patented",
+  "issued by": "Issued by",
 
   // Compound forms
   "designed and made": "Designed and made",
