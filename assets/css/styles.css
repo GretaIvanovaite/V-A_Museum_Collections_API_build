@@ -179,13 +179,13 @@
   .object-card dt {
     font-size: var(--font-size-small);
     font-weight: var(--font-weight-bold);
-    justify-self: left;
   }
 
   .object-card dd {
     font-size: var(--font-size-small);
     font-weight: var(--font-weight-regular);
-    text-align: right;
+    padding-left: 1rem;
+    margin-left: 0;
   }
 
   .object-card picture img {
