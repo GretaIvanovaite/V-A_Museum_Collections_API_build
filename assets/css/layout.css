@@ -307,7 +307,7 @@ select {
   /* MOBILE FIX: Right column expands LEFT */
   .objects-grid .object-card:nth-child(2n):hover,
   .objects-grid .object-card:nth-child(2n):focus-within {
-    grid-column: auto / span 2;
+    grid-column: 1 / 3;
     transform-origin: top right;
   }
 }
@@ -440,10 +440,14 @@ select {
   }
 
   .objects-grid .object-card:nth-child(3n+2):hover,
-  .objects-grid .object-card:nth-child(3n+2):focus-within,
+  .objects-grid .object-card:nth-child(3n+2):focus-within {
+    grid-column: 1 / 3;
+    transform-origin: top right;
+  }
+
   .objects-grid .object-card:nth-child(3n):hover,
   .objects-grid .object-card:nth-child(3n):focus-within {
-    grid-column: auto / span 2;
+    grid-column: 2 / 4;
     transform-origin: top right;
   }
 
@@ -456,7 +460,7 @@ select {
 
   .objects-grid.compact .object-card:nth-child(2n):hover,
   .objects-grid.compact .object-card:nth-child(2n):focus-within {
-    grid-column: auto / span 2;
+    grid-column: 1 / 3;
     transform-origin: top right;
   }
 
@@ -470,10 +474,14 @@ select {
   }
 
   .objects-grid.dense .object-card:nth-child(4n+3):hover,
-  .objects-grid.dense .object-card:nth-child(4n+3):focus-within,
+  .objects-grid.dense .object-card:nth-child(4n+3):focus-within {
+    grid-column: 2 / 4;
+    transform-origin: top right;
+  }
+
   .objects-grid.dense .object-card:nth-child(4n):hover,
   .objects-grid.dense .object-card:nth-child(4n):focus-within {
-    grid-column: auto / span 2;
+    grid-column: 3 / 5;
     transform-origin: top right;
   }
 
@@ -502,12 +510,20 @@ select {
   }
 
   .objects-grid .object-card:nth-child(6n+4):hover,
-  .objects-grid .object-card:nth-child(6n+4):focus-within,
+  .objects-grid .object-card:nth-child(6n+4):focus-within {
+    grid-column: 3 / 5;
+    transform-origin: top right;
+  }
+
   .objects-grid .object-card:nth-child(6n+5):hover,
-  .objects-grid .object-card:nth-child(6n+5):focus-within,
+  .objects-grid .object-card:nth-child(6n+5):focus-within {
+    grid-column: 4 / 6;
+    transform-origin: top right;
+  }
+
   .objects-grid .object-card:nth-child(6n):hover,
   .objects-grid .object-card:nth-child(6n):focus-within {
-    grid-column: auto / span 2;
+    grid-column: 5 / 7;
     transform-origin: top right;
   }
 
@@ -521,10 +537,14 @@ select {
   }
 
   .objects-grid.compact .object-card:nth-child(4n+3):hover,
-  .objects-grid.compact .object-card:nth-child(4n+3):focus-within,
+  .objects-grid.compact .object-card:nth-child(4n+3):focus-within {
+    grid-column: 2 / 4;
+    transform-origin: top right;
+  }
+
   .objects-grid.compact .object-card:nth-child(4n):hover,
   .objects-grid.compact .object-card:nth-child(4n):focus-within {
-    grid-column: auto / span 2;
+    grid-column: 3 / 5;
     transform-origin: top right;
   }
 
@@ -542,14 +562,26 @@ select {
   }
 
   .objects-grid.dense .object-card:nth-child(8n+5):hover,
-  .objects-grid.dense .object-card:nth-child(8n+5):focus-within,
+  .objects-grid.dense .object-card:nth-child(8n+5):focus-within {
+    grid-column: 4 / 6;
+    transform-origin: top right;
+  }
+
   .objects-grid.dense .object-card:nth-child(8n+6):hover,
-  .objects-grid.dense .object-card:nth-child(8n+6):focus-within,
+  .objects-grid.dense .object-card:nth-child(8n+6):focus-within {
+    grid-column: 5 / 7;
+    transform-origin: top right;
+  }
+
   .objects-grid.dense .object-card:nth-child(8n+7):hover,
-  .objects-grid.dense .object-card:nth-child(8n+7):focus-within,
+  .objects-grid.dense .object-card:nth-child(8n+7):focus-within {
+    grid-column: 6 / 8;
+    transform-origin: top right;
+  }
+
   .objects-grid.dense .object-card:nth-child(8n):hover,
   .objects-grid.dense .object-card:nth-child(8n):focus-within {
-    grid-column: auto / span 2;
+    grid-column: 7 / 9;
     transform-origin: top right;
   }
 }
