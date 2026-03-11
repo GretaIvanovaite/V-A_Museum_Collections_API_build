@@ -242,7 +242,6 @@ select {
   .object-card .creator a {
     position: relative;
     z-index: 1;
-    padding: var(--padding-tag);
   }
 
   .object-card picture {
@@ -252,6 +251,21 @@ select {
   .object-card picture img {
     width: 100%;
     object-fit: cover;
+  }
+
+  .object-card dl {
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: var(--space-xs);
+  }
+
+  .object-card dt,
+  .object-card hr {
+    flex-basis: 100%;
+  }
+
+  .object-card dd {
+    flex: 0 0 auto;
   }
 
   .object-card h3,
@@ -303,7 +317,7 @@ select {
 
   .object-card:hover dl,
   .object-card:focus-within dl {
-    display: block;
+    display: flex;
     opacity: 1;
     order: 4;
   }
@@ -384,10 +398,6 @@ select {
     object-fit: contain;
   }
 
-  .object-card dd {
-    padding: var(--space-xs);
-  }
-
   /* Desktop hover*/
   .object-card:hover,
   .object-card:focus-within {
@@ -458,4 +468,12 @@ select {
     --grid-columns-browse: 4;
   }
 
+}
+
+/* META LINK */
+
+.meta-link {
+  display: inline-block;
+  text-wrap: balance;
+  padding: var(--padding-tag);
 }

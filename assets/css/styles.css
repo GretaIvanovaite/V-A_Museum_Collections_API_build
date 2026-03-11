@@ -242,8 +242,6 @@
 /* ── Metadata & creator links (pill style from design standards) ── */
 
 .meta-link {
-  display: inline-block;
-  text-wrap: balance;
   background-color: var(--color-bg-link);
   border: var(--border-width-standard) solid var(--color-primary-teal);
   color: var(--color-primary-teal-hover);
