@@ -13,6 +13,9 @@
   --z-modal-backdrop: 900;
   --z-modal: 1000;
   --z-chat-button: 1100;
+
+    /* Tag / Pill Padding */
+  --padding-tag: 0.5rem 1rem;
 }
 
 /* RESET */
@@ -239,6 +242,7 @@ select {
   .object-card .creator a {
     position: relative;
     z-index: 1;
+    padding: var(--padding-tag);
   }
 
   .object-card picture {

@@ -69,9 +69,6 @@
   --border-width-thin: 1px;
   --border-width-standard: 2px;
 
-  /* Tag / Pill Padding */
-  --padding-tag: 0.2rem 0.6rem;
-
   /* Line Heights (unitless) */
   --line-height-tag: 1.4;
 
@@ -88,21 +85,11 @@
   --width-content: 95%;
   --width-content-md: 90%;
 
-  /* Transition Delays */
-  --delay-1: 0.05s;
-  --delay-2: 0.1s;
-  --delay-3: 0.15s;
-
   /* Shadows */
   --shadow-card: 0px 4px 4px 0px var(--color-shadow);
   --shadow-hover: 0px 6px 12px 0px rgba(31, 38, 50, 0.18);
   --shadow-offset: 0.2rem 0.2rem var(--color-shadow);
   --shadow-offset-hover: 0.4rem 0.4rem var(--color-shadow);
-  
-  /* Transitions */
-  --transition-fast: 0.15s ease;
-  --transition-normal: 0.3s ease;
-  --transition-slow: 0.5s ease;
 }
 
 @media (min-width: 0) {
@@ -132,7 +119,6 @@
     background-color: var(--color-primary-teal-hover);
     outline: none;
     border-radius: var(--radius-s);
-    transition: background-color var(--transition-fast);
   }
 
   #skip-link {
@@ -189,8 +175,6 @@
     border-radius: var(--radius-m);
     background-color: var(--color-bg-card);
     box-shadow: var(--shadow-offset);
-    transition: box-shadow var(--transition-normal), 
-                background-color var(--transition-normal);
   }
 
   .object-card:hover,
@@ -216,8 +200,6 @@
     font-size: var(--font-size-small);
     font-weight: var(--font-weight-regular);
     color: var(--color-text-secondary);
-    padding-left: var(--space-l);
-    margin-left: 0;
   }
 
   .object-card picture img {
@@ -266,11 +248,8 @@
   border: var(--border-width-standard) solid var(--color-primary-teal);
   color: var(--color-primary-teal-hover);
   border-radius: var(--radius-pill);
-  padding: var(--padding-tag);
   text-decoration: none;
   line-height: var(--line-height-tag);
-  transition: background-color var(--transition-fast),
-              border-color var(--transition-fast);
 }
 
 .meta-link:hover,
