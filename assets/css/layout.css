@@ -224,9 +224,6 @@ select {
     overflow: visible;
     width: fit-content;
     height: fit-content;
-    transition: padding var(--transition-normal),
-                grid-column var(--transition-normal),
-                grid-row var(--transition-normal);
   }
 
   /* Stretched link: h3 <a> expands to cover the whole card */
@@ -246,7 +243,6 @@ select {
 
   .object-card picture {
     width: 100%;
-    transition: margin-bottom var(--transition-normal);
   }
 
   .object-card picture img {
@@ -280,7 +276,6 @@ select {
   .object-card:focus-within h3 {
     display: block;
     opacity: 1;
-    transform: translateY(0);
     padding-top: 0;
     margin-bottom: var(--space-xs);
     order: 1;
@@ -290,30 +285,23 @@ select {
   .object-card:focus-within .date {
     display: block;
     opacity: 1;
-    transform: translateY(0);
     margin-bottom: var(--space-xs);
     order: 2;
-    transition-delay: var(--delay-1);
   }
 
   .object-card:hover .description,
   .object-card:focus-within .description {
     display: block;
     opacity: 1;
-    transform: translateY(0);
     margin-bottom: var(--space-xs);
     order: 3;
-    transition-delay: var(--delay-2);
   }
 
   .object-card:hover dl,
   .object-card:focus-within dl {
     display: block;
     opacity: 1;
-    transform: translateY(0);
-    padding-top: 0;
     order: 4;
-    transition-delay: var(--delay-3);
   }
 
 }
@@ -392,7 +380,11 @@ select {
     object-fit: contain;
   }
 
-  /* Desktop hover: 2-column layout */
+  .object-card dd {
+    padding: var(--space-xs);
+  }
+
+  /* Desktop hover*/
   .object-card:hover,
   .object-card:focus-within {
     grid-template-columns: repeat(2, minmax(0, 1fr));

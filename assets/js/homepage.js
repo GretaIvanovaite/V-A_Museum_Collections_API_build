@@ -118,6 +118,22 @@ async function loadAllSubcategories() {
   }
 }
 
+// If text is longer than 18 chars, inserts a <br> at the word boundary closest
+// to the middle so the pill border wraps tightly around both lines.
+// Screen readers ignore <br> inside <a>, so this does not affect accessibility.
+function breakLongLabel(text) {
+  if (text.length <= 18) return text;
+  const mid = Math.floor(text.length / 2);
+  const before = text.lastIndexOf(' ', mid);
+  const after = text.indexOf(' ', mid);
+  let breakAt;
+  if (before === -1) breakAt = after;
+  else if (after === -1) breakAt = before;
+  else breakAt = (mid - before <= after - mid) ? before : after;
+  if (breakAt === -1) return text;
+  return text.slice(0, breakAt) + '<br>' + text.slice(breakAt + 1);
+}
+
 // Extracts the first 4-digit year from a date string for <time datetime>
 function extractYear(dateStr) {
   const match = dateStr?.match(/\d{4}/);
@@ -183,7 +199,7 @@ function createCard(record, groupClass) {
       if (collection) {
         const collId = collectionCode?.id;
         const collLink = collId
-          ? `<a href="browse/collections/property.html?id=${collId}" class="meta-link">${collection}</a>`
+          ? `<a href="browse/collections/property.html?id=${collId}" class="meta-link">${breakLongLabel(collection)}</a>`
           : collection;
         dlContent += `<dt>Collection</dt><dd>${collLink}</dd><hr aria-hidden="true">`;
       }
@@ -194,7 +210,7 @@ function createCard(record, groupClass) {
         dlContent += categories.map(c => {
           const label = normalizeCategory(c.text || c.name || '');
           return c.id
-            ? `<dd><a href="browse/categories/property.html?id=${c.id}" class="meta-link">${label}</a></dd>`
+            ? `<dd><a href="browse/categories/property.html?id=${c.id}" class="meta-link">${breakLongLabel(label)}</a></dd>`
             : `<dd>${label}</dd>`;
         }).join('');
         if (place) dlContent += `<hr aria-hidden="true">`;
@@ -204,7 +220,7 @@ function createCard(record, groupClass) {
         const placeId = detail.placesOfOrigin?.[0]?.place?.id;
         const placeLabel = normalizePlace(place);
         const placeLink = placeId
-          ? `<a href="browse/origins/property.html?id=${placeId}" class="meta-link">${placeLabel}</a>`
+          ? `<a href="browse/origins/property.html?id=${placeId}" class="meta-link">${breakLongLabel(placeLabel)}</a>`
           : placeLabel;
         dlContent += `<dt>Origin</dt><dd>${placeLink}</dd>`;
       }
