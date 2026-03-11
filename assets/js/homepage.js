@@ -125,10 +125,10 @@ function extractYear(dateStr) {
 }
 
 function createCard(record, groupClass) {
-  const article = document.createElement('article');
+  const article = document.createElement('a');
   article.className = `object-card group-${groupClass}`;
   article.dataset.group = groupClass;
-  article.tabIndex = 0;
+  article.href = `details.html?id=${record.systemNumber}`;
 
   const title = record._primaryTitle || record.objectType || 'Untitled';
   const imageId = record._primaryImageId;
