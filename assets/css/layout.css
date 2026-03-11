@@ -219,6 +219,7 @@ select {
   .object-card {
     display: flex;
     flex-direction: column;
+    position: relative;
     padding: 0.5rem;
     overflow: visible;
     width: fit-content;
@@ -226,6 +227,21 @@ select {
     transition: padding var(--transition-normal),
                 grid-column var(--transition-normal),
                 grid-row var(--transition-normal);
+  }
+
+  /* Stretched link: h3 <a> expands to cover the whole card */
+  .object-card h3 .card-link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  /* Metadata and creator links sit above the stretched link */
+  .object-card .meta-link,
+  .object-card .creator a {
+    position: relative;
+    z-index: 1;
   }
 
   .object-card picture {
@@ -357,6 +373,7 @@ select {
     align-items: stretch;
     align-self: center;
     container-type: inline-size;
+    position: relative;
     padding: 1rem;
     width: auto;
     height: fit-content;

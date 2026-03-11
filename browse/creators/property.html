@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="../../assets/js/app.js" defer></script>
+  <link rel="stylesheet" href="../../assets/css/layout.css">
+  <link rel="stylesheet" href="../../assets/css/styles.css">
+  <title>Selected Property | Collections & Archives</title>
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+  <header class="site-header">
+    <div class="logo">
+      <img src="../../images/Logo.png" alt="Collections & Archives Logo" width="167" height="88">
+    </div>
+
+    <nav aria-label="Main navigation">
+      <ul class="nav-list">
+        <li><a href="../../index.html">Home</a></li>
+        <li><a href="../../browse.html">Browse</a></li>
+        
+        <li>
+          <button type="button" popovertarget="coll-menu" anchor-name="--coll-btn">Collections</button>
+          <ul id="coll-menu" popover class="dropdown" style="position-anchor: --coll-btn;">
+            <li><a href="../collections/property.html?id=THES48595">Prints, Drawings & Paintings</a></li>
+            <li><a href="../collections/property.html?id=THES48602">Theatre and Performance</a></li>
+            <li><a href="../collections/property.html?id=THES48601">Textiles and Fashion</a></li>
+            <li><a href="../collections/property.html?id=THES48596">East Asia</a></li>
+            <li><a href="../collections/property.html?id=THES48594">Ceramics</a></li>
+            <li><hr aria-hidden="true"></li>
+            <li><a href="../collections/all.html">See all collections</a></li>
+          </ul>
+        </li>
+
+        <li>
+          <button type="button" popovertarget="cat-menu" anchor-name="--cat-btn">Categories</button>
+          <ul id="cat-menu" popover class="dropdown" style="position-anchor: --cat-btn;">
+            <li><a href="../categories/property.html?id=THES48903">Prints</a></li>
+            <li><a href="../categories/property.html?id=THES48968">Designs</a></li>
+            <li><a href="../categories/property.html?id=THES48966">Drawings</a></li>
+            <li><a href="../categories/property.html?id=THES48910">Photographs</a></li>
+            <li><a href="../categories/property.html?id=THES48885">Textiles</a></li>
+            <li><hr aria-hidden="true"></li>
+            <li><a href="../categories/all.html">See all categories</a></li>
+          </ul>
+        </li>
+
+        <li>
+          <button type="button" popovertarget="mat-menu" anchor-name="--mat-btn">Materials</button>
+          <ul id="mat-menu" popover class="dropdown" style="position-anchor: --mat-btn;">
+            <li><a href="../materials/property.html?id=x30308">Paper</a></li>
+            <li><a href="../materials/property.html?id=x30347">Pencil</a></li>
+            <li><a href="../materials/property.html?id=AAT15012">Ink</a></li>
+            <li><a href="../materials/property.html?id=AAT14190">Photographic paper</a></li>
+            <li><a href="../materials/property.html?id=AAT187371">Printing ink</a></li>
+            <li><hr aria-hidden="true"></li>
+            <li><a href="../materials/all.html">See all materials</a></li>
+          </ul>
+        </li>
+
+        <li>
+          <button type="button" popovertarget="org-menu" anchor-name="--org-btn">Origins</button>
+          <ul id="org-menu" popover class="dropdown" style="position-anchor: --org-btn;">
+            <li><a href="../origins/property.html?id=x32019">Great Britain</a></li>
+            <li><a href="../origins/property.html?id=x28980">London</a></li>
+            <li><a href="../origins/property.html?id=x28826">England</a></li>
+            <li><a href="../origins/property.html?id=x29399">Japan</a></li>
+            <li><a href="../origins/property.html?id=x29068">Paris</a></li>
+            <li><hr aria-hidden="true"></li>
+            <li><a href="../origins/all.html">See all origins</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <nav aria-label="Breadcrumb" class="breadcrumb-nav">
+    <ol>
+      <li><a href="../../index.html">Home</a></li>
+      <li><a href="../../browse.html">Browse</a></li>
+      <li><a href="all.html" id="breadcrumb-parent">Origin</a></li>
+      <li id="breadcrumb-current" aria-current="page">Loading Filter...</li>
+    </ol>
+  </nav>
+
+  <main id="main-content">
+    <h1 id="page-title">Loading Results...</h1>
+    
+    <section class="objects-grid" id="api-grid">
+        
+    </section>
+
+    <div class="pagination">
+      <button type="button" class="btn-load">Load More</button>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Collections & Archives</p>
+  </footer>
+
+  <button type="button" class="chat-toggle" popovertarget="ai-chat">Chat</button>
+
+  <dialog id="ai-chat" popover="manual" class="chat-overlay">
+    <div class="chat-container">
+      <header class="chat-header">
+        <h2>Ask about this object</h2>
+        <button type="button" popovertarget="ai-chat" popovertargetaction="hide">&times;</button>
+      </header>
+      <section class="messages-area" role="log" aria-live="polite">
+        <div class="message system"><p>Welcome! I can help you explore the archive.</p></div>
+      </section>
+      <footer class="input-area">
+        <form method="dialog" class="chat-form">
+          <input type="text" placeholder="Ask a question..." required autofocus>
+          <button type="submit">Send</button>
+        </form>
+      </footer>
+    </div>
+  </dialog>
+
+</body>
+</html>

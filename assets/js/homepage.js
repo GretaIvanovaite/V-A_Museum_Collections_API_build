@@ -125,28 +125,22 @@ function extractYear(dateStr) {
 }
 
 function createCard(record, groupClass) {
-  const article = document.createElement('a');
+  const article = document.createElement('article');
   article.className = `object-card group-${groupClass}`;
   article.dataset.group = groupClass;
-  article.href = `details.html?id=${record.systemNumber}`;
 
   const title = record._primaryTitle || record.objectType || 'Untitled';
   const imageId = record._primaryImageId;
   const date = record._primaryDate || '';
   const year = extractYear(date);
   const place = record._primaryPlace || '';
-  const maker = record._primaryMaker?.name || '';
-  const association = record._primaryMaker?.association
-    ? normalizeAssociation(record._primaryMaker.association)
-    : '';
-
   const base = `${IMAGE_CDN}/${imageId}/full`;
   const imgMobile  = `${base}/!400,400/0/default.jpg`;
   const imgDesktop = `${base}/!800,800/0/default.jpg`;
   const imgLarge   = `${base}/!1200,1200/0/default.jpg`;
 
   article.innerHTML = `
-    <h3>${title}</h3>
+    <h3><a class="card-link" href="details.html?id=${record.systemNumber}">${title}</a></h3>
     <picture>
       <source media="(min-width: 1000px)" srcset="${imgLarge}">
       <source media="(min-width: 600px)" srcset="${imgDesktop}">
@@ -159,11 +153,10 @@ function createCard(record, groupClass) {
       >
     </picture>
     <dl class="metadata">
-      ${place ? `<dt>Origin</dt><dd>${place}</dd>` : ''}
     </dl>
     <section class="description">
       <p class="date">${date ? `<time datetime="${year}">${date}</time>` : 'Date unknown'}</p>
-      ${maker ? maker.toLowerCase() === 'unknown' ? `<p class="creator">Creator unknown</p>` : `<p class="creator">${association ? `${association}: ` : 'Created by: '}${maker}</p>` : ''}
+      <p class="creator"></p>
       <p class="detail-text"></p>
     </section>
   `;
@@ -181,27 +174,64 @@ function createCard(record, groupClass) {
       const data = await res.json();
       const detail = data.record;
 
-      // Build dl content with collection, categories, and origin
+      // Build dl content with linked collection, categories, and origin
       const dl = article.querySelector('dl.metadata');
       let dlContent = '';
 
-      const collection = normalizeCollection(detail.collectionCode?.text);
+      const collectionCode = detail.collectionCode;
+      const collection = normalizeCollection(collectionCode?.text);
       if (collection) {
-        dlContent += `<dt>Collection</dt><dd>${collection}</dd><hr aria-hidden="true">`;
+        const collId = collectionCode?.id;
+        const collLink = collId
+          ? `<a href="browse/collections/property.html?id=${collId}" class="meta-link">${collection}</a>`
+          : collection;
+        dlContent += `<dt>Collection</dt><dd>${collLink}</dd><hr aria-hidden="true">`;
       }
 
       const categories = detail.categories || [];
-        if (categories.length) {
-          dlContent += `<dt>Categories</dt>`;
-          dlContent += categories.map(c => `<dd>${normalizeCategory(c.text || c.name || '')}</dd>`).join('');
-          if (place) dlContent += `<hr aria-hidden="true">`;
-        }
+      if (categories.length) {
+        dlContent += `<dt>Categories</dt>`;
+        dlContent += categories.map(c => {
+          const label = normalizeCategory(c.text || c.name || '');
+          return c.id
+            ? `<dd><a href="browse/categories/property.html?id=${c.id}" class="meta-link">${label}</a></dd>`
+            : `<dd>${label}</dd>`;
+        }).join('');
+        if (place) dlContent += `<hr aria-hidden="true">`;
+      }
 
       if (place) {
-        dlContent += `<dt>Origin</dt><dd>${normalizePlace(place)}</dd>`;
+        const placeId = detail.placesOfOrigin?.[0]?.place?.id;
+        const placeLabel = normalizePlace(place);
+        const placeLink = placeId
+          ? `<a href="browse/origins/property.html?id=${placeId}" class="meta-link">${placeLabel}</a>`
+          : placeLabel;
+        dlContent += `<dt>Origin</dt><dd>${placeLink}</dd>`;
       }
 
       dl.innerHTML = dlContent;
+
+      // Populate creator with link
+      const creatorP = article.querySelector('p.creator');
+      if (creatorP) {
+        const makerName = detail._primaryMaker?.name || record._primaryMaker?.name || '';
+        const makerAssoc = detail._primaryMaker?.association || record._primaryMaker?.association || '';
+        const assocLabel = makerAssoc ? normalizeAssociation(makerAssoc) : '';
+        const personId = detail.artistMakerPerson?.[0]?.person?.id
+          || detail.artistMakerOrganisations?.[0]?.organisation?.id;
+
+        if (makerName) {
+          const prefix = makerName.toLowerCase() === 'unknown'
+            ? null
+            : (assocLabel || 'Created by');
+          const nameDisplay = personId
+            ? `<a href="browse/creators/property.html?id=${personId}" class="meta-link">${makerName}</a>`
+            : makerName;
+          creatorP.innerHTML = makerName.toLowerCase() === 'unknown'
+            ? 'Creator unknown'
+            : `${prefix}: ${nameDisplay}`;
+        }
+      }
 
       // Populate short description
       const descP = article.querySelector('p.detail-text');
