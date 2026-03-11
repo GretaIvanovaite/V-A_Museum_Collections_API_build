@@ -95,7 +95,7 @@ const BATCH_DELAY = 150; // ms between batches
 
 async function fetchSubcategory(sub) {
   const res = await fetch(
-    `${API_BASE}/objects/search?id_category=${sub.id}&images_exist=1&page_size=10`
+    `${API_BASE}/objects/search?id_category=${sub.id}&images_exist=1&page_size=10&data_restrict=descriptive_only`
   );
   const data = await res.json();
   const records = data.records || [];
@@ -163,7 +163,7 @@ function createCard(record, groupClass) {
     </dl>
     <section class="description">
       <p class="date">${date ? `<time datetime="${year}">${date}</time>` : 'Date unknown'}</p>
-      ${maker ? `<p class="creator">${association ? `${association}: ` : ''}${maker}</p>` : ''}
+      ${maker ? `<p class="creator">${association ? `${association}: ` : 'Creator '}${maker}</p>` : ''}
       <p class="detail-text"></p>
     </section>
   `;
@@ -206,7 +206,7 @@ function createCard(record, groupClass) {
       // Populate short description
       const descP = article.querySelector('p.detail-text');
       if (descP) {
-        descP.textContent = detail.briefDescription || '';
+        descP.innerHTML = detail.briefDescription || '';
       }
     } catch (err) {
       console.error(`Detail fetch failed for ${record.systemNumber}:`, err);

@@ -2,25 +2,31 @@ const COLLECTIONS = {
   "PDP": "Prints, Drawings and Paintings",
   "FE": "Furniture and Woodwork",
   "FURN": "Furniture and Woodwork",
+  "FWK": "Furniture and Woodwork",
   "MET": "Metalwork",
   "CER": "Ceramics",
   "SCUL": "Sculpture",
   "SCP": "Sculpture",
   "T": "Textiles and Fashion",
+  "T&F": "Textiles and Fashion",
   "TEX": "Textiles and Fashion",
   "CIRC": "Circulation Department",
   "NAL": "National Art Library",
   "AAD": "Archive of Art and Design",
   "LDSAL": "London Day School of Art Library",
   "MoC": "Museum of Childhood",
+  "T&P": "Theatre and Performance",
   "TH": "Theatre and Performance",
   "PH": "Photographs",
   "PHOTO": "Photographs",
+  "DOP": "Photography",
   "ARC": "Architecture",
   "DAD": "Design, Architecture and Digital",
   "AS": "Asian",
   "SAS": "South and South East Asia",
+  "SSEA": "South & South East Asia",
   "ME": "Middle East",
+  "MES": "Middle East",
   "FEA": "Far Eastern",
   "EA": "East Asia",
   "EAS": "East Asian",
@@ -29,11 +35,10 @@ const COLLECTIONS = {
   "YVA": "Young V&A",
   "INDIA": "Indian Section",
   "GLASS": "Glass and Ceramics",
-  "JEWEL": "Jewellery"
+  "JEWEL": "Jewellery",
 };
 
 const CATEGORIES = {
-  // Photography and media
   "photograph": "Photographs",
   "photographs": "Photographs",
   "photography": "Photographs",
@@ -51,8 +56,6 @@ const CATEGORIES = {
   "ornament prints": "Ornament Prints",
   "album": "Albums",
   "albums": "Albums",
-
-  // Art and design
   "painting": "Paintings",
   "paintings": "Paintings",
   "portrait": "Portraits",
@@ -72,8 +75,6 @@ const CATEGORIES = {
   "plaster cast": "Plaster Casts",
   "plaster casts": "Plaster Casts",
   "wallpaper": "Wallpaper",
-
-  // Fashion and textiles
   "fashion": "Fashion",
   "jewellery": "Jewellery",
   "jewelry": "Jewellery",
@@ -93,8 +94,6 @@ const CATEGORIES = {
   "rug": "Rugs",
   "rugs": "Rugs",
   "lacemaking": "Lace",
-
-  // Applied art and crafts
   "ceramic": "Ceramics",
   "ceramics": "Ceramics",
   "metalwork": "Metalwork",
@@ -109,8 +108,6 @@ const CATEGORIES = {
   "goldwork": "Goldwork",
   "enamel": "Enamelwork",
   "enamels": "Enamelwork",
-
-  // Performance and leisure
   "theatre": "Theatre",
   "theater": "Theatre",
   "music": "Music",
@@ -122,8 +119,6 @@ const CATEGORIES = {
   "children & childhood": "Children & Childhood",
   "toy": "Toys",
   "toys": "Toys",
-
-  // Architecture and spaces
   "architecture": "Architecture",
   "interior": "Interiors",
   "interiors": "Interiors",
@@ -163,7 +158,6 @@ const PLACES = {
 };
 
 const ASSOCIATIONS = {
-  // Role nouns
   "maker": "Made by",
   "designer": "Designed by",
   "photographer": "Photographed by",
@@ -187,39 +181,36 @@ const ASSOCIATIONS = {
   "bookseller": "Bookseller",
   "draughtsman": "Drawn by",
   "agent": "Agent",
-
-  // Past-tense verbs
-  "made": "Made",
-  "designed": "Designed",
-  "drawn": "Drawn",
-  "painted": "Painted",
-  "printed": "Printed",
-  "published": "Published",
-  "manufactured": "Manufactured",
-  "photographed": "Photographed",
-  "worn": "Worn",
-  "issued": "Issued",
-  "carved": "Carved",
-  "modelled": "Modelled",
-  "engraved": "Engraved",
-  "etched": "Etched",
-  "gilded": "Gilded",
-  "embroidered": "Embroidered",
-  "woven": "Woven",
-  "decorated": "Decorated",
-  "enamelled": "Enamelled",
-  "cast": "Cast",
-  "forged": "Forged",
-  "lacquered": "Lacquered",
-  "chased": "Chased",
-  "inlaid": "Inlaid",
-  "lithographed": "Lithographed",
-  "illustrated": "Illustrated",
-  "sculpted": "Sculpted",
-  "patented": "Patented",
+  "painter": "Painter",
+  "made": "Made by",
+  "designed": "Designed by",
+  "drawn": "Drawn by",
+  "painted": "Painted by",
+  "printed": "Printed by",
+  "published": "Published by",
+  "manufactured": "Manufactured by",
+  "photographed": "Photographed by",
+  "worn": "Worn by",
+  "issued": "Issued by",
+  "carved": "Carved by",
+  "modelled": "Modelled by",
+  "engraved": "Engraved by",
+  "etched": "Etched by",
+  "gilded": "Gilded by",
+  "embroidered": "Embroidered by",
+  "woven": "Woven by",
+  "decorated": "Decorated by",
+  "enamelled": "Enamelled by",
+  "cast": "Cast by",
+  "forged": "Forged by",
+  "lacquered": "Lacquered by",
+  "chased": "Chased by",
+  "inlaid": "Inlaid by",
+  "lithographed": "Lithographed by",
+  "illustrated": "Illustrated by",
+  "sculpted": "Sculpted by",
+  "patented": "Patented by",
   "issued by": "Issued by",
-
-  // Compound forms
   "designed and made": "Designed and made",
   "designed and printed": "Designed and printed",
   "designed and manufactured": "Designed and manufactured",
@@ -230,8 +221,6 @@ const ASSOCIATIONS = {
   "published and sold": "Published and sold",
   "made and published": "Made and published",
   "publisher and printseller": "Published and sold by",
-
-  // Attribution qualifiers
   "attributed to": "Attributed to",
   "after": "After",
   "possibly": "Possibly",
@@ -241,7 +230,26 @@ const ASSOCIATIONS = {
   "workshop of": "Workshop of",
   "circle of": "Circle of",
   "follower of": "Follower of",
-  "formerly attributed to": "Formerly attributed to"
+  "formerly attributed to": "Formerly attributed to",
+  "designers": "Designed by",
+  "photographers": "Photographed by",
+  "artists": "Artist",
+  "designer and maker": "Designed and made",
+  "designed and made by": "Designed and made",
+  "designed by": "Designed by",
+  "published by": "Published by",
+  "commissioned by": "Commissioned by",
+  "printmaker": "Printmaker",
+  "print-maker": "Printmaker",
+  "print-makers": "Printmaker",
+  "copyist": "Copyist",
+  "architect": "Architect",
+  "art director": "Art director",
+  "design studio": "Design studio",
+  "advertising agency": "Advertising agency",
+  "artist (stained glass)": "Artist",
+  "painter (artist)": "Painter",
+  "distributer": "Distributer"
 };
 
 function normalizeCollection(code) {

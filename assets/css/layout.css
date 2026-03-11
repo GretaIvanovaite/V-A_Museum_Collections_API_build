@@ -355,8 +355,10 @@ select {
     display: grid;
     grid-template-columns: 1fr;
     align-items: stretch;
+    align-self: center;
+    container-type: inline-size;
     padding: 1rem;
-    width: fit-content;
+    width: auto;
     height: fit-content;
     transform-origin: top left;
   }
@@ -369,6 +371,8 @@ select {
 
   .object-card picture img {
     min-width: 8rem;
+    max-height: 100cqi;
+    object-fit: contain;
   }
 
   /* Desktop hover: 2-column layout */
@@ -379,8 +383,13 @@ select {
     grid-column: span 2;
     grid-row: span 2;
     padding: 1rem;
-    width: fit-content;
+    width: auto;
     height: fit-content;
+  }
+
+  .object-card:hover picture img,
+  .object-card:focus-within picture img {
+    max-height: none;
   }
 
   .object-card:hover picture,
