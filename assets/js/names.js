@@ -249,7 +249,9 @@ const ASSOCIATIONS = {
   "advertising agency": "Advertising agency",
   "artist (stained glass)": "Artist",
   "painter (artist)": "Painter",
-  "distributer": "Distributer"
+  "distributer": "Distributed by",
+  "distributor": "Distributed by",
+  "creator": "Created by"
 };
 
 function normalizeCollection(code) {
@@ -268,5 +270,7 @@ function normalizePlace(place) {
 
 function normalizeAssociation(association) {
   const lower = association.toLowerCase().trim();
-  return ASSOCIATIONS[lower] || association;
+  const mapped = ASSOCIATIONS[lower];
+  if (mapped) return mapped;
+  return lower.charAt(0).toUpperCase() + lower.slice(1);
 }

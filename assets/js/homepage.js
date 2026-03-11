@@ -163,7 +163,7 @@ function createCard(record, groupClass) {
     </dl>
     <section class="description">
       <p class="date">${date ? `<time datetime="${year}">${date}</time>` : 'Date unknown'}</p>
-      ${maker ? `<p class="creator">${association ? `${association}: ` : 'Creator '}${maker}</p>` : ''}
+      ${maker ? maker.toLowerCase() === 'unknown' ? `<p class="creator">Creator unknown</p>` : `<p class="creator">${association ? `${association}: ` : 'Created by: '}${maker}</p>` : ''}
       <p class="detail-text"></p>
     </section>
   `;
