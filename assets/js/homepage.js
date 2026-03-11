@@ -214,19 +214,26 @@ function createCard(record, groupClass) {
       // Populate creator with link
       const creatorP = article.querySelector('p.creator');
       if (creatorP) {
-        const makerName = detail._primaryMaker?.name || record._primaryMaker?.name || '';
-        const makerAssoc = detail._primaryMaker?.association || record._primaryMaker?.association || '';
+        const makerName = detail.artistMakerPerson?.[0]?.name?.text
+          || detail.artistMakerOrganisations?.[0]?.name?.text
+          || record._primaryMaker?.name || '';
+        const makerAssoc = detail.artistMakerPerson?.[0]?.association?.text
+          || detail.artistMakerOrganisations?.[0]?.association?.text
+          || record._primaryMaker?.association || '';
         const assocLabel = makerAssoc ? normalizeAssociation(makerAssoc) : '';
-        const personId = detail.artistMakerPerson?.[0]?.person?.id
-          || detail.artistMakerOrganisations?.[0]?.organisation?.id;
+        const personId = detail.artistMakerPerson?.[0]?.name?.id
+          || detail.artistMakerOrganisations?.[0]?.name?.id;
 
         if (makerName) {
           const prefix = makerName.toLowerCase() === 'unknown'
             ? null
             : (assocLabel || 'Created by');
-          const nameDisplay = personId
-            ? `<a href="browse/creators/property.html?id=${personId}" class="meta-link">${makerName}</a>`
-            : makerName;
+          const creatorHref = personId
+            ? `browse/creators/property.html?id=${personId}`
+            : `browse/creators/property.html?name=${encodeURIComponent(makerName)}`;
+          const nameDisplay = makerName.toLowerCase() === 'unknown'
+            ? makerName
+            : `<a href="${creatorHref}" class="meta-link">${makerName}</a>`;
           creatorP.innerHTML = makerName.toLowerCase() === 'unknown'
             ? 'Creator unknown'
             : `${prefix}: ${nameDisplay}`;
