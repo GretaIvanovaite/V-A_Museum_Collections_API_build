@@ -15,6 +15,12 @@
   --color-bg-clickable: #EDF2F7;
   --color-bg-link: #E6F2F2;
   --color-bg-slider: #D4DEE7;
+  --color-bg-photography: #F5EDD8;
+  --color-bg-art: #E8D8F0;
+  --color-bg-fashion: #F5DCEB;
+  --color-bg-appliedart: #D5EDE6;
+  --color-bg-performance: #F5E2D5;
+  --color-bg-architecture: #D8E5F5;
   
   /* Colors - Text */
   --color-text-primary: #1F2632;
@@ -166,14 +172,20 @@
     border-radius: var(--radius-pill);
   }
 
+  #density-controls input {
+    accent-color: var(--color-accent-brown);
+  }
+
   #filter-groups {
     font-size: var(--font-size-small);
     font-weight: var(--font-weight-bold);
     text-transform: uppercase;
   }
 
-  #density-controls input {
-    accent-color: var(--color-accent-brown);
+  #filter-groups li {
+    cursor: pointer;
+    text-align: center;
+    border-radius: var(--radius-l);
   }
 
 
@@ -217,6 +229,46 @@
   }
 
   .object-card picture img {
+    border-radius: var(--radius-m);
+  }
+
+  .disabled {
+    pointer-events: none;
+  }
+
+  .selected.photography {
+    background-color: var(--color-bg-photography);
+  }
+
+  .selected.art {
+    background-color: var(--color-bg-art);
+  }
+
+  .selected.fashion {
+    background-color: var(--color-bg-fashion);
+  }
+
+  .selected.appliedart {
+    background-color: var(--color-bg-appliedart);
+  }
+
+  .selected.performance {
+    background-color: var(--color-bg-performance);
+  }
+
+  .selected.architecture {
+    background-color: var(--color-bg-architecture);
+  }
+
+  .object-card.disabled::before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(220, 225, 232, 0.75);
     border-radius: var(--radius-m);
   }
 }

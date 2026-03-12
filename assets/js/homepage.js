@@ -51,7 +51,7 @@ const groups = [
   },
   {
     name: 'Applied art and crafts',
-    class: 'applied-art',
+    class: 'appliedart',
     subcategories: [
       {name: 'Ceramics', id: 'THES48982', minTier: 20},
       {name: 'Metalwork', id: 'THES48920', minTier: 20},
@@ -419,18 +419,81 @@ function makeCard(item, cssClass) {
 
 function showCards(tier) {
   grid.innerHTML = '';
+
+  // Build per-group item lists
+  const groupItems = [];
   for (let i = 0; i < groups.length; i++) {
     const group = groups[i];
+    const items = [];
     for (let j = 0; j < group.subcategories.length; j++) {
       const category = group.subcategories[j];
       if (category.minTier <= tier) {
         const item = cache[category.id];
         if (item) {
-          grid.appendChild(makeCard(item, group.class));
+          items.push({ item: item, cssClass: group.class });
         }
       }
     }
+    if (items.length > 0) {
+      groupItems.push(items);
+    }
   }
+
+  // Shuffle group order and items within each group
+  for (let i = groupItems.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [groupItems[i], groupItems[j]] = [groupItems[j], groupItems[i]];
+  }
+  for (let g = 0; g < groupItems.length; g++) {
+    const items = groupItems[g];
+    for (let i = items.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [items[i], items[j]] = [items[j], items[i]];
+    }
+  }
+
+  // Round-robin interleave to ensure group variety, then shuffle the result
+  const ordered = [];
+  let round = 0;
+  while (true) {
+    let added = false;
+    for (let g = 0; g < groupItems.length; g++) {
+      if (round < groupItems[g].length) {
+        ordered.push(groupItems[g][round]);
+        added = true;
+      }
+    }
+    if (!added) break;
+    round++;
+  }
+
+  for (let i = ordered.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [ordered[i], ordered[j]] = [ordered[j], ordered[i]];
+  }
+
+  for (let i = 0; i < ordered.length; i++) {
+    grid.appendChild(makeCard(ordered[i].item, ordered[i].cssClass));
+  }
+}
+
+function filterByGroup(groupName) {
+  document.querySelectorAll('.object-card').forEach(card => {
+    if (card.dataset.group !== groupName) {
+      card.classList.add('disabled');
+      card.classList.remove('selected');
+    } else {
+      card.classList.remove('disabled');
+      card.classList.add('selected');
+    }
+  });
+  document.querySelectorAll('#filter-groups li').forEach(li => {
+    if (li.className.replace(' selected', '') !== groupName) {
+      li.classList.remove('selected');
+    } else {
+      li.classList.add('selected');
+    }
+  });
 }
 
 async function startPage() {
@@ -447,6 +510,10 @@ async function startPage() {
 slider.addEventListener('input', function() {
   const currentTier = tierMap[Number(slider.value)];
   showCards(currentTier);
+});
+
+document.getElementById('filter-groups').querySelectorAll('li').forEach(li => {
+  li.addEventListener('click', () => filterByGroup(li.className));
 });
 
 startPage();
