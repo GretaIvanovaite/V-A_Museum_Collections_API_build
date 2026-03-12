@@ -1,13 +1,11 @@
 /* VARIABLES */
 
 :root {
-  /* Colors - Primary & Accent */
   --color-primary-teal: #2C7A7B;
   --color-primary-teal-hover: #234E52;
   --color-accent-brown: #8F4A32;
   --color-accent-brown-hover: #6C3322;
-  
-  /* Colors - Backgrounds */
+
   --color-bg-main: #FDFCFB;
   --color-bg-card: #F5F5F5;
   --color-bg-image: #1F2632;
@@ -27,32 +25,26 @@
   --color-bg-performance-hover: #8A4020;
   --color-bg-architecture: #D8E5F5;
   --color-bg-architecture-hover: #2A4A8A;
-  
-  /* Colors - Text */
+
   --color-text-primary: #1F2632;
   --color-text-secondary: #6B7280;
   --color-text-white: #FFFFFF;
-  
-  /* Colors - Borders */
+
   --color-border-card: #CBD5E1;
   --color-divider-main: #CBD5E1;
   --color-divider-secondary: #B8C5D3;
-  
-  /* Colors - Shadow */
+
   --color-shadow: rgba(31, 38, 50, 0.12);
-  
-  /* Typography - Font Family */
+
   --font-family-primary: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  
-  /* Typography - Font Sizes */
+
   --font-size-h1: 28px;
   --font-size-h2: 22px;
   --font-size-h3: 18px;
   --font-size-body: 16px;
   --font-size-large: 17px;
   --font-size-small: 14px;
-  
-  /* Typography - Line Heights */
+
   --line-height-h1: 34px;
   --line-height-h2: 28px;
   --line-height-h3: 24px;
@@ -60,16 +52,14 @@
   --line-height-large: 24px;
   --line-height-small: 20px;
   --line-height-tight: 16px;
-  
-  /* Typography - Font Weights */
+  --line-height-tag: 1.4;
+
   --font-weight-regular: 400;
   --font-weight-bold: 700;
-  
-  /* Typography - Letter Spacing */
+
   --letter-spacing-normal: 0;
   --letter-spacing-wide: 0.03em;
-  
-  /* Border Radius */
+
   --radius-xs: 0.25rem;
   --radius-s: 0.5rem;
   --radius-m: 1rem;
@@ -77,14 +67,9 @@
   --radius-full: 50%;
   --radius-pill: 100rem;
 
-  /* Border Widths */
   --border-width-thin: 1px;
   --border-width-standard: 2px;
 
-  /* Line Heights (unitless) */
-  --line-height-tag: 1.4;
-
-  /* Spacing Scale */
   --space-xs: 0.25rem;
   --space-s: 0.5rem;
   --space-m: 0.75rem;
@@ -93,18 +78,19 @@
   --space-2xl: 2rem;
   --space-3xl: 3rem;
 
-  /* Layout Widths */
   --width-content: 95%;
   --width-content-md: 90%;
 
-  /* Shadows */
   --shadow-card: 0px 4px 4px 0px var(--color-shadow);
   --shadow-hover: 0px 6px 12px 0px rgba(31, 38, 50, 0.18);
   --shadow-offset: 0.2rem 0.2rem var(--color-shadow);
   --shadow-offset-hover: 0.4rem 0.4rem var(--color-shadow);
 }
 
+/* MOBILE */
+
 @media (min-width: 0) {
+
   /* BODY */
 
   body {
@@ -114,7 +100,7 @@
     line-height: var(--line-height-body);
   }
 
-  /* HEADER & NAVIGATION */
+  /* HEADER */
 
   header,
   header li button {
@@ -143,7 +129,7 @@
     font-size: var(--font-size-small);
   }
 
-  /* DROPDOWN */
+  /* POPOVERS */
 
   .dropdown {
     background-color: var(--color-primary-teal);
@@ -161,9 +147,9 @@
   }
 
   #photography-subgroups { background-color: var(--color-bg-photography); }
-  #art-subgroups { background-color: var(--color-bg-art); }
-  #fashion-subgroups { background-color: var(--color-bg-fashion); }
-  #appliedart-subgroups { background-color: var(--color-bg-appliedart); }
+  #art-subgroups         { background-color: var(--color-bg-art); }
+  #fashion-subgroups     { background-color: var(--color-bg-fashion); }
+  #appliedart-subgroups  { background-color: var(--color-bg-appliedart); }
   #performance-subgroups { background-color: var(--color-bg-performance); }
   #architecture-subgroups { background-color: var(--color-bg-architecture); }
 
@@ -176,11 +162,11 @@
     color: var(--color-text-white);
   }
 
-  #photography-subgroups > li:hover { background-color: var(--color-bg-photography-hover); }
-  #art-subgroups > li:hover { background-color: var(--color-bg-art-hover); }
-  #fashion-subgroups > li:hover { background-color: var(--color-bg-fashion-hover); }
-  #appliedart-subgroups > li:hover { background-color: var(--color-bg-appliedart-hover); }
-  #performance-subgroups > li:hover { background-color: var(--color-bg-performance-hover); }
+  #photography-subgroups > li:hover  { background-color: var(--color-bg-photography-hover); }
+  #art-subgroups > li:hover          { background-color: var(--color-bg-art-hover); }
+  #fashion-subgroups > li:hover      { background-color: var(--color-bg-fashion-hover); }
+  #appliedart-subgroups > li:hover   { background-color: var(--color-bg-appliedart-hover); }
+  #performance-subgroups > li:hover  { background-color: var(--color-bg-performance-hover); }
   #architecture-subgroups > li:hover { background-color: var(--color-bg-architecture-hover); }
 
   /* FOOTER */
@@ -190,13 +176,11 @@
     border-top: var(--border-width-thin) solid var(--color-divider-main);
   }
 
-  /* DIVIDER */
-
   hr {
     border: var(--border-width-thin) solid var(--color-divider-main);
   }
 
-  /* DENSITY CONTROLS */
+  /* CONTROLS */
 
   #density-controls,
   #filter-groups {
@@ -212,11 +196,6 @@
     accent-color: var(--color-accent-brown);
   }
 
-  #filter-groups {
-    font-size: var(--font-size-small);
-    font-weight: var(--font-weight-bold);
-  }
-
   #filter-groups li,
   #filter-groups button {
     cursor: pointer;
@@ -224,12 +203,7 @@
     text-transform: uppercase;
   }
 
-  #filter-groups li {
-    border: none;
-  }
-
-
-  /* OBJECT CARD */
+  /* OBJECT CARDS */
 
   .object-card {
     border-radius: var(--radius-m);
@@ -282,43 +256,27 @@
     z-index: 1;
   }
 
-  .selected.photography {
-    background-color: var(--color-bg-photography);
-  }
+  .selected.photography  { background-color: var(--color-bg-photography); }
+  .selected.art          { background-color: var(--color-bg-art); }
+  .selected.fashion      { background-color: var(--color-bg-fashion); }
+  .selected.appliedart   { background-color: var(--color-bg-appliedart); }
+  .selected.performance  { background-color: var(--color-bg-performance); }
+  .selected.architecture { background-color: var(--color-bg-architecture); }
 
-  .selected.art {
-    background-color: var(--color-bg-art);
-  }
-
-  .selected.fashion {
-    background-color: var(--color-bg-fashion);
-  }
-
-  .selected.appliedart {
-    background-color: var(--color-bg-appliedart);
-  }
-
-  .selected.performance {
-    background-color: var(--color-bg-performance);
-  }
-
-  .selected.architecture {
-    background-color: var(--color-bg-architecture);
+  #filter-groups button.photography:hover {
+    background-color: var(--color-bg-photography-hover);
+    color: var(--color-text-white);
   }
 
   .object-card.disabled::before {
     content: "";
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
     background-color: rgba(220, 225, 232, 0.75);
     border-radius: var(--radius-m);
   }
+
 }
-/* TABLET & DESKTOP */
+
+/* TABLET */
 
 @media (min-width: 768px) {
   :root {
@@ -327,7 +285,7 @@
     --font-size-h3: 19px;
     --font-size-large: 18px;
     --font-size-small: 15px;
-    
+
     --line-height-h1: 36px;
     --line-height-h2: 30px;
     --line-height-h3: 26px;
@@ -337,6 +295,8 @@
     font-size: var(--font-size-body);
   }
 }
+
+/* DESKTOP */
 
 @media (min-width: 1280px) {
   :root {
@@ -350,12 +310,15 @@
   }
 }
 
+/* UTILITIES */
+
 .meta-link {
   background-color: var(--color-bg-link);
   border: var(--border-width-standard) solid var(--color-primary-teal);
   color: var(--color-primary-teal-hover);
   border-radius: var(--radius-pill);
   text-decoration: none;
+  text-wrap: balance;
   line-height: var(--line-height-tag);
 }
 
@@ -367,7 +330,6 @@
   outline: none;
 }
 
-/* Card stretched link — inherits h3 styling, no extra decoration */
 .card-link {
   color: inherit;
   text-decoration: none;

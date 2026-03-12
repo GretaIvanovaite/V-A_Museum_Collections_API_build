@@ -1,20 +1,17 @@
 /* VARIABLES */
 
 :root {
-  /* Grid - Mobile First (2 columns default) */
   --grid-columns-default: 2;
   --grid-columns-compact: 1;
   --grid-columns-dense: 3;
   --grid-columns-browse: 1;
 
-  /* Z-index */
   --z-header: 100;
   --z-dropdown: 200;
   --z-modal-backdrop: 900;
   --z-modal: 1000;
   --z-chat-button: 1100;
 
-    /* Tag / Pill Padding */
   --padding-tag: 0.5rem 1rem;
 }
 
@@ -60,8 +57,11 @@ select {
   font: inherit;
 }
 
+/* MOBILE */
+
 @media (min-width: 0) {
-  /* LAYOUT */
+
+  /* BODY */
 
   body {
     display: flex;
@@ -133,7 +133,7 @@ select {
     pointer-events: none;
   }
 
-  /* DROPDOWNS */
+  /* POPOVERS */
 
   .dropdown {
     position: absolute;
@@ -144,27 +144,27 @@ select {
 
   @supports (anchor-name: --a) {
     button[popovertarget="coll-menu"] { anchor-name: --coll-btn; }
-    button[popovertarget="cat-menu"] { anchor-name: --cat-btn; }
-    button[popovertarget="mat-menu"] { anchor-name: --mat-btn; }
-    button[popovertarget="org-menu"] { anchor-name: --org-btn; }
+    button[popovertarget="cat-menu"]  { anchor-name: --cat-btn; }
+    button[popovertarget="mat-menu"]  { anchor-name: --mat-btn; }
+    button[popovertarget="org-menu"]  { anchor-name: --org-btn; }
 
     #coll-menu { position-anchor: --coll-btn; }
-    #cat-menu { position-anchor: --cat-btn; }
-    #mat-menu { position-anchor: --mat-btn; }
-    #org-menu { position-anchor: --org-btn; }
+    #cat-menu  { position-anchor: --cat-btn; }
+    #mat-menu  { position-anchor: --mat-btn; }
+    #org-menu  { position-anchor: --org-btn; }
 
-    button[popovertarget="photography-subgroups"] { anchor-name: --photography-btn; }
-    button[popovertarget="art-subgroups"] { anchor-name: --art-btn; }
-    button[popovertarget="fashion-subgroups"] { anchor-name: --fashion-btn; }
-    button[popovertarget="appliedart-subgroups"] { anchor-name: --appliedart-btn; }
-    button[popovertarget="performance-subgroups"] { anchor-name: --performance-btn; }
+    button[popovertarget="photography-subgroups"]  { anchor-name: --photography-btn; }
+    button[popovertarget="art-subgroups"]          { anchor-name: --art-btn; }
+    button[popovertarget="fashion-subgroups"]      { anchor-name: --fashion-btn; }
+    button[popovertarget="appliedart-subgroups"]   { anchor-name: --appliedart-btn; }
+    button[popovertarget="performance-subgroups"]  { anchor-name: --performance-btn; }
     button[popovertarget="architecture-subgroups"] { anchor-name: --architecture-btn; }
 
-    #photography-subgroups { position-anchor: --photography-btn; }
-    #art-subgroups { position-anchor: --art-btn; }
-    #fashion-subgroups { position-anchor: --fashion-btn; }
-    #appliedart-subgroups { position-anchor: --appliedart-btn; }
-    #performance-subgroups { position-anchor: --performance-btn; }
+    #photography-subgroups  { position-anchor: --photography-btn; }
+    #art-subgroups          { position-anchor: --art-btn; }
+    #fashion-subgroups      { position-anchor: --fashion-btn; }
+    #appliedart-subgroups   { position-anchor: --appliedart-btn; }
+    #performance-subgroups  { position-anchor: --performance-btn; }
     #architecture-subgroups { position-anchor: --architecture-btn; }
 
     .dropdown,
@@ -186,6 +186,8 @@ select {
     height: 100%;
     padding: var(--space-s) var(--space-l);
   }
+
+  /* CONTROLS */
 
   .controls {
     display: flex;
@@ -222,7 +224,7 @@ select {
     line-height: var(--space-xl);
     display: flex;
     justify-content: center;
-    align-content: center;
+    align-items: center;
     gap: var(--space-m);
     max-width: 70%;
   }
@@ -232,7 +234,7 @@ select {
     width: 100%;
   }
 
-  /* GRIDS */
+  /* GRID */
 
   .objects-grid {
     display: grid;
@@ -262,12 +264,10 @@ select {
     flex-direction: column;
     position: relative;
     padding: var(--space-s);
-    overflow: visible;
     width: fit-content;
     height: fit-content;
   }
 
-  /* Stretched link: h3 <a> expands to cover the whole card */
   .object-card h3 .card-link::after {
     content: '';
     position: absolute;
@@ -275,7 +275,6 @@ select {
     z-index: 0;
   }
 
-  /* Metadata and creator links sit above the stretched link */
   .object-card .meta-link,
   .object-card .creator a {
     position: relative;
@@ -313,13 +312,20 @@ select {
     display: none;
   }
 
+  .object-card.disabled::before {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
   .object-card:hover,
   .object-card:focus-within {
     grid-column: span 2;
     grid-row: span 2;
     padding: var(--space-l);
-    width: fit-content;
-    height: fit-content;
     transform-origin: top left;
   }
 
@@ -331,7 +337,6 @@ select {
   .object-card:hover h3,
   .object-card:focus-within h3 {
     display: block;
-    opacity: 1;
     padding-top: 0;
     margin-bottom: var(--space-xs);
     order: 1;
@@ -340,7 +345,6 @@ select {
   .object-card:hover .date,
   .object-card:focus-within .date {
     display: block;
-    opacity: 1;
     margin-bottom: var(--space-xs);
     order: 2;
   }
@@ -348,7 +352,6 @@ select {
   .object-card:hover .description,
   .object-card:focus-within .description {
     display: block;
-    opacity: 1;
     margin-bottom: var(--space-xs);
     order: 3;
   }
@@ -356,13 +359,12 @@ select {
   .object-card:hover dl,
   .object-card:focus-within dl {
     display: flex;
-    opacity: 1;
     order: 4;
   }
 
 }
 
-/* TABLET & DESKTOP */
+/* TABLET */
 
 @media (min-width: 768px) {
   :root {
@@ -407,7 +409,6 @@ select {
     align-items: stretch;
     align-self: center;
     container-type: inline-size;
-    position: relative;
     padding: var(--space-l);
     width: auto;
     height: fit-content;
@@ -429,16 +430,12 @@ select {
     object-fit: contain;
   }
 
-  /* Desktop hover*/
   .object-card:hover,
   .object-card:focus-within {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-template-rows: auto auto auto auto auto;
     grid-column: span 2;
     grid-row: span 2;
-    padding: var(--space-l);
-    width: auto;
-    height: fit-content;
   }
 
   .object-card:hover picture img,
@@ -492,11 +489,12 @@ select {
     margin-bottom: var(--space-xs);
   }
 
-
   #skip-link:focus-visible {
     left: 10rem;
   }
 }
+
+/* DESKTOP */
 
 @media (min-width: 1280px) {
   :root {
@@ -505,10 +503,9 @@ select {
     --grid-columns-dense: 8;
     --grid-columns-browse: 4;
   }
-
 }
 
-/* EXTRA IMAGES */
+/* UTILITIES */
 
 .extra-image {
   width: 100%;
@@ -516,10 +513,7 @@ select {
   display: block;
 }
 
-/* META LINK */
-
 .meta-link {
   display: inline-block;
-  text-wrap: balance;
   padding: var(--padding-tag);
 }
