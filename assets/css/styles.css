@@ -146,6 +146,13 @@
     box-shadow: var(--shadow-card);
   }
 
+  .subgroups {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-small);
+    border-radius: var(--radius-m);
+    border: var(--border-width-thin);
+  }
+
   /* FOOTER */
 
   footer {
@@ -165,7 +172,6 @@
   #filter-groups {
     font-size: var(--font-size-small);
     font-weight: var(--font-weight-bold);
-    text-transform: uppercase;
     color: var(--color-text-primary);
     letter-spacing: var(--letter-spacing-normal);
     background-color: var(--color-bg-clickable);
@@ -179,13 +185,17 @@
   #filter-groups {
     font-size: var(--font-size-small);
     font-weight: var(--font-weight-bold);
+  }
+
+  #filter-groups li,
+  #filter-groups button {
+    cursor: pointer;
+    border-radius: var(--radius-l);
     text-transform: uppercase;
   }
 
   #filter-groups li {
-    cursor: pointer;
-    text-align: center;
-    border-radius: var(--radius-l);
+    border: none;
   }
 
 
@@ -234,6 +244,12 @@
 
   .disabled {
     pointer-events: none;
+  }
+
+  .object-card.selected {
+    box-shadow: var(--shadow-hover);
+    transform: scale(1.02);
+    z-index: 1;
   }
 
   .selected.photography {

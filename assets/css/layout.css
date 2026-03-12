@@ -153,7 +153,22 @@ select {
     #mat-menu { position-anchor: --mat-btn; }
     #org-menu { position-anchor: --org-btn; }
 
-    .dropdown {
+    button[popovertarget="photography-subgroups"] { anchor-name: --photography-btn; }
+    button[popovertarget="art-subgroups"] { anchor-name: --art-btn; }
+    button[popovertarget="fashion-subgroups"] { anchor-name: --fashion-btn; }
+    button[popovertarget="appliedart-subgroups"] { anchor-name: --appliedart-btn; }
+    button[popovertarget="performance-subgroups"] { anchor-name: --performance-btn; }
+    button[popovertarget="architecture-subgroups"] { anchor-name: --architecture-btn; }
+
+    #photography-subgroups { position-anchor: --photography-btn; }
+    #art-subgroups { position-anchor: --art-btn; }
+    #fashion-subgroups { position-anchor: --fashion-btn; }
+    #appliedart-subgroups { position-anchor: --appliedart-btn; }
+    #performance-subgroups { position-anchor: --performance-btn; }
+    #architecture-subgroups { position-anchor: --architecture-btn; }
+
+    .dropdown,
+    .subgroups {
       top: anchor(bottom);
       left: anchor(left);
     }
@@ -164,11 +179,12 @@ select {
     width: 100%;
   }
 
-  .dropdown > li > a {
+  .dropdown > li > a,
+  .subgroups > li {
     display: block;
     width: 100%;
     height: 100%;
-    padding: var(--space-m) var(--space-l);
+    padding: var(--space-s) var(--space-l);
   }
 
   .controls {
@@ -179,8 +195,7 @@ select {
     gap: var(--space-3xl);
   }
 
-  #density-controls,
-  #filter-groups {
+  #density-controls {
     padding: var(--space-xs) var(--space-xl);
     line-height: var(--space-xl);
     display: flex;
@@ -203,6 +218,19 @@ select {
     text-align: left;
   }
 
+  #filter-groups {
+    line-height: var(--space-xl);
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    gap: var(--space-m);
+    max-width: 70%;
+  }
+
+  #filter-groups button {
+    height: 100%;
+    width: 100%;
+  }
 
   /* GRIDS */
 
@@ -366,10 +394,6 @@ select {
 
   .dropdown {
     min-width: 15rem;
-  }
-
-  .dropdown > li > a {
-    padding: var(--space-l) var(--space-2xl);
   }
 
   .objects-grid {

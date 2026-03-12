@@ -417,8 +417,53 @@ function makeCard(item, cssClass) {
   return card;
 }
 
+function buildFilterGroups(tier) {
+  const filterList = document.getElementById('filter-groups');
+  filterList.innerHTML = '';
+
+  for (let i = 0; i < groups.length; i++) {
+    const group = groups[i];
+    const visibleSubs = [];
+    for (let j = 0; j < group.subcategories.length; j++) {
+      if (group.subcategories[j].minTier <= tier) {
+        visibleSubs.push(group.subcategories[j]);
+      }
+    }
+
+    if (visibleSubs.length === 0) continue;
+
+    const popoverId = group.class + '-subgroups';
+
+    const li = document.createElement('li');
+    li.className = group.class;
+    li.addEventListener('click', function() { filterByGroup(group.class); });
+
+    const btn = document.createElement('button');
+    btn.setAttribute('type', 'button');
+    btn.setAttribute('popovertarget', popoverId);
+    btn.textContent = group.name;
+    li.appendChild(btn);
+
+    filterList.appendChild(li);
+
+    const subUl = document.createElement('ul');
+    subUl.id = popoverId;
+    subUl.setAttribute('popover', '');
+    subUl.className = 'subgroups';
+
+    for (let j = 0; j < visibleSubs.length; j++) {
+      const subLi = document.createElement('li');
+      subLi.textContent = visibleSubs[j].name;
+      subUl.appendChild(subLi);
+    }
+
+    filterList.appendChild(subUl);
+  }
+}
+
 function showCards(tier) {
   grid.innerHTML = '';
+  buildFilterGroups(tier);
 
   // Build per-group item lists
   const groupItems = [];
@@ -510,10 +555,6 @@ async function startPage() {
 slider.addEventListener('input', function() {
   const currentTier = tierMap[Number(slider.value)];
   showCards(currentTier);
-});
-
-document.getElementById('filter-groups').querySelectorAll('li').forEach(li => {
-  li.addEventListener('click', () => filterByGroup(li.className));
 });
 
 startPage();
