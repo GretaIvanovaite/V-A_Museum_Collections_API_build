@@ -171,28 +171,38 @@ select {
     padding: var(--space-m) var(--space-l);
   }
 
-  .density-controls {
-    margin: var(--space-s);
-    justify-self: center;
-    padding: var(--space-l);
+  .controls {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: var(--space-xl);
+    gap: var(--space-3xl);
+  }
+
+  #density-controls,
+  #filter-groups {
+    padding: var(--space-xs) var(--space-xl);
+    line-height: var(--space-xl);
     display: flex;
     justify-content: center;
-    gap: var(--space-l);
-    max-width: 90%;
+    gap: var(--space-m);
+    max-width: 70%;
   }
 
-  .density-controls label {
+  #density-controls label {
     max-width: 35%;
     overflow-wrap: break-word;
+    align-self: center;
   }
 
-  .density-controls .less {
+  #density-controls .less {
     text-align: right;
   }
 
-  .density-controls .more {
+  #density-controls .more {
     text-align: left;
   }
+
 
   /* GRIDS */
 
@@ -360,12 +370,6 @@ select {
 
   .dropdown > li > a {
     padding: var(--space-l) var(--space-2xl);
-  }
-
-  .density-controls {
-    margin: var(--space-2xl) var(--space-l);
-    justify-self: center;
-    padding: var(--space-l);
   }
 
   .objects-grid {

@@ -155,19 +155,27 @@
 
   /* DENSITY CONTROLS */
 
-  .density-controls {
+  #density-controls,
+  #filter-groups {
     font-size: var(--font-size-small);
     font-weight: var(--font-weight-bold);
     text-transform: uppercase;
     color: var(--color-text-primary);
-    letter-spacing: var(--letter-spacing-wide);
+    letter-spacing: var(--letter-spacing-normal);
     background-color: var(--color-bg-clickable);
-    border-radius: var(--radius-l);
+    border-radius: var(--radius-pill);
   }
 
-  .density-controls input {
-    accent-color: var(--color-accent-brown)
+  #filter-groups {
+    font-size: var(--font-size-small);
+    font-weight: var(--font-weight-bold);
+    text-transform: uppercase;
   }
+
+  #density-controls input {
+    accent-color: var(--color-accent-brown);
+  }
+
 
   /* OBJECT CARD */
 
@@ -189,7 +197,6 @@
     font-size: var(--font-size-small);
     color: var(--color-text-secondary);
     font-weight: var(--font-weight-regular);
-    line-height: var(--line-height-tight);
   }
 
   .object-card .description {
@@ -228,9 +235,8 @@
     --line-height-h3: 26px;
   }
 
-  .density-controls {
+  #density-controls {
     font-size: var(--font-size-body);
-    border-radius: var(--radius-pill);
   }
 }
 

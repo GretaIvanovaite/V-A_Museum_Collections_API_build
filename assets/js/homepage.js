@@ -168,7 +168,7 @@ function getYear(dateText) {
 
 function makeCard(item, cssClass) {
   const card = document.createElement('article');
-  card.className = 'object-card group-' + cssClass;
+  card.className = 'object-card ' + cssClass;
   card.dataset.group = cssClass;
 
   let itemTitle;
@@ -420,13 +420,13 @@ function makeCard(item, cssClass) {
 function showCards(tier) {
   grid.innerHTML = '';
   for (let i = 0; i < groups.length; i++) {
-    const section = groups[i];
-    for (let j = 0; j < section.subcategories.length; j++) {
-      const category = section.subcategories[j];
+    const group = groups[i];
+    for (let j = 0; j < group.subcategories.length; j++) {
+      const category = group.subcategories[j];
       if (category.minTier <= tier) {
         const item = cache[category.id];
         if (item) {
-          grid.appendChild(makeCard(item, section.class));
+          grid.appendChild(makeCard(item, group.class));
         }
       }
     }
