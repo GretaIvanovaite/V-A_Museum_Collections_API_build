@@ -16,11 +16,17 @@
   --color-bg-link: #E6F2F2;
   --color-bg-slider: #D4DEE7;
   --color-bg-photography: #F5EDD8;
+  --color-bg-photography-hover: #7A5520;
   --color-bg-art: #E8D8F0;
+  --color-bg-art-hover: #5C3D8A;
   --color-bg-fashion: #F5DCEB;
+  --color-bg-fashion-hover: #8A2E6A;
   --color-bg-appliedart: #D5EDE6;
+  --color-bg-appliedart-hover: #2A6B58;
   --color-bg-performance: #F5E2D5;
+  --color-bg-performance-hover: #8A4020;
   --color-bg-architecture: #D8E5F5;
+  --color-bg-architecture-hover: #2A4A8A;
   
   /* Colors - Text */
   --color-text-primary: #1F2632;
@@ -147,11 +153,35 @@
   }
 
   .subgroups {
-    color: var(--color-text-secondary);
+    color: var(--color-text-primary);
     font-size: var(--font-size-small);
     border-radius: var(--radius-m);
     border: var(--border-width-thin);
+    background-color: var(--color-bg-clickable);
   }
+
+  #photography-subgroups { background-color: var(--color-bg-photography); }
+  #art-subgroups { background-color: var(--color-bg-art); }
+  #fashion-subgroups { background-color: var(--color-bg-fashion); }
+  #appliedart-subgroups { background-color: var(--color-bg-appliedart); }
+  #performance-subgroups { background-color: var(--color-bg-performance); }
+  #architecture-subgroups { background-color: var(--color-bg-architecture); }
+
+  #photography-subgroups > li:hover,
+  #art-subgroups > li:hover,
+  #fashion-subgroups > li:hover,
+  #appliedart-subgroups > li:hover,
+  #performance-subgroups > li:hover,
+  #architecture-subgroups > li:hover {
+    color: var(--color-text-white);
+  }
+
+  #photography-subgroups > li:hover { background-color: var(--color-bg-photography-hover); }
+  #art-subgroups > li:hover { background-color: var(--color-bg-art-hover); }
+  #fashion-subgroups > li:hover { background-color: var(--color-bg-fashion-hover); }
+  #appliedart-subgroups > li:hover { background-color: var(--color-bg-appliedart-hover); }
+  #performance-subgroups > li:hover { background-color: var(--color-bg-performance-hover); }
+  #architecture-subgroups > li:hover { background-color: var(--color-bg-architecture-hover); }
 
   /* FOOTER */
 

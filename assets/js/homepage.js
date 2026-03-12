@@ -85,6 +85,7 @@ const groups = [
 ];
 
 const cache = {};
+const categoryCache = {}; // systemNumber → array of API category IDs
 
 // Using batches because of API rate limits
 const batchSize = 8;
@@ -166,10 +167,13 @@ function getYear(dateText) {
   return '';
 }
 
-function makeCard(item, cssClass) {
+function makeCard(item, cssClass, subcategoryId) {
   const card = document.createElement('article');
   card.className = 'object-card ' + cssClass;
   card.dataset.group = cssClass;
+  card.dataset.originalGroup = cssClass;
+  card.dataset.subcategory = subcategoryId;
+  card.dataset.systemNumber = item.systemNumber;
 
   let itemTitle;
   if (item._primaryTitle && item.objectType)  {
@@ -452,8 +456,14 @@ function buildFilterGroups(tier) {
     subUl.className = 'subgroups';
 
     for (let j = 0; j < visibleSubs.length; j++) {
+      const sub = visibleSubs[j];
       const subLi = document.createElement('li');
-      subLi.textContent = visibleSubs[j].name;
+      subLi.textContent = sub.name;
+      subLi.addEventListener('click', function(e) {
+        e.stopPropagation();
+        subUl.hidePopover();
+        filterBySubgroup(group.class, sub.id);
+      });
       subUl.appendChild(subLi);
     }
 
@@ -475,7 +485,7 @@ function showCards(tier) {
       if (category.minTier <= tier) {
         const item = cache[category.id];
         if (item) {
-          items.push({ item: item, cssClass: group.class });
+          items.push({ item: item, cssClass: group.class, subcategoryId: category.id });
         }
       }
     }
@@ -518,12 +528,50 @@ function showCards(tier) {
   }
 
   for (let i = 0; i < ordered.length; i++) {
-    grid.appendChild(makeCard(ordered[i].item, ordered[i].cssClass));
+    grid.appendChild(makeCard(ordered[i].item, ordered[i].cssClass, ordered[i].subcategoryId));
   }
+}
+
+async function fetchDetailCategories(systemNumber) {
+  if (categoryCache[systemNumber] !== undefined) return;
+  try {
+    const response = await fetch(apiBase + "/museumobject/" + systemNumber);
+    const jsonData = await response.json();
+    const cats = jsonData.record.categories || [];
+    categoryCache[systemNumber] = cats.map(function(c) { return c.id; }).filter(Boolean);
+  } catch (e) {
+    categoryCache[systemNumber] = [];
+  }
+}
+
+async function loadAllDetailCategories() {
+  const cards = document.querySelectorAll('.object-card');
+  const sysNums = [];
+  cards.forEach(function(card) {
+    if (card.dataset.systemNumber) {
+      sysNums.push(card.dataset.systemNumber);
+    }
+  });
+
+  for (let i = 0; i < sysNums.length; i += batchSize) {
+    const batch = sysNums.slice(i, i + batchSize);
+    await Promise.all(batch.map(fetchDetailCategories));
+    if (i + batchSize < sysNums.length) {
+      await new Promise(function(resolve) { setTimeout(resolve, batchDelay); });
+    }
+  }
+}
+
+function setCardGroupClass(card, groupClass) {
+  for (let i = 0; i < groups.length; i++) {
+    card.classList.remove(groups[i].class);
+  }
+  card.classList.add(groupClass);
 }
 
 function filterByGroup(groupName) {
   document.querySelectorAll('.object-card').forEach(card => {
+    setCardGroupClass(card, card.dataset.originalGroup);
     if (card.dataset.group !== groupName) {
       card.classList.add('disabled');
       card.classList.remove('selected');
@@ -541,11 +589,38 @@ function filterByGroup(groupName) {
   });
 }
 
+function filterBySubgroup(groupClass, subcategoryId) {
+  document.querySelectorAll('.object-card').forEach(card => {
+    const sysNum = card.dataset.systemNumber;
+    const apiCats = categoryCache[sysNum];
+    const matches = apiCats
+      ? apiCats.includes(subcategoryId)
+      : card.dataset.subcategory === subcategoryId;
+    if (!matches) {
+      setCardGroupClass(card, card.dataset.originalGroup);
+      card.classList.add('disabled');
+      card.classList.remove('selected');
+    } else {
+      setCardGroupClass(card, groupClass);
+      card.classList.remove('disabled');
+      card.classList.add('selected');
+    }
+  });
+  document.querySelectorAll('#filter-groups li').forEach(li => {
+    if (li.className.replace(' selected', '') === groupClass) {
+      li.classList.add('selected');
+    } else {
+      li.classList.remove('selected');
+    }
+  });
+}
+
 async function startPage() {
   try {
     await loadCategories();
     const currentTier = tierMap[Number(slider.value)];
     showCards(currentTier);
+    loadAllDetailCategories();
   } catch (error) {
     console.error('Error loading museum data:', error);
     grid.innerHTML = '<p class="error">Sorry, we couldn\'t load the gallery right now.</p>';
@@ -555,6 +630,7 @@ async function startPage() {
 slider.addEventListener('input', function() {
   const currentTier = tierMap[Number(slider.value)];
   showCards(currentTier);
+  loadAllDetailCategories();
 });
 
 startPage();
