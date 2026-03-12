@@ -185,6 +185,13 @@
   }
 
   .object-card .date,
+  .object-card .creator {
+    font-size: var(--font-size-small);
+    color: var(--color-text-secondary);
+    font-weight: var(--font-weight-regular);
+    line-height: var(--line-height-tight);
+  }
+
   .object-card .description {
     font-size: var(--font-size-small);
     color: var(--color-text-primary);
@@ -238,8 +245,6 @@
     --line-height-h3: 28px;
   }
 }
-
-/* ── Metadata & creator links (pill style from design standards) ── */
 
 .meta-link {
   background-color: var(--color-bg-link);
