@@ -633,4 +633,16 @@ slider.addEventListener('input', function() {
   loadAllDetailCategories();
 });
 
+document.querySelector('label.less').addEventListener('click', function(e) {
+  e.preventDefault();
+  slider.value = Math.max(Number(slider.min), Number(slider.value) - 1);
+  slider.dispatchEvent(new Event('input'));
+});
+
+document.querySelector('label.more').addEventListener('click', function(e) {
+  e.preventDefault();
+  slider.value = Math.min(Number(slider.max), Number(slider.value) + 1);
+  slider.dispatchEvent(new Event('input'));
+});
+
 startPage();

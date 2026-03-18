@@ -197,6 +197,7 @@
     font-weight: var(--font-weight-bold);
     color: var(--color-text-primary);
     letter-spacing: var(--letter-spacing-normal);
+    text-transform: uppercase;
     background-color: var(--color-bg-clickable);
     border-radius: var(--radius-pill);
   }
@@ -379,5 +380,26 @@
   background-color: var(--color-bg-link);
   border-color: var(--color-primary-teal-hover);
   font-weight: var(--font-weight-bold);
+  outline: none;
+}
+
+/* LOAD MORE BUTTON */
+
+#load-more {
+  background-color: var(--color-accent-brown);
+  color: var(--color-text-white);
+  border: none;
+  border-radius: var(--radius-s);
+  padding: var(--space-m) var(--space-2xl);
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-normal);
+  cursor: pointer;
+}
+
+#load-more:hover,
+#load-more:focus-visible {
+  background-color: var(--color-accent-brown-hover);
   outline: none;
 }

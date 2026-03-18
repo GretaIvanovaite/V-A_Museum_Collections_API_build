@@ -167,7 +167,11 @@ select {
     #performance-subgroups  { position-anchor: --performance-btn; }
     #architecture-subgroups { position-anchor: --architecture-btn; }
 
-    nav ul[popover],
+    nav ul[popover] {
+      top: anchor(bottom);
+      left: min(anchor(left), calc(100vw - 16rem));
+    }
+
     #filter-groups ul[popover] {
       top: anchor(bottom);
       left: anchor(left);
@@ -522,4 +526,11 @@ select {
 .meta-link {
   display: inline-block;
   padding: var(--padding-tag);
+}
+
+/* LOAD MORE BUTTON */
+
+#load-more {
+  display: block;
+  margin: var(--space-3xl) auto;
 }
