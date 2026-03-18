@@ -138,6 +138,15 @@
     box-shadow: var(--shadow-card);
   }
 
+  nav ul[popover] > li:first-child {
+    font-size: var(--font-size-small);
+    font-style: italic;
+    opacity: 0.75;
+    pointer-events: none;
+    border-bottom: var(--border-width-thin) solid rgba(255, 255, 255, 0.25);
+    margin-bottom: var(--space-xs);
+  }
+
   #filter-groups ul[popover] {
     color: var(--color-text-primary);
     font-size: var(--font-size-small);

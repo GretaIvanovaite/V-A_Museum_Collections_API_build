@@ -187,6 +187,11 @@ select {
     padding: var(--space-s) var(--space-l);
   }
 
+  nav ul[popover] > li:first-child {
+    display: block;
+    padding: var(--space-m) var(--space-l) var(--space-xs);
+  }
+
   /* CONTROLS */
 
   .controls {
