@@ -230,6 +230,7 @@ select {
   }
 
   #filter-groups button {
+    padding: var(--space-xs);
     height: 100%;
     width: 100%;
   }

@@ -1,7 +1,7 @@
 /* VARIABLES */
 
 :root {
-  --color-primary-teal: #2C7A7B;
+  --color-primary-teal: #236263;
   --color-primary-teal-hover: #234E52;
   --color-accent-brown: #8F4A32;
   --color-accent-brown-hover: #6C3322;
@@ -13,21 +13,21 @@
   --color-bg-clickable: #EDF2F7;
   --color-bg-link: #E6F2F2;
   --color-bg-slider: #D4DEE7;
-  --color-bg-photography: #F5EDD8;
-  --color-bg-photography-hover: #7A5520;
-  --color-bg-art: #E8D8F0;
-  --color-bg-art-hover: #5C3D8A;
-  --color-bg-fashion: #F5DCEB;
-  --color-bg-fashion-hover: #8A2E6A;
-  --color-bg-appliedart: #D5EDE6;
-  --color-bg-appliedart-hover: #2A6B58;
-  --color-bg-performance: #F5E2D5;
-  --color-bg-performance-hover: #8A4020;
-  --color-bg-architecture: #D8E5F5;
-  --color-bg-architecture-hover: #2A4A8A;
+  --color-bg-photography: #F5E6C8;
+  --color-bg-photography-hover: #7A4A10;
+  --color-bg-art: #F5CCCC;
+  --color-bg-art-hover: #8B1010;
+  --color-bg-fashion: #F5CCE8;
+  --color-bg-fashion-hover: #8B1060;
+  --color-bg-appliedart: #C2EDDA;
+  --color-bg-appliedart-hover: #0C6040;
+  --color-bg-performance: #DDD0F5;
+  --color-bg-performance-hover: #4A1080;
+  --color-bg-architecture: #F5EAB0;
+  --color-bg-architecture-hover: #6B5000;
 
   --color-text-primary: #1F2632;
-  --color-text-secondary: #6B7280;
+  --color-text-secondary: #4C515B;
   --color-text-white: #FFFFFF;
 
   --color-border-card: #CBD5E1;
@@ -263,8 +263,39 @@
   .selected.performance  { background-color: var(--color-bg-performance); }
   .selected.architecture { background-color: var(--color-bg-architecture); }
 
-  #filter-groups button.photography:hover {
+  #filter-groups li.photography:hover,
+  #filter-groups li.photography:hover button {
     background-color: var(--color-bg-photography-hover);
+    color: var(--color-text-white);
+  }
+
+  #filter-groups li.art:hover,
+  #filter-groups li.art:hover button {
+    background-color: var(--color-bg-art-hover);
+    color: var(--color-text-white);
+  }
+
+  #filter-groups li.fashion:hover,
+  #filter-groups li.fashion:hover button {
+    background-color: var(--color-bg-fashion-hover);
+    color: var(--color-text-white);
+  }
+
+  #filter-groups li.appliedart:hover,
+  #filter-groups li.appliedart:hover button {
+    background-color: var(--color-bg-appliedart-hover);
+    color: var(--color-text-white);
+  }
+
+  #filter-groups li.performance:hover,
+  #filter-groups li.performance:hover button {
+    background-color: var(--color-bg-performance-hover);
+    color: var(--color-text-white);
+  }
+
+  #filter-groups li.architecture:hover,
+  #filter-groups li.architecture:hover button {
+    background-color: var(--color-bg-architecture-hover);
     color: var(--color-text-white);
   }
 
