@@ -12,24 +12,24 @@
 </head>
 <body>
   <a href="#main-content" id="skip-link">Skip to main content</a>
-  <header class="site-header">
-    <a class="logo" href="/">
-      <object data="images/Logo.svg" type="image/svg+xml" aria-label="Toggle Menu" class="nav-icon" width="167" height="88" alt="Collections & Archives Logo">
-        <span class="fallback-text">Collections & Archives</span>
+  <header>
+    <a href="/">
+      <object data="images/Logo.svg" type="image/svg+xml" width="167" height="88" alt="Collections & Archives Logo">
+        <span>Collections & Archives</span>
       </object>
     </a>
     <nav aria-label="Main navigation">
-      <ul class="nav-list">
+      <ul>
         <li><a href="index.html">Home</a></li>
         <li><a href="browse.html">Browse</a></li>
         <li>
-          <button type="button" popovertarget="coll-menu">
+          <button type="button" popovertarget="coll-menu" aria-controls="coll-menu">
             Collections
-            <object data="images/angle-down-solid.svg" type="image/svg+xml" class="nav-icon" width="20">
-              <span class="fallback-symbol" aria-hidden="true">&#x26DB;</span>
+            <object data="images/angle-down-solid.svg" type="image/svg+xml" width="20">
+              <span aria-hidden="true">&#x26DB;</span>
             </object>
           </button>
-          <ul id="coll-menu" popover class="dropdown">
+          <ul id="coll-menu" popover>
             <li><a href="browse/collections/property.html?id=THES48595">Prints, Drawings & Paintings</a></li>
             <li><a href="browse/collections/property.html?id=THES48602">Theatre and Performance</a></li>
             <li><a href="browse/collections/property.html?id=THES48601">Textiles and Fashion</a></li>
@@ -40,13 +40,13 @@
           </ul>
         </li>
         <li>
-          <button type="button" popovertarget="cat-menu">
+          <button type="button" popovertarget="cat-menu" aria-controls="cat-menu">
             Categories
-            <object data="images/angle-down-solid.svg" type="image/svg+xml" class="nav-icon" width="20">
-              <span class="fallback-symbol" aria-hidden="true">&#x26DB;</span>
+            <object data="images/angle-down-solid.svg" type="image/svg+xml" width="20">
+              <span aria-hidden="true">&#x26DB;</span>
             </object>
           </button>
-          <ul id="cat-menu" popover class="dropdown">
+          <ul id="cat-menu" popover>
             <li><a href="browse/categories/property.html?id=THES48903">Prints</a></li>
             <li><a href="browse/categories/property.html?id=THES48968">Designs</a></li>
             <li><a href="browse/categories/property.html?id=THES48966">Drawings</a></li>
@@ -57,13 +57,13 @@
           </ul>
         </li>
         <li>
-          <button type="button" popovertarget="mat-menu">
+          <button type="button" popovertarget="mat-menu" aria-controls="mat-menu">
             Materials
-            <object data="images/angle-down-solid.svg" type="image/svg+xml" class="nav-icon" width="20">
-              <span class="fallback-symbol" aria-hidden="true">&#x26DB;</span>
+            <object data="images/angle-down-solid.svg" type="image/svg+xml" width="20">
+              <span aria-hidden="true">&#x26DB;</span>
             </object>
           </button>
-          <ul id="mat-menu" popover class="dropdown">
+          <ul id="mat-menu" popover>
             <li><a href="browse/materials/property.html?id=x30308">Paper</a></li>
             <li><a href="browse/materials/property.html?id=x30347">Pencil</a></li>
             <li><a href="browse/materials/property.html?id=AAT15012">Ink</a></li>
@@ -74,13 +74,13 @@
           </ul>
         </li>
         <li>
-          <button type="button" popovertarget="org-menu">
+          <button type="button" popovertarget="org-menu" aria-controls="org-menu">
             Origins
-            <object data="images/angle-down-solid.svg" type="image/svg+xml" class="nav-icon" width="20">
-              <span class="fallback-symbol" aria-hidden="true">&#x26DB;</span>
+            <object data="images/angle-down-solid.svg" type="image/svg+xml" width="20">
+              <span aria-hidden="true">&#x26DB;</span>
             </object>
           </button>
-          <ul id="org-menu" popover class="dropdown">
+          <ul id="org-menu" popover>
             <li><a href="browse/origins/property.html?id=x32019">Great Britain</a></li>
             <li><a href="browse/origins/property.html?id=x28980">London</a></li>
             <li><a href="browse/origins/property.html?id=x28826">England</a></li>
@@ -95,20 +95,20 @@
   </header>
 
   <main id="main-content">
-    <section class="controls">
+    <section class="controls" aria-label="Display controls">
       <div id="density-controls">
         <label for="density-slider" class="less">Fewer Objects</label>
         <input type="range" id="density-slider" min="1" max="3" value="2" step="1">
         <label for="density-slider" class="more">More Objects</label>
       </div>
-      <ul id="filter-groups"></ul>
+      <ul id="filter-groups" aria-label="Filter by category"></ul>
     </section>
 
-    <section id="objects-grid" class="objects-grid">
+    <section id="objects-grid" class="objects-grid" aria-label="Museum objects">
       <p>Loading museum artefacts...</p>
     </section>
 
-    <div class="pagination">
+    <div>
       <button type="button" id="load_more">Load More</button>
     </div>
   </main>
@@ -118,29 +118,6 @@
     <p>Data retrieved via Victoria and Albert Museum Collections API</p>
     <p>This prototype is part of an Edge Hill University Undergraduate Research and Development project</p>
   </footer>
-<!--
-  <button type="button" class="chat-toggle" popovertarget="ai-chat" aria-label="Open support chat">
-    Chat
-  </button>
 
-  <dialog id="ai-chat" popover="manual" class="chat-overlay">
-    <div class="chat-container">
-      <header class="chat-header">
-        <h2>Ask about this object</h2>
-        <button type="button" popovertarget="ai-chat" popovertargetaction="hide" aria-label="Close chat">&times;</button>
-      </header>
-      <section class="messages-area" role="log" aria-live="polite">
-        <div class="message system"><p>Welcome! I can help you explore the archive.</p></div>
-      </section>
-      <footer class="input-area">
-        <p class="ai-warning">AI-generated responses may be inaccurate.</p>
-        <form method="dialog" class="chat-form">
-          <input type="text" id="chat-input" placeholder="Ask a question..." required autofocus>
-          <button type="submit">Send</button>
-        </form>
-      </footer>
-    </div>
-  </dialog>
--->
 </body>
 </html>

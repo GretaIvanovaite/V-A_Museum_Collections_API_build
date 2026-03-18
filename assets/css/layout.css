@@ -103,19 +103,19 @@ select {
     padding: 0 var(--space-l);
   }
 
-  .nav-list {
+  header nav > ul {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
   }
 
-  .nav-list li {
+  header nav > ul > li {
     min-width: 5rem;
     width: fit-content;
   }
 
-  .nav-list > li > a,
-  .nav-list > li > button {
+  header nav > ul > li > a,
+  header nav > ul > li > button {
     display: block;
     width: 100%;
     height: 100%;
@@ -123,7 +123,7 @@ select {
     padding: var(--space-m) var(--space-s);
   }
 
-  .nav-list button > * {
+  header nav > ul > li > button > * {
     align-self: flex-end;
     vertical-align: text-bottom;
   }
@@ -135,7 +135,7 @@ select {
 
   /* POPOVERS */
 
-  .dropdown {
+  nav ul[popover] {
     position: absolute;
     top: 100%;
     left: 0;
@@ -167,20 +167,20 @@ select {
     #performance-subgroups  { position-anchor: --performance-btn; }
     #architecture-subgroups { position-anchor: --architecture-btn; }
 
-    .dropdown,
-    .subgroups {
+    nav ul[popover],
+    #filter-groups ul[popover] {
       top: anchor(bottom);
       left: anchor(left);
     }
   }
 
-  .dropdown > li {
+  nav ul[popover] > li {
     display: block;
     width: 100%;
   }
 
-  .dropdown > li > a,
-  .subgroups > li {
+  nav ul[popover] > li > a,
+  #filter-groups ul[popover] > li {
     display: block;
     width: 100%;
     height: 100%;
@@ -260,7 +260,7 @@ select {
 
   /* OBJECT CARD */
 
-  .object-card {
+  .objects-grid article {
     display: flex;
     flex-direction: column;
     position: relative;
@@ -269,51 +269,51 @@ select {
     height: fit-content;
   }
 
-  .object-card h3 .card-link::after {
+  .objects-grid article h3 a::after {
     content: '';
     position: absolute;
     inset: 0;
     z-index: 0;
   }
 
-  .object-card .meta-link,
-  .object-card .creator a {
+  .objects-grid article .meta-link,
+  .objects-grid article .creator a {
     position: relative;
     z-index: 1;
   }
 
-  .object-card picture {
+  .objects-grid article picture {
     width: 100%;
   }
 
-  .object-card picture img {
+  .objects-grid article picture img {
     width: 100%;
     object-fit: contain;
   }
 
-  .object-card dl {
+  .objects-grid article dl {
     flex-wrap: wrap;
     align-items: flex-start;
     gap: var(--space-xs);
   }
 
-  .object-card dt,
-  .object-card hr {
+  .objects-grid article dt,
+  .objects-grid article hr {
     flex-basis: 100%;
   }
 
-  .object-card dd {
+  .objects-grid article dd {
     flex: 0 0 auto;
   }
 
-  .object-card h3,
-  .object-card .date,
-  .object-card .description,
-  .object-card dl {
+  .objects-grid article h3,
+  .objects-grid article .date,
+  .objects-grid article .description,
+  .objects-grid article dl {
     display: none;
   }
 
-  .object-card.disabled::before {
+  .objects-grid article.disabled::before {
     display: block;
     position: absolute;
     top: 0;
@@ -322,43 +322,43 @@ select {
     height: 100%;
   }
 
-  .object-card:hover,
-  .object-card:focus-within {
+  .objects-grid article:hover,
+  .objects-grid article:focus-within {
     grid-column: span 2;
     grid-row: span 2;
     padding: var(--space-l);
     transform-origin: top left;
   }
 
-  .object-card:hover picture,
-  .object-card:focus-within picture {
+  .objects-grid article:hover picture,
+  .objects-grid article:focus-within picture {
     margin-bottom: var(--space-m);
   }
 
-  .object-card:hover h3,
-  .object-card:focus-within h3 {
+  .objects-grid article:hover h3,
+  .objects-grid article:focus-within h3 {
     display: block;
     padding-top: 0;
     margin-bottom: var(--space-xs);
     order: 1;
   }
 
-  .object-card:hover .date,
-  .object-card:focus-within .date {
+  .objects-grid article:hover .date,
+  .objects-grid article:focus-within .date {
     display: block;
     margin-bottom: var(--space-xs);
     order: 2;
   }
 
-  .object-card:hover .description,
-  .object-card:focus-within .description {
+  .objects-grid article:hover .description,
+  .objects-grid article:focus-within .description {
     display: block;
     margin-bottom: var(--space-xs);
     order: 3;
   }
 
-  .object-card:hover dl,
-  .object-card:focus-within dl {
+  .objects-grid article:hover dl,
+  .objects-grid article:focus-within dl {
     display: flex;
     order: 4;
   }
@@ -386,16 +386,16 @@ select {
     padding: 0 var(--space-l);
   }
 
-  .nav-list {
+  header nav > ul {
     flex-wrap: nowrap;
   }
 
-  .nav-list > li > a,
-  .nav-list > li > button {
+  header nav > ul > li > a,
+  header nav > ul > li > button {
     padding: var(--space-l) var(--space-s);
   }
 
-  .dropdown {
+  nav ul[popover] {
     min-width: 15rem;
   }
 
@@ -404,7 +404,7 @@ select {
     padding: var(--space-2xl) 0;
   }
 
-  .object-card {
+  .objects-grid article {
     display: grid;
     grid-template-columns: 1fr;
     align-items: stretch;
@@ -416,36 +416,36 @@ select {
     transform-origin: top left;
   }
 
-  .object-card figure {
+  .objects-grid article figure {
     grid-column: 1;
     height: 100%;
   }
 
-  .object-card picture {
+  .objects-grid article picture {
     margin-bottom: 0;
   }
 
-  .object-card picture img {
+  .objects-grid article picture img {
     min-width: 8rem;
     max-height: 100cqi;
     object-fit: contain;
   }
 
-  .object-card:hover,
-  .object-card:focus-within {
+  .objects-grid article:hover,
+  .objects-grid article:focus-within {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-template-rows: auto auto auto auto auto;
     grid-column: span 2;
     grid-row: span 2;
   }
 
-  .object-card:hover picture img,
-  .object-card:focus-within picture img {
+  .objects-grid article:hover picture img,
+  .objects-grid article:focus-within picture img {
     max-height: none;
   }
 
-  .object-card:hover figure,
-  .object-card:focus-within figure {
+  .objects-grid article:hover figure,
+  .objects-grid article:focus-within figure {
     grid-column: 1;
     grid-row: 1;
     align-self: start;
@@ -454,13 +454,13 @@ select {
     gap: var(--space-s);
   }
 
-  .object-card:hover picture,
-  .object-card:focus-within picture {
+  .objects-grid article:hover picture,
+  .objects-grid article:focus-within picture {
     margin-bottom: 0;
   }
 
-  .object-card:hover dl,
-  .object-card:focus-within dl {
+  .objects-grid article:hover dl,
+  .objects-grid article:focus-within dl {
     grid-column: 2;
     grid-row: 1;
     padding-left: var(--space-l);
@@ -468,23 +468,23 @@ select {
     align-self: start;
   }
 
-  .object-card:hover h3,
-  .object-card:focus-within h3 {
+  .objects-grid article:hover h3,
+  .objects-grid article:focus-within h3 {
     grid-column: 1 / span 2;
     grid-row: 2;
     padding-top: var(--space-l);
     margin-bottom: var(--space-xs);
   }
 
-  .object-card:hover .date,
-  .object-card:focus-within .date {
+  .objects-grid article:hover .date,
+  .objects-grid article:focus-within .date {
     grid-column: 1 / span 2;
     grid-row: 3;
     margin-bottom: var(--space-xs);
   }
 
-  .object-card:hover .description,
-  .object-card:focus-within .description {
+  .objects-grid article:hover .description,
+  .objects-grid article:focus-within .description {
     grid-column: 1 / span 2;
     grid-row: 4;
     margin-bottom: var(--space-xs);

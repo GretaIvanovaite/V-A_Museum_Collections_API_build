@@ -108,10 +108,10 @@
     color: var(--color-text-white);
   }
 
-  .nav-list li a:hover,
-  .nav-list li a:focus-visible,
-  .nav-list li button:hover,
-  .nav-list li button:focus-visible,
+  header nav li a:hover,
+  header nav li a:focus-visible,
+  header nav li button:hover,
+  header nav li button:focus-visible,
   header a:hover,
   header a:focus-visible {
     background-color: var(--color-primary-teal-hover);
@@ -131,14 +131,14 @@
 
   /* POPOVERS */
 
-  .dropdown {
+  nav ul[popover] {
     background-color: var(--color-primary-teal);
     color: var(--color-text-white);
     border-radius: var(--radius-m);
     box-shadow: var(--shadow-card);
   }
 
-  .subgroups {
+  #filter-groups ul[popover] {
     color: var(--color-text-primary);
     font-size: var(--font-size-small);
     border-radius: var(--radius-m);
@@ -146,12 +146,12 @@
     background-color: var(--color-bg-clickable);
   }
 
-  #photography-subgroups { background-color: var(--color-bg-photography); }
-  #art-subgroups         { background-color: var(--color-bg-art); }
-  #fashion-subgroups     { background-color: var(--color-bg-fashion); }
-  #appliedart-subgroups  { background-color: var(--color-bg-appliedart); }
-  #performance-subgroups { background-color: var(--color-bg-performance); }
-  #architecture-subgroups { background-color: var(--color-bg-architecture); }
+  #filter-groups #photography-subgroups  { background-color: var(--color-bg-photography); }
+  #filter-groups #art-subgroups          { background-color: var(--color-bg-art); }
+  #filter-groups #fashion-subgroups      { background-color: var(--color-bg-fashion); }
+  #filter-groups #appliedart-subgroups   { background-color: var(--color-bg-appliedart); }
+  #filter-groups #performance-subgroups  { background-color: var(--color-bg-performance); }
+  #filter-groups #architecture-subgroups { background-color: var(--color-bg-architecture); }
 
   #photography-subgroups > li:hover,
   #art-subgroups > li:hover,
@@ -205,44 +205,44 @@
 
   /* OBJECT CARDS */
 
-  .object-card {
+  .objects-grid article {
     border-radius: var(--radius-m);
     background-color: var(--color-bg-card);
     box-shadow: var(--shadow-offset);
   }
 
-  .object-card:hover,
-  .object-card:focus-within {
+  .objects-grid article:hover,
+  .objects-grid article:focus-within {
     border-radius: var(--radius-s);
     background-color: var(--color-bg-clickable);
     box-shadow: var(--shadow-offset-hover);
   }
 
-  .object-card .date,
-  .object-card .creator {
+  .objects-grid article .date,
+  .objects-grid article .creator {
     font-size: var(--font-size-small);
     color: var(--color-text-secondary);
     font-weight: var(--font-weight-regular);
   }
 
-  .object-card .description {
+  .objects-grid article .description {
     font-size: var(--font-size-small);
     color: var(--color-text-primary);
     font-weight: var(--font-weight-regular);
   }
 
-  .object-card dt {
+  .objects-grid article dt {
     font-size: var(--font-size-small);
     font-weight: var(--font-weight-bold);
   }
 
-  .object-card dd {
+  .objects-grid article dd {
     font-size: var(--font-size-small);
     font-weight: var(--font-weight-regular);
     color: var(--color-text-secondary);
   }
 
-  .object-card picture img {
+  .objects-grid article picture img {
     border-radius: var(--radius-m);
   }
 
@@ -250,18 +250,18 @@
     pointer-events: none;
   }
 
-  .object-card.selected {
+  .objects-grid article.selected {
     box-shadow: var(--shadow-hover);
     transform: scale(1.02);
     z-index: 1;
   }
 
-  .selected.photography  { background-color: var(--color-bg-photography); }
-  .selected.art          { background-color: var(--color-bg-art); }
-  .selected.fashion      { background-color: var(--color-bg-fashion); }
-  .selected.appliedart   { background-color: var(--color-bg-appliedart); }
-  .selected.performance  { background-color: var(--color-bg-performance); }
-  .selected.architecture { background-color: var(--color-bg-architecture); }
+  .objects-grid article.selected.photography  { background-color: var(--color-bg-photography); }
+  .objects-grid article.selected.art          { background-color: var(--color-bg-art); }
+  .objects-grid article.selected.fashion      { background-color: var(--color-bg-fashion); }
+  .objects-grid article.selected.appliedart   { background-color: var(--color-bg-appliedart); }
+  .objects-grid article.selected.performance  { background-color: var(--color-bg-performance); }
+  .objects-grid article.selected.architecture { background-color: var(--color-bg-architecture); }
 
   #filter-groups li.photography:hover,
   #filter-groups li.photography:hover button {
@@ -299,7 +299,7 @@
     color: var(--color-text-white);
   }
 
-  .object-card.disabled::before {
+  .objects-grid article.disabled::before {
     content: "";
     background-color: rgba(220, 225, 232, 0.75);
     border-radius: var(--radius-m);
@@ -343,6 +343,18 @@
 
 /* UTILITIES */
 
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .meta-link {
   background-color: var(--color-bg-link);
   border: var(--border-width-standard) solid var(--color-primary-teal);
@@ -359,9 +371,4 @@
   border-color: var(--color-primary-teal-hover);
   font-weight: var(--font-weight-bold);
   outline: none;
-}
-
-.card-link {
-  color: inherit;
-  text-decoration: none;
 }

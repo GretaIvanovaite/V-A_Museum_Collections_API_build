@@ -9,22 +9,20 @@
   <title>All Origins | Collections & Archives</title>
 </head>
 <body>
-  <a href="#main-content" class="skip-link">Skip to main content</a>
-  <header class="site-header">
-    <div class="logo">
-      <!-- Returns to root images folder -->
-      <img src="../../images/Logo.png" alt="Collections & Archives Logo" width="167" height="88">
-    </div>
+  <a href="#main-content" id="skip-link">Skip to main content</a>
+  <header>
+    <a href="../../index.html">
+      <img src="../../images/Logo.png" alt="Collections &amp; Archives home" width="167" height="88">
+    </a>
 
     <nav aria-label="Main navigation">
-      <ul class="nav-list">
+      <ul>
         <li><a href="../../index.html">Home</a></li>
         <li><a href="../../browse.html">Browse</a></li>
-        
+
         <li>
-          <button type="button" popovertarget="coll-menu" anchor-name="--coll-btn">Collections</button>
-          <ul id="coll-menu" popover class="dropdown" style="position-anchor: --coll-btn;">
-            <!-- Moves sideways to sibling category folder -->
+          <button type="button" popovertarget="coll-menu" aria-controls="coll-menu">Collections</button>
+          <ul id="coll-menu" popover>
             <li><a href="../collections/property.html?id=THES48595">Prints, Drawings & Paintings</a></li>
             <li><a href="../collections/property.html?id=THES48602">Theatre and Performance</a></li>
             <li><a href="../collections/property.html?id=THES48601">Textiles and Fashion</a></li>
@@ -36,8 +34,8 @@
         </li>
 
         <li>
-          <button type="button" popovertarget="cat-menu" anchor-name="--cat-btn">Categories</button>
-          <ul id="cat-menu" popover class="dropdown" style="position-anchor: --cat-btn;">
+          <button type="button" popovertarget="cat-menu" aria-controls="cat-menu">Categories</button>
+          <ul id="cat-menu" popover>
             <li><a href="../categories/property.html?id=THES48903">Prints</a></li>
             <li><a href="../categories/property.html?id=THES48968">Designs</a></li>
             <li><a href="../categories/property.html?id=THES48966">Drawings</a></li>
@@ -49,8 +47,8 @@
         </li>
 
         <li>
-          <button type="button" popovertarget="mat-menu" anchor-name="--mat-btn">Materials</button>
-          <ul id="mat-menu" popover class="dropdown" style="position-anchor: --mat-btn;">
+          <button type="button" popovertarget="mat-menu" aria-controls="mat-menu">Materials</button>
+          <ul id="mat-menu" popover>
             <li><a href="../materials/property.html?id=x30308">Paper</a></li>
             <li><a href="../materials/property.html?id=x30347">Pencil</a></li>
             <li><a href="../materials/property.html?id=AAT15012">Ink</a></li>
@@ -62,8 +60,8 @@
         </li>
 
         <li>
-          <button type="button" popovertarget="org-menu" anchor-name="--org-btn">Origins</button>
-          <ul id="org-menu" popover class="dropdown" style="position-anchor: --org-btn;">
+          <button type="button" popovertarget="org-menu" aria-controls="org-menu">Origins</button>
+          <ul id="org-menu" popover>
             <li><a href="../origins/property.html?id=x32019">Great Britain</a></li>
             <li><a href="../origins/property.html?id=x28980">London</a></li>
             <li><a href="../origins/property.html?id=x28826">England</a></li>
@@ -77,7 +75,7 @@
     </nav>
   </header>
 
-  <nav aria-label="Breadcrumb" class="breadcrumb-nav">
+  <nav aria-label="Breadcrumb">
     <ol>
       <li><a href="../../index.html">Home</a></li>
       <li><a href="../../browse.html">Browse</a></li>
@@ -87,18 +85,18 @@
 
   <main id="main-content">
     <h1>Browse by Origin</h1>
-    <section class="browse-section">
-      <div class="cards-container">
-        <a href="property.html?id=x32019" class="browse-card">
-          <div class="card-label-wrapper"><span class="label-text">Great Britain</span></div>
+    <section>
+      <div>
+        <a href="property.html?id=x32019">
+          <div><span>Great Britain</span></div>
           <picture><img src="../../images/origin1.jpg" alt="" aria-hidden="true" loading="lazy"></picture>
         </a>
-        <a href="property.html?id=x28980" class="browse-card">
-          <div class="card-label-wrapper"><span class="label-text">London</span></div>
+        <a href="property.html?id=x28980">
+          <div><span>London</span></div>
           <picture><img src="../../images/origin2.jpg" alt="" aria-hidden="true" loading="lazy"></picture>
         </a>
-        <a href="property.html?id=x28826" class="browse-card">
-          <div class="card-label-wrapper"><span class="label-text">England</span></div>
+        <a href="property.html?id=x28826">
+          <div><span>England</span></div>
           <picture><img src="../../images/origin3.jpg" alt="" aria-hidden="true" loading="lazy"></picture>
         </a>
       </div>
@@ -109,20 +107,21 @@
     <p>&copy; 2026 Collections & Archives</p>
   </footer>
 
-  <button type="button" class="chat-toggle" popovertarget="ai-chat">Chat</button>
+  <button type="button" popovertarget="ai-chat" aria-label="Open support chat">Chat</button>
 
-  <dialog id="ai-chat" popover="manual" class="chat-overlay">
-    <div class="chat-container">
-      <header class="chat-header">
-        <h2>Ask about this object</h2>
-        <button type="button" popovertarget="ai-chat" popovertargetaction="hide">&times;</button>
+  <dialog id="ai-chat" popover="manual" aria-labelledby="chat-title">
+    <div>
+      <header>
+        <h2 id="chat-title">Ask about this object</h2>
+        <button type="button" popovertarget="ai-chat" popovertargetaction="hide" aria-label="Close chat">&times;</button>
       </header>
-      <section class="messages-area" role="log" aria-live="polite">
-        <div class="message system"><p>Welcome! I can help you explore the archive.</p></div>
+      <section role="log" aria-live="polite">
+        <div><p>Welcome! I can help you explore the archive.</p></div>
       </section>
-      <footer class="input-area">
-        <form method="dialog" class="chat-form">
-          <input type="text" placeholder="Ask a question..." required autofocus>
+      <footer>
+        <form method="dialog">
+          <label for="chat-input" class="visually-hidden">Your question</label>
+          <input type="text" id="chat-input" placeholder="Ask a question..." required autofocus>
           <button type="submit">Send</button>
         </form>
       </footer>
