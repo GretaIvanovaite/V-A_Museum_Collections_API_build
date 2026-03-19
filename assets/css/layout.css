@@ -472,7 +472,7 @@ select {
   .objects-grid article.is-hovered .card-inner,
   .objects-grid article:focus-within .card-inner {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     grid-template-rows: auto auto auto auto auto;
     width: min(calc(200% + var(--space-xl)), 100vw);
   }
