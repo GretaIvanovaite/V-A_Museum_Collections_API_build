@@ -511,7 +511,7 @@ function showCards(tier) {
   grid.innerHTML = '';
   buildFilterGroups(tier);
 
-  // Build per-group item lists
+  // Group lists
   const groupItems = [];
   for (let i = 0; i < groups.length; i++) {
     const group = groups[i];
@@ -530,7 +530,6 @@ function showCards(tier) {
     }
   }
 
-  // Shuffle group order and items within each group
   for (let i = groupItems.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [groupItems[i], groupItems[j]] = [groupItems[j], groupItems[i]];
@@ -543,7 +542,7 @@ function showCards(tier) {
     }
   }
 
-  // Round-robin interleave to ensure group variety, then shuffle the result
+  // shuffle before placing
   const ordered = [];
   let round = 0;
   while (true) {

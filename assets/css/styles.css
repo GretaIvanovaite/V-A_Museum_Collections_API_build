@@ -197,7 +197,6 @@
     font-size: var(--font-size-small);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-primary);
-    letter-spacing: var(--letter-spacing-normal);
     text-transform: uppercase;
     background-color: var(--color-bg-clickable);
     border-radius: var(--radius-pill);
@@ -205,6 +204,22 @@
 
   #density-controls input {
     accent-color: var(--color-accent-brown);
+    cursor: pointer;
+  }
+
+  #density-controls:hover {
+    background-color: var(--color-bg-slider);
+    cursor: pointer;
+  }
+
+  #density-controls input[type="range"]:hover {
+    accent-color: var(--color-accent-brown-hover);
+  }
+
+  #density-controls input[type="range"]:focus-visible {
+    outline: var(--space-xs) solid var(--color-primary-teal);
+    outline-offset: var(--space-s);
+    border-radius: var(--radius-xs);
   }
 
   #filter-groups li,
