@@ -402,6 +402,12 @@ select {
     order: 4;
   }
 
+  .details-view main {
+  display: flex;
+  flex-direction: column; /* Stack everything vertically on mobile */
+  gap: var(--space-xl);
+  }
+
 }
 
 /* TABLET */
@@ -550,6 +556,35 @@ select {
 
   #skip-link:focus-visible {
     left: 10rem;
+  }
+
+  .details-view main {
+    display: grid;
+    grid-template-columns: 1fr minmax(33.33%, 50%);
+    column-gap: var(--space-2xl);
+    row-gap: var(--space-xl);
+    align-items: start;
+  }
+
+  .details-view h1 { grid-column: 1 / -1; }
+
+  .details-view section:nth-of-type(1) {
+    grid-column: 1;
+    grid-row: 2 / span 2;
+  }
+
+  .details-view aside {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .details-view section:nth-of-type(2) {
+    grid-column: 2;
+    grid-row: 3;
+  }
+
+  .details-view section:nth-of-type(n+3) {
+    grid-column: 1 / -1;
   }
 }
 

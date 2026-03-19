@@ -4,152 +4,164 @@ const IMAGE_CDN = "https://framemark.vam.ac.uk/collections";
 const params = new URLSearchParams(window.location.search);
 const objectId = params.get('id');
 
+// --- INITIALIZATION ---
 if (!objectId) {
-  document.getElementById('main-content').innerHTML = '<p>No object specified.</p>';
+  const mainContent = document.getElementById('main-content');
+  if (mainContent) mainContent.innerHTML = '<p>No object specified.</p>';
 } else {
   loadObject(objectId);
 }
 
+// --- DATA FETCHING ---
 async function loadObject(id) {
   try {
     const res = await fetch(`${API_BASE}/museumobject/${id}`);
     const data = await res.json();
-    const record = data.record;
-
-    console.log(record);
-
-    renderDetails(record);
+    renderDetails(data.record);
   } catch (err) {
     console.error('Failed to load object:', err);
-    document.getElementById('main-content').innerHTML = '<p>Failed to load object details.</p>';
+    const mainContent = document.getElementById('main-content');
+    if (mainContent) mainContent.innerHTML = '<p>Failed to load object details.</p>';
   }
 }
 
+// --- HELPERS ---
+const toggleSection = (selector, content) => {
+  const element = document.querySelector(selector);
+  if (!element) return;
+  const section = element.closest('section');
+  
+  if (content && content.toString().trim() !== "" && content !== '<dd>Not recorded</dd>') {
+    element.innerHTML = content;
+    if (section) section.style.display = 'block';
+  } else {
+    if (section) section.style.display = 'none';
+  }
+};
+
+const createLink = (text, id, type) => {
+  if (!text || text.toLowerCase() === 'unknown') return text || 'Unknown';
+  return `<a href="browse/${type}/property.html?id=${id}" class="meta-link">${text}</a>`;
+};
+
+// --- CORE RENDERING ---
 function renderDetails(record) {
   const title = record._primaryTitle || record.objectType || 'Untitled';
-  const date = record._primaryDate || '';
-  const year = date.match(/\d{4}/)?.[0] || '';
-  const place = record._primaryPlace || '';
-  const maker = record._primaryMaker?.name || '';
-  const association = record._primaryMaker?.association
-    ? normalizeAssociation(record._primaryMaker.association)
-    : '';
-  const collection = normalizeCollection(record.collectionCode?.text);
-  const categories = (record.categories || []).map(c => normalizeCategory(c.text || c.name || '')).filter(Boolean);
-  const materials = (record.materials || []).map(m => m.text).filter(Boolean);
-  const techniques = (record.techniques || []).map(t => t.text).filter(Boolean);
-  const physicalDescription = record.physicalDescription || '';
-  const briefDescription = record.briefDescription || '';
-  const summaryDescription = record.summaryDescription || '';
-  const imageId = record.images[0];
-  const allImages = record.images || [];
-
-  // Page title
+  const h1 = document.querySelector('h1');
+  if (h1) h1.textContent = title;
   document.title = `${title} | Collections & Archives`;
 
-  // Breadcrumb
+  // 1. Breadcrumb
   const breadcrumb = document.querySelector('.breadcrumb-nav ol');
   if (breadcrumb) {
+    const cleanColl = normalizeCollection(record.collectionCode?.text);
     breadcrumb.innerHTML = `
       <li><a href="index.html">Home</a></li>
-      ${collection ? `<li><a href="#">${collection}</a></li>` : ''}
+      ${record.collectionCode ? `<li><a href="#">${cleanColl}</a></li>` : ''}
       <li aria-current="page">${title}</li>
     `;
   }
 
-  // Main image
-  if (imageId) {
-    const base = `${IMAGE_CDN}/${imageId}/full`;
-    const mainFigure = document.querySelector('.main-display');
-    if (mainFigure) {
-      mainFigure.innerHTML = `
-        <picture>
-          <source media="(min-width: 1000px)" srcset="${base}/!1200,1200/0/default.jpg">
-          <source media="(min-width: 600px)" srcset="${base}/!800,800/0/default.jpg">
-          <img src="${base}/!600,600/0/default.jpg" alt="${title}" width="1200" height="1200">
-        </picture>
-      `;
-    }
+  // 2. Image Gallery Logic
+  renderGallery(record, title);
 
-    // Thumbnail strip for additional images
-    const strip = document.querySelector('.thumbnail-strip');
-    // Check if there is more than one image
-    if (strip && allImages.length > 1) {
-      const extras = allImages.slice(0, 6);
-      strip.innerHTML = extras.map(imgId => `
-        <button type="button" data-image-id="${imgId}">
-          <img src="${IMAGE_CDN}/${imgId}/full/!100,100/0/default.jpg" alt="View ${title} gallery image" loading="lazy">
-        </button>
-      `).join('');
-
-      strip.addEventListener('click', e => {
-        const btn = e.target.closest('button[data-image-id]');
-        if (!btn) return;
-        
-        const newId = btn.dataset.imageId;
-        const newBase = `${IMAGE_CDN}/${newId}/full`;
-        
-        // Update main image display
-        mainFigure.innerHTML = `
-          <picture>
-            <source media="(min-width: 1000px)" srcset="${newBase}/!1200,1200/0/default.jpg">
-            <source media="(min-width: 600px)" srcset="${newBase}/!800,800/0/default.jpg">
-            <img src="${newBase}/!600,600/0/default.jpg" alt="${title}" width="1200" height="1200">
-          </picture>
-        `;
-      });
-    } else if (strip) {
-      // Clear the strip if there's only one image or none
-      strip.innerHTML = '';
-    }
-  }
-
-  // Descriptions
-  const briefEl = document.querySelector('.brief-desc');
-  if (briefEl) briefEl.innerHTML = briefDescription;
-
-  const summaryEl = document.querySelector('.summary-desc');
-  if (summaryEl) summaryEl.innerHTML = summaryDescription;
-
-  const physicalEl = document.querySelector('.physical-desc');
-  if (physicalEl) physicalEl.innerHTML = physicalDescription;
-
-  // Physical characteristics
-  const physDl = document.querySelector('.physical-characteristics dl');
-  if (physDl) {
+  // 3. Quick Facts (The 6 Required Fields with Helper)
+  const quickFactsDl = document.querySelector('.quick-facts dl');
+  if (quickFactsDl) {
     let html = '';
-    if (materials.length) html += `<dt>Materials</dt>${materials.map(m => `<dd>${m}</dd>`).join('')}`;
-    if (techniques.length) html += `<dt>Techniques</dt>${techniques.map(t => `<dd>${t}</dd>`).join('')}`;
-    if (record.dimensions?.length) {
-      html += `<dt>Dimensions</dt>`;
-      html += record.dimensions.map(d => `<dd>${d.dimension}: ${d.value}${d.units}</dd>`).join('');
-    }
-    physDl.innerHTML = html || '<dd>Not recorded</dd>';
+
+    // The Helper Function
+    const addGroup = (label, values) => {
+      const valArray = Array.isArray(values) ? values : [values];
+      const validValues = valArray.filter(v => v && v !== 'Unknown' && v !== 'Not specified');
+      
+      if (validValues.length === 0) return;
+
+      html += `<dt>${label}</dt>`;
+      validValues.forEach(val => {
+        html += `<dd>${val}</dd>`;
+      });
+    };
+
+    // Field 1: Object Type
+    addGroup('Object type', record.objectType);
+
+    // Field 2: Artist/Maker
+    const makers = (record.artistMakerPerson || []).map(m => 
+      createLink(m.name.text, m.name.id, 'artists')
+    );
+    addGroup('Artist/Maker', makers);
+
+    // Field 3: Date
+    addGroup('Date', record.productionDates?.[0]?.date?.text);
+
+    // Field 4: Place of Origin
+    const rawPlace = record.placesOfOrigin?.[0]?.place?.text;
+    addGroup('Place of origin', createLink(normalizePlace(rawPlace), '', 'origins'));
+
+    // Field 5: Categories
+    const categories = (record.categories || []).map(c => 
+      createLink(normalizeCategory(c.text), c.id, 'categories')
+    );
+    addGroup('Categories', categories);
+
+    // Field 6: Collection
+    addGroup('Collection', createLink(normalizeCollection(record.collectionCode?.text), record.collectionCode?.id, 'collections'));
+
+    quickFactsDl.innerHTML = html;
   }
 
-  // Quick facts sidebar
-  const quickFacts = document.querySelector('.quick-facts');
-  if (quickFacts) {
-    let creatorText = '';
-    if (maker) {
-      if (maker.toLowerCase() === 'unknown') {
-        creatorText = 'Creator unknown';
-      } else {
-        creatorText = `${association ? `${association}: ` : 'Created by: '}${maker}`;
-      }
-    }
+  // 4. Content Sections (Using toggleSection for auto-hide)
+  toggleSection('.brief-desc', record.briefDescription);
+  toggleSection('.summary-desc', record.summaryDescription);
+  toggleSection('.historical-content', record.historicalContext || record.objectHistory);
 
-    quickFacts.innerHTML = `
-      <h2>${title}</h2>
-      <dl>
-        ${record.objectType ? `<dt>Object type</dt><dd>${record.objectType}</dd>` : ''}
-        ${creatorText ? `<dt>Maker</dt><dd>${creatorText}</dd>` : ''}
-        ${date ? `<dt>Date</dt><dd><time datetime="${year}">${date}</time></dd>` : ''}
-        ${place ? `<dt>Place</dt><dd>${normalizePlace(place)}</dd>` : ''}
-        ${categories.length ? `<dt>Categories</dt>${categories.map(c => `<dd>${c}</dd>`).join('')}` : ''}
-        ${collection ? `<dt>Collection</dt><dd>${collection}</dd>` : ''}
-        ${record.accessionNumber ? `<dt>Accession number</dt><dd>${record.accessionNumber}</dd>` : ''}
-      </dl>
-    `;
+  // 5. Physical Characteristics
+  let physHtml = '';
+  if (record.materials?.length) {
+    physHtml += `<dt>Materials</dt>${record.materials.map(m => `<dd>${m.text}</dd>`).join('')}`;
+  }
+  if (record.techniques?.length) {
+    physHtml += `<dt>Techniques</dt>${record.techniques.map(t => `<dd>${t.text}</dd>`).join('')}`;
+  }
+  toggleSection('.physical-characteristics dl', physHtml);
+
+  // 6. Museum Info
+  const museumHtml = `
+    <dt>System Number</dt><dd>${record.systemNumber}</dd>
+    <dt>Accession Number</dt><dd>${record.accessionNumber}</dd>
+  `;
+  toggleSection('.museum-info dl', museumHtml);
+}
+
+// --- SUPPORTING FUNCTIONS ---
+
+function renderGallery(record, title) {
+  const imageId = record.images?.[0];
+  const allImages = record.images || [];
+  const mainFigure = document.querySelector('.main-display');
+
+  if (imageId && mainFigure) {
+    const base = `${IMAGE_CDN}/${imageId}/full`;
+    mainFigure.innerHTML = `
+      <picture>
+        <source media="(min-width: 1000px)" srcset="${base}/!1200,1200/0/default.jpg">
+        <img src="${base}/!600,600/0/default.jpg" alt="${title}">
+      </picture>`;
+
+    const strip = document.querySelector('.thumbnail-strip');
+    if (strip && allImages.length > 1) {
+      strip.innerHTML = allImages.slice(0, 6).map(imgId => `
+        <button type="button" data-image-id="${imgId}">
+          <img src="${IMAGE_CDN}/${imgId}/full/!100,100/0/default.jpg" alt="Gallery image">
+        </button>`).join('');
+
+      strip.onclick = (e) => {
+        const btn = e.target.closest('button');
+        if (!btn) return;
+        const newBase = `${IMAGE_CDN}/${btn.dataset.imageId}/full`;
+        mainFigure.innerHTML = `<picture><img src="${newBase}/!1200,1200/0/default.jpg" alt="${title}"></picture>`;
+      };
+    }
   }
 }

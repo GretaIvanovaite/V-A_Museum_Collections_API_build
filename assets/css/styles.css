@@ -348,6 +348,30 @@
     border-radius: var(--radius-m);
   }
 
+  .quick-facts dd + dt,
+  .quick-facts dd + dt + dd {
+    border-top: 1px solid var(--color-divider-secondary);
+    padding-top: var(--space-m);
+  }
+
+  /* Tighten multiple DDs within a group */
+  .quick-facts dd + dd {
+    grid-column: 2;
+    padding-top: 0;
+    margin-top: calc(var(--space-xs) * -1); 
+  }
+
+  /* Base styles for the DL */
+  .quick-facts dl {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-top: 1px solid var(--color-divider-secondary); /* Initial line */
+  }
+
+  .quick-facts dt, .quick-facts dd {
+    padding: var(--space-m) 0;
+  }
+
 }
 
 /* TABLET */
@@ -473,9 +497,8 @@ nav[aria-label="Breadcrumb"] ol {
   nav[aria-label="Breadcrumb"] li + li::before {
     content: '\25B9'; 
     margin-right: var(--space-xs);
-    margin-left: var(--space-xs);
     color: var(--color-text-teal);
-    font-size: 2rem; 
+    font-size: 2rem;
     vertical-align: top;
   }
 

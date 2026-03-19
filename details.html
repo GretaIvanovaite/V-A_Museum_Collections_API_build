@@ -10,7 +10,7 @@
   <script src="assets/js/details.js" defer></script>
   <title>Object Title | Collections &amp; Archives</title>
 </head>
-<body>
+<body class="details-view">
   <a href="#main-content" id="skip-link">Skip to main content</a>
   <header>
     <a href="index.html" aria-label="Collections &amp; Archives home">
@@ -104,100 +104,42 @@
     </ol>
   </nav>
 
-  <main id="main-content" class="details-page">
-    <div>
-      <section aria-label="Object images">
-        <figure class="main-display">
-          <picture>
-            <source srcset="object-large.avif" type="image/avif">
-            <img src="object-large.jpg" alt="Detailed view of the artifact">
-          </picture>
-        </figure>
-        <div class="thumbnail-strip" role="group" aria-label="Additional views">
-          <button type="button" aria-pressed="true"><img src="thumb1.jpg" alt="View 1" loading="lazy"></button>
-          <button type="button"><img src="thumb2.jpg" alt="View 2" loading="lazy"></button>
-          <button type="button"><img src="thumb3.jpg" alt="View 3" loading="lazy"></button>
-          <button type="button"><img src="thumb4.jpg" alt="View 4" loading="lazy"></button>
-        </div>
-      </section>
+  <main id="main-content">
+    <h1>Object Title</h1>
 
-      <section aria-labelledby="desc-heading">
-        <h2 id="desc-heading">Description</h2>
-        <p class="brief-desc">A brief overview of the object's history and significance.</p>
-        <p class="summary-desc">Detailed summary providing context on the craftsmanship and usage.</p>
-        <details>
-          <summary>Historical Context</summary>
-          <div>
-            <p>In-depth historical details about the period and provenance of this specific object.</p>
-          </div>
-        </details>
-      </section>
+    <section aria-label="Object images">
+      <figure class="main-display"></figure>
+      <div class="thumbnail-strip" role="group"></div>
+    </section>
 
-      <section class="physical-characteristics" aria-labelledby="phys-heading">
-        <h2 id="phys-heading">Physical Characteristics</h2>
-        <dl>
-          <dt>Materials</dt>
-          <dd>Paper, Ink</dd>
-          <dt>Techniques</dt>
-          <dd>Photography, Albumen process</dd>
-          <dt>Dimensions</dt>
-          <dd>Height: 20cm, Width: 15cm</dd>
-        </dl>
-      </section>
-
-      <section class="museum-info" aria-labelledby="museum-heading">
-        <h2 id="museum-heading">Museum Information</h2>
-        <dl>
-          <dt>Library Number</dt>
-          <dd>PH.123-2026</dd>
-          <dt>Other Numbers</dt>
-          <dd>Inventory: 456789</dd>
-        </dl>
-      </section>
-
-      <section aria-labelledby="related-heading">
-        <h2 id="related-heading">Related Objects</h2>
-        <div class="objects-grid">
-          <article>
-            <picture>
-              <source srcset="related1.avif" type="image/avif">
-              <img src="related1.jpg" alt="Related artifact" loading="lazy">
-            </picture>
-            <h3>Related Title</h3>
-            <p>London, UK</p>
-          </article>
-        </div>
-      </section>
-    </div>
-
-    <aside>
-      <article class="quick-facts" aria-label="Object quick facts">
-        <h2>Object Title</h2>
-        <dl>
-          <dt>Object Type</dt>
-          <dd>Photograph</dd>
-          <dt>Artist/Maker</dt>
-          <dd>Unknown (Photographer)</dd>
-          <dt>Date</dt>
-          <dd><time datetime="1860">ca. 1860</time></dd>
-          <dt>Place</dt>
-          <dd>London, England</dd>
-          <dt>Categories</dt>
-          <dd><a href="browse/categories/property.html?id=THES48910">Photographs</a></dd>
-          <dt>Collection</dt>
-          <dd><a href="browse/collections/property.html?id=THES48595">Prints, Drawings &amp; Paintings</a></dd>
-        </dl>
-      </article>
-
-      <aside aria-label="Explore more">
-        <h2>Explore More</h2>
-        <a href="browse/categories/property.html?id=THES48910" aria-label="Browse Photography category">
-          <span>Photography</span>
-          <img src="thumb.avif" alt="" aria-hidden="true" loading="lazy">
-          <span>Category</span>
-        </a>
-      </aside>
+    <aside aria-label="Object quick facts" class="quick-facts">
+      <dl></dl>
     </aside>
+
+    <section aria-labelledby="desc-heading">
+      <h2 id="desc-heading" class="visually-hidden">Description</h2>
+      <p class="brief-desc"></p>
+      <p class="summary-desc"></p>
+      <details>
+        <summary>Historical Context</summary>
+        <div class="historical-content"></div>
+      </details>
+    </section>
+
+    <section aria-labelledby="phys-heading">
+      <h2 id="phys-heading">Physical Characteristics</h2>
+      <dl></dl>
+    </section>
+
+    <section aria-labelledby="museum-heading">
+      <h2 id="museum-heading">Museum Information</h2>
+      <dl></dl>
+    </section>
+
+    <section aria-labelledby="related-heading">
+      <h2 id="related-heading">Related Objects</h2>
+      <div class="objects-grid"></div>
+    </section>
   </main>
 
   <footer>
