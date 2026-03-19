@@ -469,20 +469,24 @@ nav[aria-label="Breadcrumb"] ol {
   color: var(--color-text-secondary);
 }
 
-nav[aria-label="Breadcrumb"] li + li::before {
-  content: '/';
-  margin-right: var(--space-xs);
-  color: var(--color-divider-secondary);
-}
+  /* BREADCRUMBS */
+  nav[aria-label="Breadcrumb"] li + li::before {
+    content: '\25B9'; 
+    margin-right: var(--space-xs);
+    margin-left: var(--space-xs);
+    color: var(--color-text-teal);
+    font-size: 2rem; 
+    vertical-align: top;
+  }
 
 nav[aria-label="Breadcrumb"] a {
   color: var(--color-text-teal);
+  text-decoration: underline;
 }
 
 nav[aria-label="Breadcrumb"] a:hover,
 nav[aria-label="Breadcrumb"] a:focus-visible {
-  text-decoration: underline;
-  outline: none;
+  font-weight: var(--font-weight-bold);
 }
 
 nav[aria-label="Breadcrumb"] [aria-current="page"] {
