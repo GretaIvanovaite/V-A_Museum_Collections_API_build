@@ -98,6 +98,69 @@
     </nav>
   </header>
 
+  <noscript>
+    <style>
+      /* Hide the main content and any navigation/footers */
+      main, header, footer, #skip-link { display: none !important; }
+
+      .js-error-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 40px;
+        font-family: system-ui, -apple-system, sans-serif;
+        background-color: #fff; /* High contrast background */
+        color: #000;
+      }
+
+      .error-card {
+        max-width: 600px;
+        border: 4px solid #d93025; /* Bold red border for visual cue */
+        padding: 30px;
+        border-radius: 8px;
+      }
+
+      .btn-enable {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 12px 24px;
+        background-color: #1a73e8;
+        color: white;
+        font-weight: 700;
+        text-decoration: none;
+        border-radius: 4px;
+      }
+      
+      /* Ensure the link is clearly a link for colorblind users */
+      .btn-enable:hover {
+        text-decoration: underline;
+        background-color: #1557b0;
+      }
+    </style>
+
+    <div class="js-error-container" role="alert" aria-live="assertive">
+      <div class="error-card">
+        <h1 style="font-size: 2rem; margin-bottom: 1rem;">
+          JavaScript is Required
+        </h1>
+        <p style="font-size: 1.2rem; line-height: 1.5;">
+          We're sorry, but this website fetches data via an API and <strong>cannot function</strong> without JavaScript enabled.
+        </p>
+        
+        <p><strong>Once enabled, please refresh this page to load the content.</strong></p>
+        
+        <a href="https://www.enable-javascript.com/" 
+           target="_blank" 
+           rel="noopener noreferrer"
+           class="btn-enable">
+           How to enable JavaScript in your browser
+        </a>
+      </div>
+    </div>
+  </noscript>
+
   <main id="main-content">
     <section class="controls" aria-label="Display controls">
       <div id="density-controls">

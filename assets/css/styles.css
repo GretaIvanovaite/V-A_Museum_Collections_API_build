@@ -150,7 +150,7 @@
   #filter-groups ul[popover] {
     color: var(--color-text-primary);
     font-size: var(--font-size-small);
-    border-radius: var(--radius-m);
+    border-radius: var(--radius-l);
     border: var(--border-width-thin) solid var(--color-border-card);
     background-color: var(--color-bg-clickable);
     box-shadow: var(--shadow-hover);
@@ -224,7 +224,7 @@
 
   .objects-grid article:hover .card-inner,
   .objects-grid article:focus-within .card-inner {
-    border-radius: var(--radius-s);
+    border-radius: var(--radius-m);
     background-color: var(--card-accent, var(--color-bg-clickable));
     box-shadow: var(--shadow-offset-hover);
   }

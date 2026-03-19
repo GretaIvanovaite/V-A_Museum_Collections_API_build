@@ -239,7 +239,7 @@ select {
   }
 
   #filter-groups button {
-    padding: var(--space-xs);
+    padding: var(--space-xs) var(--space-l);
     height: 100%;
     width: 100%;
   }
@@ -251,6 +251,7 @@ select {
     grid-template-columns: repeat(var(--grid-columns-default), 1fr);
     gap: var(--space-l);
     padding: var(--space-l) 0;
+    border-bottom: none;
   }
 
   @supports (grid-template-rows: masonry) {
