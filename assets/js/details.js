@@ -16,6 +16,8 @@ async function loadObject(id) {
     const data = await res.json();
     const record = data.record;
 
+    console.log(record);
+
     renderDetails(record);
   } catch (err) {
     console.error('Failed to load object:', err);
@@ -39,7 +41,7 @@ function renderDetails(record) {
   const physicalDescription = record.physicalDescription || '';
   const briefDescription = record.briefDescription || '';
   const summaryDescription = record.summaryDescription || '';
-  const imageId = record._primaryImageId;
+  const imageId = record.images[0];
   const allImages = record.images || [];
 
   // Page title
@@ -71,19 +73,23 @@ function renderDetails(record) {
 
     // Thumbnail strip for additional images
     const strip = document.querySelector('.thumbnail-strip');
-    if (strip) {
+    // Check if there is more than one image
+    if (strip && allImages.length > 1) {
       const extras = allImages.slice(0, 6);
-      strip.innerHTML = extras.map(img => `
-        <button type="button" data-image-id="${img.imageAssetId}">
-          <img src="${IMAGE_CDN}/${img.imageAssetId}/full/!100,100/0/default.jpg" alt="" loading="lazy">
+      strip.innerHTML = extras.map(imgId => `
+        <button type="button" data-image-id="${imgId}">
+          <img src="${IMAGE_CDN}/${imgId}/full/!100,100/0/default.jpg" alt="View ${title} gallery image" loading="lazy">
         </button>
       `).join('');
 
       strip.addEventListener('click', e => {
         const btn = e.target.closest('button[data-image-id]');
         if (!btn) return;
+        
         const newId = btn.dataset.imageId;
         const newBase = `${IMAGE_CDN}/${newId}/full`;
+        
+        // Update main image display
         mainFigure.innerHTML = `
           <picture>
             <source media="(min-width: 1000px)" srcset="${newBase}/!1200,1200/0/default.jpg">
@@ -92,6 +98,9 @@ function renderDetails(record) {
           </picture>
         `;
       });
+    } else if (strip) {
+      // Clear the strip if there's only one image or none
+      strip.innerHTML = '';
     }
   }
 
