@@ -361,6 +361,12 @@ select {
     right: 0;
   }
 
+  .objects-grid article.expand-up:hover .card-inner,
+  .objects-grid article.expand-up:focus-within .card-inner {
+    top: auto;
+    bottom: var(--expand-bottom, 0);
+  }
+
   .objects-grid article:hover picture,
   .objects-grid article:focus-within picture {
     margin-bottom: var(--space-m);
@@ -400,9 +406,9 @@ select {
 
 @media (min-width: 768px) {
   :root {
-    --grid-columns-default: 3;
-    --grid-columns-compact: 2;
-    --grid-columns-dense: 4;
+    --grid-columns-default: 4;
+    --grid-columns-compact: 3;
+    --grid-columns-dense: 5;
     --grid-columns-browse: 2;
   }
 

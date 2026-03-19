@@ -86,6 +86,7 @@ const groups = [
 
 const cache = {};
 const categoryCache = {}; // systemNumber → array of API category IDs
+let activeSubcategory = null;
 
 // Using batches because of API rate limits
 const batchSize = 8;
@@ -425,6 +426,17 @@ function makeCard(item, cssClass, subcategoryId) {
     } else {
       card.classList.remove('expand-left');
     }
+    const grid = card.closest('.objects-grid');
+    const visibleCards = Array.from(grid.querySelectorAll('.object-card')).filter(function(c) { return c.offsetParent !== null; });
+    const cardIndex = visibleCards.indexOf(card);
+    const columnCount = getComputedStyle(grid).gridTemplateColumns.trim().split(/\s+/).length;
+    if (cardIndex >= visibleCards.length - columnCount) {
+      card.classList.add('expand-up');
+      const mainRect = document.querySelector('main').getBoundingClientRect();
+      card.style.setProperty('--expand-bottom', (rect.bottom - mainRect.bottom) + 'px');
+    } else {
+      card.classList.remove('expand-up');
+    }
     loadDetail();
   });
   card.addEventListener('focus', loadDetail);
@@ -587,7 +599,26 @@ function setCardGroupClass(card, groupClass) {
   card.classList.add(groupClass);
 }
 
+function clearFilter() {
+  activeSubcategory = null;
+  document.querySelectorAll('.object-card').forEach(card => {
+    setCardGroupClass(card, card.dataset.originalGroup);
+    card.classList.remove('disabled', 'selected');
+  });
+  document.querySelectorAll('#filter-groups li').forEach(li => {
+    li.classList.remove('selected');
+    const btn = li.querySelector('button');
+    if (btn) btn.setAttribute('aria-pressed', 'false');
+  });
+}
+
 function filterByGroup(groupName) {
+  const activeBtn = document.querySelector('#filter-groups li.selected button');
+  if (activeBtn && activeBtn.closest('li').className.replace(' selected', '') === groupName) {
+    clearFilter();
+    return;
+  }
+  activeSubcategory = null;
   document.querySelectorAll('.object-card').forEach(card => {
     setCardGroupClass(card, card.dataset.originalGroup);
     if (card.dataset.group !== groupName) {
@@ -607,6 +638,11 @@ function filterByGroup(groupName) {
 }
 
 function filterBySubgroup(groupClass, subcategoryId) {
+  if (activeSubcategory === subcategoryId) {
+    clearFilter();
+    return;
+  }
+  activeSubcategory = subcategoryId;
   document.querySelectorAll('.object-card').forEach(card => {
     const sysNum = card.dataset.systemNumber;
     const apiCats = categoryCache[sysNum];
@@ -635,6 +671,7 @@ async function startPage() {
   try {
     await loadCategories();
     const currentTier = tierMap[Number(slider.value)];
+    applyDensity(Number(slider.value));
     showCards(currentTier);
     loadAllDetailCategories();
   } catch (error) {
@@ -643,8 +680,15 @@ async function startPage() {
   }
 }
 
+function applyDensity(value) {
+  grid.classList.toggle('compact', value === 1);
+  grid.classList.toggle('dense', value === 3);
+}
+
 slider.addEventListener('input', function() {
-  const currentTier = tierMap[Number(slider.value)];
+  const value = Number(slider.value);
+  applyDensity(value);
+  const currentTier = tierMap[value];
   showCards(currentTier);
   loadAllDetailCategories();
 });
