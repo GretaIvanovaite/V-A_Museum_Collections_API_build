@@ -3,6 +3,7 @@
 :root {
   --color-primary-teal: #236263;
   --color-primary-teal-hover: #234E52;
+  --color-text-teal: #1E4548;
   --color-accent-brown: #8F4A32;
   --color-accent-brown-hover: #6C3322;
 
@@ -11,7 +12,6 @@
   --color-bg-image: #1F2632;
   --color-bg-thumbnails: #3D4552;
   --color-bg-clickable: #EDF2F7;
-  --color-bg-link: #E6F2F2;
   --color-bg-slider: #D4DEE7;
   --color-bg-photography: #F5E6C8;
   --color-bg-photography-hover: #7A4A10;
@@ -27,7 +27,7 @@
   --color-bg-architecture-hover: #6B5000;
 
   --color-text-primary: #1F2632;
-  --color-text-secondary: #4C515B;
+  --color-text-secondary: #3D4149;
   --color-text-white: #FFFFFF;
 
   --color-border-card: #CBD5E1;
@@ -151,8 +151,9 @@
     color: var(--color-text-primary);
     font-size: var(--font-size-small);
     border-radius: var(--radius-m);
-    border: var(--border-width-thin);
+    border: var(--border-width-thin) solid var(--color-border-card);
     background-color: var(--color-bg-clickable);
+    box-shadow: var(--shadow-hover);
   }
 
   #filter-groups #photography-subgroups  { background-color: var(--color-bg-photography); }
@@ -221,10 +222,10 @@
     box-shadow: var(--shadow-offset);
   }
 
-  .objects-grid article:hover,
-  .objects-grid article:focus-within {
+  .objects-grid article:hover .card-inner,
+  .objects-grid article:focus-within .card-inner {
     border-radius: var(--radius-s);
-    background-color: var(--color-bg-clickable);
+    background-color: var(--card-accent, var(--color-bg-clickable));
     box-shadow: var(--shadow-offset-hover);
   }
 
@@ -266,45 +267,62 @@
     z-index: 1;
   }
 
-  .objects-grid article.selected.photography  { background-color: var(--color-bg-photography); }
-  .objects-grid article.selected.art          { background-color: var(--color-bg-art); }
-  .objects-grid article.selected.fashion      { background-color: var(--color-bg-fashion); }
-  .objects-grid article.selected.appliedart   { background-color: var(--color-bg-appliedart); }
-  .objects-grid article.selected.performance  { background-color: var(--color-bg-performance); }
-  .objects-grid article.selected.architecture { background-color: var(--color-bg-architecture); }
+  .objects-grid article:hover,
+  .objects-grid article:focus-within {
+    z-index: 10;
+  }
+
+  .objects-grid article.selected.photography  { --card-accent: var(--color-bg-photography);  background-color: var(--card-accent); }
+  .objects-grid article.selected.art          { --card-accent: var(--color-bg-art);           background-color: var(--card-accent); }
+  .objects-grid article.selected.fashion      { --card-accent: var(--color-bg-fashion);       background-color: var(--card-accent); }
+  .objects-grid article.selected.appliedart   { --card-accent: var(--color-bg-appliedart);    background-color: var(--card-accent); }
+  .objects-grid article.selected.performance  { --card-accent: var(--color-bg-performance);   background-color: var(--card-accent); }
+  .objects-grid article.selected.architecture { --card-accent: var(--color-bg-architecture);  background-color: var(--card-accent); }
 
   #filter-groups li.photography:hover,
-  #filter-groups li.photography:hover button {
+  #filter-groups li.photography:hover button,
+  #filter-groups li.photography.selected,
+  #filter-groups li.photography.selected button {
     background-color: var(--color-bg-photography-hover);
     color: var(--color-text-white);
   }
 
   #filter-groups li.art:hover,
-  #filter-groups li.art:hover button {
+  #filter-groups li.art:hover button,
+  #filter-groups li.art.selected,
+  #filter-groups li.art.selected button {
     background-color: var(--color-bg-art-hover);
     color: var(--color-text-white);
   }
 
   #filter-groups li.fashion:hover,
-  #filter-groups li.fashion:hover button {
+  #filter-groups li.fashion:hover button,
+  #filter-groups li.fashion.selected,
+  #filter-groups li.fashion.selected button {
     background-color: var(--color-bg-fashion-hover);
     color: var(--color-text-white);
   }
 
   #filter-groups li.appliedart:hover,
-  #filter-groups li.appliedart:hover button {
+  #filter-groups li.appliedart:hover button,
+  #filter-groups li.appliedart.selected,
+  #filter-groups li.appliedart.selected button {
     background-color: var(--color-bg-appliedart-hover);
     color: var(--color-text-white);
   }
 
   #filter-groups li.performance:hover,
-  #filter-groups li.performance:hover button {
+  #filter-groups li.performance:hover button,
+  #filter-groups li.performance.selected,
+  #filter-groups li.performance.selected button {
     background-color: var(--color-bg-performance-hover);
     color: var(--color-text-white);
   }
 
   #filter-groups li.architecture:hover,
-  #filter-groups li.architecture:hover button {
+  #filter-groups li.architecture:hover button,
+  #filter-groups li.architecture.selected,
+  #filter-groups li.architecture.selected button {
     background-color: var(--color-bg-architecture-hover);
     color: var(--color-text-white);
   }
@@ -366,9 +384,8 @@
 }
 
 .meta-link {
-  background-color: var(--color-bg-link);
   border: var(--border-width-standard) solid var(--color-primary-teal);
-  color: var(--color-primary-teal-hover);
+  color: var(--color-text-teal);
   border-radius: var(--radius-pill);
   text-decoration: none;
   text-wrap: balance;
@@ -377,7 +394,6 @@
 
 .meta-link:hover,
 .meta-link:focus-visible {
-  background-color: var(--color-bg-link);
   border-color: var(--color-primary-teal-hover);
   font-weight: var(--font-weight-bold);
   outline: none;

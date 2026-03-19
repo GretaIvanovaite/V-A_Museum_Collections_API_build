@@ -291,6 +291,14 @@ select {
     z-index: 1;
   }
 
+  .objects-grid article .card-thumb {
+    width: 100%;
+  }
+
+  .objects-grid article .card-inner {
+    display: none;
+  }
+
   .objects-grid article picture {
     width: 100%;
   }
@@ -331,12 +339,26 @@ select {
     height: 100%;
   }
 
-  .objects-grid article:hover,
-  .objects-grid article:focus-within {
-    grid-column: span 2;
-    grid-row: span 2;
+  .objects-grid article:hover .card-thumb,
+  .objects-grid article:focus-within .card-thumb {
+    visibility: hidden;
+  }
+
+  .objects-grid article:hover .card-inner,
+  .objects-grid article:focus-within .card-inner {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 0;
+    left: 0;
     padding: var(--space-l);
-    transform-origin: top left;
+    z-index: 10;
+  }
+
+  .objects-grid article.expand-left:hover .card-inner,
+  .objects-grid article.expand-left:focus-within .card-inner {
+    left: auto;
+    right: 0;
   }
 
   .objects-grid article:hover picture,
@@ -440,12 +462,12 @@ select {
     object-fit: contain;
   }
 
-  .objects-grid article:hover,
-  .objects-grid article:focus-within {
+  .objects-grid article:hover .card-inner,
+  .objects-grid article:focus-within .card-inner {
+    display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-template-rows: auto auto auto auto auto;
-    grid-column: span 2;
-    grid-row: span 2;
+    width: calc(200% + var(--space-xl));
   }
 
   .objects-grid article:hover picture img,

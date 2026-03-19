@@ -202,20 +202,29 @@ function makeCard(item, cssClass, subcategoryId) {
   }
 
   card.innerHTML =
-    '<h3><a class="card-link" href="details.html?id=' + item.systemNumber + '">' + itemTitle + '</a></h3>' +
-    '<figure>' +
+    '<div class="card-thumb" aria-hidden="true">' +
       '<picture>' +
         '<source media="(min-width: 1000px)" srcset="' + largeImg + '">' +
         '<source media="(min-width: 600px)" srcset="' + medImg + '">' +
-        '<img src="' + smallImg + '" alt="' + itemTitle + '" width="600" height="600" loading="lazy">' +
+        '<img src="' + smallImg + '" alt="" width="600" height="600" loading="lazy">' +
       '</picture>' +
-    '</figure>' +
-    '<dl class="metadata"></dl>' +
-    '<section class="description">' +
-      '<p class="date">' + dateMarkup + '</p>' +
-      '<p class="creator"></p>' +
-      '<p class="detail-text"></p>' +
-    '</section>';
+    '</div>' +
+    '<div class="card-inner">' +
+      '<h3><a class="card-link" href="details.html?id=' + item.systemNumber + '">' + itemTitle + '</a></h3>' +
+      '<figure>' +
+        '<picture>' +
+          '<source media="(min-width: 1000px)" srcset="' + largeImg + '">' +
+          '<source media="(min-width: 600px)" srcset="' + medImg + '">' +
+          '<img src="' + smallImg + '" alt="' + itemTitle + '" width="600" height="600" loading="lazy">' +
+        '</picture>' +
+      '</figure>' +
+      '<dl class="metadata"></dl>' +
+      '<section class="description">' +
+        '<p class="date">' + dateMarkup + '</p>' +
+        '<p class="creator"></p>' +
+        '<p class="detail-text"></p>' +
+      '</section>' +
+    '</div>';
 
   let hasLoaded = false;
   let extraImageIds = [];
@@ -409,7 +418,15 @@ function makeCard(item, cssClass, subcategoryId) {
   });
   }
 
-  card.addEventListener('mouseenter', loadDetail);
+  card.addEventListener('mouseenter', function() {
+    const rect = card.getBoundingClientRect();
+    if (rect.right + rect.width > window.innerWidth) {
+      card.classList.add('expand-left');
+    } else {
+      card.classList.remove('expand-left');
+    }
+    loadDetail();
+  });
   card.addEventListener('focus', loadDetail);
   card.addEventListener('mouseleave', function() {
     const extras = card.querySelectorAll('.extra-image');
@@ -445,6 +462,7 @@ function buildFilterGroups(tier) {
     const btn = document.createElement('button');
     btn.setAttribute('type', 'button');
     btn.setAttribute('popovertarget', popoverId);
+    btn.setAttribute('aria-pressed', 'false');
     btn.textContent = group.name;
     li.appendChild(btn);
 
@@ -581,11 +599,10 @@ function filterByGroup(groupName) {
     }
   });
   document.querySelectorAll('#filter-groups li').forEach(li => {
-    if (li.className.replace(' selected', '') !== groupName) {
-      li.classList.remove('selected');
-    } else {
-      li.classList.add('selected');
-    }
+    const pressed = li.className.replace(' selected', '') === groupName;
+    li.classList.toggle('selected', pressed);
+    const btn = li.querySelector('button');
+    if (btn) btn.setAttribute('aria-pressed', pressed ? 'true' : 'false');
   });
 }
 
@@ -607,11 +624,10 @@ function filterBySubgroup(groupClass, subcategoryId) {
     }
   });
   document.querySelectorAll('#filter-groups li').forEach(li => {
-    if (li.className.replace(' selected', '') === groupClass) {
-      li.classList.add('selected');
-    } else {
-      li.classList.remove('selected');
-    }
+    const pressed = li.className.replace(' selected', '') === groupClass;
+    li.classList.toggle('selected', pressed);
+    const btn = li.querySelector('button');
+    if (btn) btn.setAttribute('aria-pressed', pressed ? 'true' : 'false');
   });
 }
 
