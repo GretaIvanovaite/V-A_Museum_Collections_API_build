@@ -85,7 +85,7 @@ const groups = [
 ];
 
 const cache = {};
-const categoryCache = {}; // systemNumber → array of API category IDs
+const categoryCache = {};
 let activeSubcategory = null;
 
 // Using batches because of API rate limits

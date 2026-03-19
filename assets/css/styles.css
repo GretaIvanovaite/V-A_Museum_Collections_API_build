@@ -419,3 +419,441 @@
   background-color: var(--color-accent-brown-hover);
   outline: none;
 }
+
+/* HEADINGS */
+
+h1 {
+  font-size: var(--font-size-h1);
+  line-height: var(--line-height-h1);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+}
+
+h2 {
+  font-size: var(--font-size-h2);
+  line-height: var(--line-height-h2);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+}
+
+h3 {
+  font-size: var(--font-size-h3);
+  line-height: var(--line-height-h3);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+}
+
+/* BREADCRUMB */
+
+nav[aria-label="Breadcrumb"] ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  list-style: none;
+  font-size: var(--font-size-small);
+  color: var(--color-text-secondary);
+}
+
+nav[aria-label="Breadcrumb"] li + li::before {
+  content: '/';
+  margin-right: var(--space-xs);
+  color: var(--color-divider-secondary);
+}
+
+nav[aria-label="Breadcrumb"] a {
+  color: var(--color-text-teal);
+}
+
+nav[aria-label="Breadcrumb"] a:hover,
+nav[aria-label="Breadcrumb"] a:focus-visible {
+  text-decoration: underline;
+  outline: none;
+}
+
+nav[aria-label="Breadcrumb"] [aria-current="page"] {
+  color: var(--color-text-primary);
+}
+
+/* BROWSE ALL PAGES — CARD GRID */
+
+.browse-cards a {
+  display: block;
+  position: relative;
+  border-radius: var(--radius-m);
+  overflow: hidden;
+  background-color: var(--color-bg-card);
+  box-shadow: var(--shadow-card);
+  color: var(--color-text-white);
+}
+
+.browse-cards a:hover,
+.browse-cards a:focus-visible {
+  box-shadow: var(--shadow-hover);
+  outline: none;
+}
+
+.browse-cards a picture img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+}
+
+.browse-cards a .card-label {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: var(--space-m) var(--space-l);
+  background: linear-gradient(transparent, rgba(31, 38, 50, 0.8));
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-bold);
+}
+
+/* BROWSE LANDING PAGE */
+
+.browse-collection-card {
+  position: relative;
+  border-radius: var(--radius-m);
+  overflow: hidden;
+  background-color: var(--color-bg-card);
+  box-shadow: var(--shadow-card);
+  color: var(--color-text-primary);
+}
+
+.browse-collection-card picture img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+}
+
+.browse-collection-card .card-label {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: var(--space-m) var(--space-l);
+  background: linear-gradient(transparent, rgba(31, 38, 50, 0.75));
+  color: var(--color-text-white);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-bold);
+}
+
+.browse-view-all {
+  display: block;
+  border-radius: var(--radius-m);
+  overflow: hidden;
+  background-color: var(--color-bg-clickable);
+  box-shadow: var(--shadow-card);
+  color: var(--color-text-teal);
+  text-align: center;
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-bold);
+  border: var(--border-width-standard) solid var(--color-primary-teal);
+}
+
+.browse-view-all:hover,
+.browse-view-all:focus-visible {
+  background-color: var(--color-primary-teal);
+  color: var(--color-text-white);
+  outline: none;
+}
+
+/* DETAILS PAGE — IMAGES */
+
+.main-display picture img {
+  border-radius: var(--radius-m);
+  width: 100%;
+  object-fit: contain;
+  background-color: var(--color-bg-image);
+}
+
+.thumbnail-strip button {
+  border-radius: var(--radius-s);
+  overflow: hidden;
+  border: var(--border-width-standard) solid transparent;
+  background-color: var(--color-bg-thumbnails);
+  padding: 0;
+}
+
+.thumbnail-strip button:hover,
+.thumbnail-strip button:focus-visible,
+.thumbnail-strip button[aria-pressed="true"] {
+  border-color: var(--color-primary-teal);
+  outline: none;
+}
+
+.thumbnail-strip img {
+  width: 100%;
+  object-fit: contain;
+  border-radius: var(--radius-xs);
+  display: block;
+}
+
+/* DETAILS PAGE — DESCRIPTIONS */
+
+.brief-desc {
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-bold);
+}
+
+.summary-desc {
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+  color: var(--color-text-secondary);
+}
+
+details > summary {
+  cursor: pointer;
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-teal);
+  list-style: none;
+  border-radius: var(--radius-xs);
+  padding: var(--space-xs) 0;
+}
+
+details > summary::-webkit-details-marker {
+  display: none;
+}
+
+details > summary:hover,
+details > summary:focus-visible {
+  color: var(--color-primary-teal-hover);
+  outline: none;
+}
+
+/* DETAILS PAGE — DATA LISTS */
+
+.physical-characteristics dt,
+.museum-info dt {
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+.physical-characteristics dd,
+.museum-info dd {
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+  color: var(--color-text-secondary);
+}
+
+/* QUICK FACTS ASIDE */
+
+.quick-facts {
+  background-color: var(--color-bg-card);
+  border-radius: var(--radius-m);
+  border: var(--border-width-thin) solid var(--color-border-card);
+  box-shadow: var(--shadow-card);
+}
+
+.quick-facts h2 {
+  font-size: var(--font-size-h3);
+  color: var(--color-text-primary);
+  border-bottom: var(--border-width-thin) solid var(--color-divider-main);
+}
+
+.quick-facts dt {
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+.quick-facts dd {
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+  color: var(--color-text-primary);
+}
+
+.quick-facts dd a {
+  color: var(--color-text-teal);
+}
+
+.quick-facts dd a:hover,
+.quick-facts dd a:focus-visible {
+  text-decoration: underline;
+  outline: none;
+}
+
+/* REFINE SEARCH (PROPERTY PAGE ASIDE) */
+
+aside[aria-label="Refine search"] {
+  background-color: var(--color-bg-card);
+  border-radius: var(--radius-m);
+  border: var(--border-width-thin) solid var(--color-border-card);
+  box-shadow: var(--shadow-card);
+}
+
+aside[aria-label="Refine search"] h2 {
+  font-size: var(--font-size-h3);
+  border-bottom: var(--border-width-thin) solid var(--color-divider-main);
+  color: var(--color-text-primary);
+}
+
+aside[aria-label="Refine search"] details > summary {
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+}
+
+aside[aria-label="Refine search"] label {
+  font-size: var(--font-size-body);
+  color: var(--color-text-primary);
+  cursor: pointer;
+}
+
+aside[aria-label="Refine search"] label:hover {
+  color: var(--color-text-teal);
+}
+
+aside[aria-label="Refine search"] input[type="checkbox"] {
+  accent-color: var(--color-primary-teal);
+  cursor: pointer;
+}
+
+/* ACTIVE FILTERS */
+
+.active-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-s);
+}
+
+.filter-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  background-color: var(--color-bg-clickable);
+  border: var(--border-width-thin) solid var(--color-border-card);
+  border-radius: var(--radius-pill);
+  padding: var(--space-xs) var(--space-m);
+  font-size: var(--font-size-small);
+  color: var(--color-text-primary);
+}
+
+.filter-tag button {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-body);
+  line-height: 1;
+}
+
+.filter-tag button:hover,
+.filter-tag button:focus-visible {
+  color: var(--color-accent-brown);
+  outline: none;
+}
+
+/* AI CHAT BUTTON */
+
+.chat-trigger {
+  background-color: var(--color-primary-teal);
+  color: var(--color-text-white);
+  border-radius: var(--radius-pill);
+  padding: var(--space-m) var(--space-xl);
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-bold);
+  box-shadow: var(--shadow-hover);
+}
+
+.chat-trigger:hover,
+.chat-trigger:focus-visible {
+  background-color: var(--color-primary-teal-hover);
+  outline: none;
+}
+
+/* AI CHAT DIALOG */
+
+dialog#ai-chat {
+  border: none;
+  border-radius: var(--radius-m);
+  box-shadow: var(--shadow-hover);
+  background-color: var(--color-bg-main);
+  padding: 0;
+  overflow: hidden;
+}
+
+dialog#ai-chat > div > header {
+  background-color: var(--color-primary-teal);
+  color: var(--color-text-white);
+}
+
+dialog#ai-chat > div > header h2 {
+  font-size: var(--font-size-h3);
+  color: var(--color-text-white);
+  line-height: var(--line-height-h3);
+}
+
+dialog#ai-chat > div > header button {
+  color: var(--color-text-white);
+  font-size: var(--font-size-h2);
+  line-height: 1;
+  border-radius: var(--radius-xs);
+}
+
+dialog#ai-chat > div > header button:hover,
+dialog#ai-chat > div > header button:focus-visible {
+  background-color: var(--color-primary-teal-hover);
+  outline: none;
+}
+
+dialog#ai-chat [role="log"] {
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+  color: var(--color-text-primary);
+}
+
+dialog#ai-chat [role="log"] p {
+  background-color: var(--color-bg-card);
+  border-radius: var(--radius-s);
+  font-size: var(--font-size-body);
+}
+
+dialog#ai-chat > div > footer {
+  background-color: var(--color-bg-card);
+  border-top: var(--border-width-thin) solid var(--color-divider-main);
+  width: 100%;
+}
+
+dialog#ai-chat > div > footer p {
+  font-size: var(--font-size-small);
+  color: var(--color-text-secondary);
+  font-style: italic;
+}
+
+dialog#ai-chat input[type="text"] {
+  border: var(--border-width-thin) solid var(--color-border-card);
+  border-radius: var(--radius-s);
+  padding: var(--space-s) var(--space-m);
+  font-size: var(--font-size-body);
+  background-color: var(--color-bg-main);
+  color: var(--color-text-primary);
+  flex: 1;
+}
+
+dialog#ai-chat input[type="text"]:focus-visible {
+  outline: var(--border-width-standard) solid var(--color-primary-teal);
+  border-color: var(--color-primary-teal);
+}
+
+dialog#ai-chat form button[type="submit"] {
+  background-color: var(--color-accent-brown);
+  color: var(--color-text-white);
+  border-radius: var(--radius-s);
+  padding: var(--space-s) var(--space-l);
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-bold);
+}
+
+dialog#ai-chat form button[type="submit"]:hover,
+dialog#ai-chat form button[type="submit"]:focus-visible {
+  background-color: var(--color-accent-brown-hover);
+  outline: none;
+}

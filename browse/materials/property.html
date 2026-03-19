@@ -3,28 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script src="../../assets/js/app.js" defer></script>
   <link rel="stylesheet" href="../../assets/css/layout.css">
   <link rel="stylesheet" href="../../assets/css/styles.css">
-  <title>Selected Property | Collections & Archives</title>
+  <link rel="icon" type="image/x-icon" href="../../images/Favicon.ico">
+  <title>Selected Material | Collections &amp; Archives</title>
 </head>
 <body>
   <a href="#main-content" id="skip-link">Skip to main content</a>
   <header>
-    <a href="../../index.html">
-      <img src="../../images/Logo.png" alt="Collections &amp; Archives home" width="167" height="88">
+    <a href="../../index.html" aria-label="Collections &amp; Archives home">
+      <img src="../../images/Logo.svg" alt="" aria-hidden="true" width="167" height="88">
     </a>
-
     <nav aria-label="Main navigation">
       <ul>
         <li><a href="../../index.html">Home</a></li>
         <li><a href="../../browse.html">Browse</a></li>
-
         <li>
-          <button type="button" popovertarget="coll-menu" aria-controls="coll-menu">Collections</button>
+          <button type="button" popovertarget="coll-menu" aria-controls="coll-menu">
+            Collections
+            <object data="../../images/angle-down-solid.svg" type="image/svg+xml" width="20" aria-hidden="true">
+              <span aria-hidden="true">&#x25BE;</span>
+            </object>
+          </button>
           <ul id="coll-menu" popover>
             <li>Largest collections</li>
-            <li><a href="../collections/property.html?id=THES48595">Prints, Drawings & Paintings</a></li>
+            <li><a href="../collections/property.html?id=THES48595">Prints, Drawings &amp; Paintings</a></li>
             <li><a href="../collections/property.html?id=THES48602">Theatre and Performance</a></li>
             <li><a href="../collections/property.html?id=THES48601">Textiles and Fashion</a></li>
             <li><a href="../collections/property.html?id=THES48596">East Asia</a></li>
@@ -33,9 +36,13 @@
             <li><a href="../collections/all.html">See all collections</a></li>
           </ul>
         </li>
-
         <li>
-          <button type="button" popovertarget="cat-menu" aria-controls="cat-menu">Categories</button>
+          <button type="button" popovertarget="cat-menu" aria-controls="cat-menu">
+            Categories
+            <object data="../../images/angle-down-solid.svg" type="image/svg+xml" width="20" aria-hidden="true">
+              <span aria-hidden="true">&#x25BE;</span>
+            </object>
+          </button>
           <ul id="cat-menu" popover>
             <li>Most represented categories</li>
             <li><a href="../categories/property.html?id=THES48903">Prints</a></li>
@@ -47,9 +54,13 @@
             <li><a href="../categories/all.html">See all categories</a></li>
           </ul>
         </li>
-
         <li>
-          <button type="button" popovertarget="mat-menu" aria-controls="mat-menu">Materials</button>
+          <button type="button" popovertarget="mat-menu" aria-controls="mat-menu">
+            Materials
+            <object data="../../images/angle-down-solid.svg" type="image/svg+xml" width="20" aria-hidden="true">
+              <span aria-hidden="true">&#x25BE;</span>
+            </object>
+          </button>
           <ul id="mat-menu" popover>
             <li>Most common materials</li>
             <li><a href="../materials/property.html?id=x30308">Paper</a></li>
@@ -61,9 +72,13 @@
             <li><a href="../materials/all.html">See all materials</a></li>
           </ul>
         </li>
-
         <li>
-          <button type="button" popovertarget="org-menu" aria-controls="org-menu">Origins</button>
+          <button type="button" popovertarget="org-menu" aria-controls="org-menu">
+            Origins
+            <object data="../../images/angle-down-solid.svg" type="image/svg+xml" width="20" aria-hidden="true">
+              <span aria-hidden="true">&#x25BE;</span>
+            </object>
+          </button>
           <ul id="org-menu" popover>
             <li>Most common origins</li>
             <li><a href="../origins/property.html?id=x32019">Great Britain</a></li>
@@ -83,37 +98,62 @@
     <ol>
       <li><a href="../../index.html">Home</a></li>
       <li><a href="../../browse.html">Browse</a></li>
-      <li><a href="all.html" id="breadcrumb-parent">Property</a></li>
+      <li><a href="all.html" id="breadcrumb-parent">Materials</a></li>
       <li id="breadcrumb-current" aria-current="page">Loading Filter...</li>
     </ol>
   </nav>
 
-  <main id="main-content">
-    <h1 id="page-title">Loading Results...</h1>
+  <main id="main-content" class="property-page">
+    <aside aria-label="Refine search">
+      <h2>Refine Search</h2>
 
-    <section class="objects-grid" id="api-grid">
+      <details open>
+        <summary>Categories</summary>
+        <ul>
+          <li><label><input type="checkbox"> Prints</label></li>
+          <li><label><input type="checkbox"> Designs</label></li>
+          <li><label><input type="checkbox"> Drawings</label></li>
+        </ul>
+      </details>
 
-    </section>
+      <details>
+        <summary>Origins</summary>
+        <ul>
+          <li><label><input type="checkbox"> Great Britain</label></li>
+          <li><label><input type="checkbox"> London</label></li>
+          <li><label><input type="checkbox"> Japan</label></li>
+        </ul>
+      </details>
+    </aside>
 
     <div>
-      <button type="button" id="load-more">Load More</button>
+      <h1 id="page-title">Loading Results...</h1>
+
+      <section class="objects-grid" id="api-grid" aria-label="Objects using this material">
+      </section>
+
+      <div>
+        <button type="button" id="load-more">Load More</button>
+      </div>
     </div>
   </main>
 
   <footer>
-    <p>&copy; 2026 Collections & Archives</p>
+    <p>&copy; 2026 Collections &amp; Archives</p>
+    <p>Data retrieved via Victoria and Albert Museum Collections API</p>
+    <p>This prototype is part of an Edge Hill University Undergraduate Research and Development project</p>
   </footer>
 
-  <button type="button" popovertarget="ai-chat" aria-label="Open support chat">Chat</button>
+  <button type="button" class="chat-trigger" popovertarget="ai-chat" aria-label="Open support chat">Chat</button>
 
   <dialog id="ai-chat" popover="manual" aria-labelledby="chat-title">
     <div>
       <header>
-        <h2 id="chat-title">Ask about this object</h2>
+        <h2 id="chat-title">Ask about this material</h2>
         <button type="button" popovertarget="ai-chat" popovertargetaction="hide" aria-label="Close chat">&times;</button>
       </header>
-      <section role="log" aria-live="polite">
-        <div><p>Welcome! I can help you explore the archive.</p></div>
+      <section role="log" aria-live="polite" aria-label="Chat messages">
+        <p>Welcome! I can help you explore the archive.</p>
       </section>
       <footer>
         <form method="dialog">
