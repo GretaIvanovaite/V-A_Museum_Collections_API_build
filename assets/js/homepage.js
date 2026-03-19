@@ -419,28 +419,34 @@ function makeCard(item, cssClass, subcategoryId) {
   });
   }
 
+  let hoverTimer;
   card.addEventListener('mouseenter', function() {
-    const rect = card.getBoundingClientRect();
-    if (rect.right + rect.width > window.innerWidth) {
-      card.classList.add('expand-left');
-    } else {
-      card.classList.remove('expand-left');
-    }
-    const grid = card.closest('.objects-grid');
-    const visibleCards = Array.from(grid.querySelectorAll('.object-card')).filter(function(c) { return c.offsetParent !== null; });
-    const cardIndex = visibleCards.indexOf(card);
-    const columnCount = getComputedStyle(grid).gridTemplateColumns.trim().split(/\s+/).length;
-    if (cardIndex >= visibleCards.length - columnCount) {
-      card.classList.add('expand-up');
-      const mainRect = document.querySelector('main').getBoundingClientRect();
-      card.style.setProperty('--expand-bottom', (rect.bottom - mainRect.bottom) + 'px');
-    } else {
-      card.classList.remove('expand-up');
-    }
-    loadDetail();
+    hoverTimer = setTimeout(function() {
+      const rect = card.getBoundingClientRect();
+      if (rect.right + rect.width * 2 > window.innerWidth) {
+        card.classList.add('expand-left');
+      } else {
+        card.classList.remove('expand-left');
+      }
+      const grid = card.closest('.objects-grid');
+      const visibleCards = Array.from(grid.querySelectorAll('.object-card')).filter(function(c) { return c.offsetParent !== null; });
+      const cardIndex = visibleCards.indexOf(card);
+      const columnCount = getComputedStyle(grid).gridTemplateColumns.trim().split(/\s+/).length;
+      if (cardIndex >= visibleCards.length - columnCount) {
+        card.classList.add('expand-up');
+        const mainRect = document.querySelector('main').getBoundingClientRect();
+        card.style.setProperty('--expand-bottom', (rect.bottom - mainRect.bottom) + 'px');
+      } else {
+        card.classList.remove('expand-up');
+      }
+      card.classList.add('is-hovered');
+      loadDetail();
+    }, 200);
   });
   card.addEventListener('focus', loadDetail);
   card.addEventListener('mouseleave', function() {
+    clearTimeout(hoverTimer);
+    card.classList.remove('is-hovered');
     const extras = card.querySelectorAll('.extra-image');
     for (let i = 0; i < extras.length; i++) {
       extras[i].remove();

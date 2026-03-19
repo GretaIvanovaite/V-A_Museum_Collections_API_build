@@ -265,6 +265,7 @@ select {
 
   .objects-grid.dense {
     grid-template-columns: repeat(var(--grid-columns-dense), 1fr);
+    gap: var(--space-s);
   }
 
   /* OBJECT CARD */
@@ -339,12 +340,12 @@ select {
     height: 100%;
   }
 
-  .objects-grid article:hover .card-thumb,
+  .objects-grid article.is-hovered .card-thumb,
   .objects-grid article:focus-within .card-thumb {
     visibility: hidden;
   }
 
-  .objects-grid article:hover .card-inner,
+  .objects-grid article.is-hovered .card-inner,
   .objects-grid article:focus-within .card-inner {
     display: flex;
     flex-direction: column;
@@ -367,12 +368,12 @@ select {
     bottom: var(--expand-bottom, 0);
   }
 
-  .objects-grid article:hover picture,
+  .objects-grid article.is-hovered picture,
   .objects-grid article:focus-within picture {
     margin-bottom: var(--space-m);
   }
 
-  .objects-grid article:hover h3,
+  .objects-grid article.is-hovered h3,
   .objects-grid article:focus-within h3 {
     display: block;
     padding-top: 0;
@@ -380,21 +381,21 @@ select {
     order: 1;
   }
 
-  .objects-grid article:hover .date,
+  .objects-grid article.is-hovered .date,
   .objects-grid article:focus-within .date {
     display: block;
     margin-bottom: var(--space-xs);
     order: 2;
   }
 
-  .objects-grid article:hover .description,
+  .objects-grid article.is-hovered .description,
   .objects-grid article:focus-within .description {
     display: block;
     margin-bottom: var(--space-xs);
     order: 3;
   }
 
-  .objects-grid article:hover dl,
+  .objects-grid article.is-hovered dl,
   .objects-grid article:focus-within dl {
     display: flex;
     order: 4;
@@ -468,20 +469,26 @@ select {
     object-fit: contain;
   }
 
-  .objects-grid article:hover .card-inner,
+  .objects-grid article.is-hovered .card-inner,
   .objects-grid article:focus-within .card-inner {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
     grid-template-rows: auto auto auto auto auto;
-    width: calc(200% + var(--space-xl));
+    width: min(calc(200% + var(--space-xl)), 100vw);
   }
 
-  .objects-grid article:hover picture img,
+  .objects-grid.dense article.is-hovered .card-inner,
+  .objects-grid.dense article:focus-within .card-inner {
+    width: min(calc(300% + 2 * var(--space-s)), 100vw);
+  }
+
+  .objects-grid article.is-hovered picture img,
   .objects-grid article:focus-within picture img {
-    max-height: none;
+    max-height: 16rem;
+    width: auto;
   }
 
-  .objects-grid article:hover figure,
+  .objects-grid article.is-hovered figure,
   .objects-grid article:focus-within figure {
     grid-column: 1;
     grid-row: 1;
@@ -491,21 +498,34 @@ select {
     gap: var(--space-s);
   }
 
-  .objects-grid article:hover picture,
+  .objects-grid article.is-hovered picture,
   .objects-grid article:focus-within picture {
     margin-bottom: 0;
   }
 
-  .objects-grid article:hover dl,
+  .objects-grid article.is-hovered dl,
   .objects-grid article:focus-within dl {
     grid-column: 2;
     grid-row: 1;
     padding-left: var(--space-l);
     padding-top: 0;
     align-self: start;
+    min-width: 0;
   }
 
-  .objects-grid article:hover h3,
+  .objects-grid article.is-hovered dd,
+  .objects-grid article:focus-within dd {
+    max-width: 100%;
+  }
+
+  .objects-grid article.is-hovered dd .meta-link,
+  .objects-grid article:focus-within dd .meta-link {
+    white-space: normal;
+    overflow-wrap: break-word;
+    max-width: 100%;
+  }
+
+  .objects-grid article.is-hovered h3,
   .objects-grid article:focus-within h3 {
     grid-column: 1 / span 2;
     grid-row: 2;
@@ -513,14 +533,14 @@ select {
     margin-bottom: var(--space-xs);
   }
 
-  .objects-grid article:hover .date,
+  .objects-grid article.is-hovered .date,
   .objects-grid article:focus-within .date {
     grid-column: 1 / span 2;
     grid-row: 3;
     margin-bottom: var(--space-xs);
   }
 
-  .objects-grid article:hover .description,
+  .objects-grid article.is-hovered .description,
   .objects-grid article:focus-within .description {
     grid-column: 1 / span 2;
     grid-row: 4;
