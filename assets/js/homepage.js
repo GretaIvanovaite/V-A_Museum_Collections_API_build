@@ -713,7 +713,6 @@ function showCards(tier) {
 
   for (let i = 0; i < ordered.length; i++) {
     const card = makeCard(ordered[i].item, ordered[i].cssClass, ordered[i].subcategoryId);
-    card.dataset.originalIndex = i;
     grid.appendChild(card);
   }
 }
@@ -768,20 +767,6 @@ function setCardGroupClass(card, groupClass) {
   card.classList.add(groupClass);
 }
 
-function reorderGrid() {
-  const cards = Array.from(grid.querySelectorAll('.object-card'));
-  const selected = cards.filter(function(c) { return c.classList.contains('selected'); });
-  const others   = cards.filter(function(c) { return !c.classList.contains('selected'); });
-  selected.concat(others).forEach(function(c) { grid.appendChild(c); });
-}
-
-function restoreGridOrder() {
-  const cards = Array.from(grid.querySelectorAll('.object-card'));
-  cards.sort(function(a, b) {
-    return parseInt(a.dataset.originalIndex) - parseInt(b.dataset.originalIndex);
-  });
-  cards.forEach(function(c) { grid.appendChild(c); });
-}
 
 function showClearButton() {
   const btn = document.getElementById('clear-filter-btn');
@@ -820,7 +805,6 @@ function clearFilter() {
       btn.setAttribute('aria-pressed', 'false');
     }
   }
-  restoreGridOrder();
   hideClearButton();
 }
 
@@ -866,7 +850,6 @@ function filterByGroup(groupName) {
       }
     }
   }
-  reorderGrid();
   showClearButton();
 }
 
@@ -922,7 +905,6 @@ function filterBySubgroup(groupClass, subcategoryId) {
       }
     }
   }
-  reorderGrid();
   showClearButton();
 }
 
@@ -1065,7 +1047,6 @@ async function loadMore() {
 
   for (let i = 0; i < newItems.length; i++) {
     const card = makeCard(newItems[i].item, newItems[i].cssClass, newItems[i].subcategoryId);
-    card.dataset.originalIndex = existingCardCount + i;
     grid.appendChild(card);
   }
 
@@ -1091,7 +1072,6 @@ async function loadMore() {
         card.classList.remove('selected');
       }
     }
-    reorderGrid();
   }
 
   loadAllDetailCategories();

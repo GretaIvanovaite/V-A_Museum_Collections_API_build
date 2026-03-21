@@ -198,21 +198,25 @@ select {
 
   /* CONTROLS */
 
-  .controls {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin-top: var(--space-xl);
-    gap: var(--space-3xl);
+  main.home-page {
+    display: grid;
+    grid-template-columns: 3fr 7fr;
+    column-gap: var(--space-3xl);
+  }
+
+  main.home-page > #objects-grid,
+  main.home-page > div:last-child {
+    grid-column: 1 / -1;
   }
 
   #density-controls {
+    margin-top: var(--space-xl);
     padding: var(--space-xs) 0;
     line-height: var(--space-xl);
-    display: inline-flex;
+    display: flex;
     justify-content: center;
     gap: var(--space-m);
-    max-width: 70%;
+    align-self: center;
   }
 
   #density-controls label {
@@ -239,13 +243,14 @@ select {
   }
 
   #filter-groups {
+    margin-top: var(--space-xl);
     line-height: var(--space-xl);
     display: flex;
     justify-content: center;
     align-items: center;
     gap: var(--space-m);
-    max-width: 70%;
-    padding: 0 var(--space-m);
+    padding: var(--space-s) var(--space-m);
+    align-self: center;
   }
 
   #filter-groups button {

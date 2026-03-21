@@ -194,10 +194,8 @@
 
   #filter-groups.filter-active {
     position: sticky;
-    top: 0;
+    top: var(--space-m);
     z-index: 20;
-    background-color: var(--color-bg-main);
-    padding: var(--space-s) var(--space-m);
     box-shadow: 0 4px 12px var(--color-shadow);
   }
 
