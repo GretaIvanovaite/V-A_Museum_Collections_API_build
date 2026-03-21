@@ -399,13 +399,13 @@ function getOriginGroup(id) {
 const TECHNIQUE_GROUPS = [
   {name: "Photography", ids: ["AAT54225"]},
   {name: "Drawing", ids: ["x32498", "AAT54196", "x30545"]},
-  {name: "Engraving", ids: ["AAT53225", "AAT53829"]},
+  {name: "Engraving", ids: ["AAT53225", "AAT53829", "AAT178612"]},
   {name: "Printmaking", ids: ["AAT53319", "AAT131119", "x46159"]},
   {name: "Watercolour drawing", ids: ["x37878"]},
-  {name: "Etching", ids: ["AAT53241"]},
+  {name: "Etching", ids: ["AAT53241", "AAT53228"]},
   {name: "Lithography", ids: ["AAT53271", "x39981"]},
   {name: "Wood engraving", ids: ["AAT53303"]},
-  {name: "Woodblock printing", ids: ["x38448"]},
+  {name: "Woodblock printing", ids: ["x38448", "x37101"]},
   {name: "Albumen process", ids: ["AAT133274"]},
   {name: "Painting", ids: ["x30138", "x30598", "AAT54216"]},
   {name: "Watercolour painting", ids: ["THES250889"]},
@@ -436,13 +436,13 @@ const TECHNIQUE_GROUPS = [
   {name: "Sewing", ids: ["AAT53658"]},
   {name: "Machine sewing", ids: ["AAT257463"]},
   {name: "Embroidery", ids: ["AAT53653", "x40351"]},
-  {name: "Enamelling", ids: ["AAT53773", "x37485"]},
+  {name: "Enamelling", ids: ["AAT53773", "x37485", "x46766"]},
   {name: "Platinum process", ids: ["AAT53492"]},
   {name: "Autochrome", ids: ["AAT53470"]},
   {name: "Chasing", ids: ["AAT54016"]},
   {name: "Paper making", ids: ["AAT54060"]},
   {name: "Forging", ids: ["AAT54033"]},
-  {name: "Bookbinding", ids: ["AAT53592", "x43679"]},
+  {name: "Bookbinding", ids: ["AAT53592", "x43679", "x38290"]},
   {name: "Firing", ids: ["AAT53887"]},
   {name: "Offset lithography", ids: ["AAT192900"]},
   {name: "Glass working", ids: ["AAT53929"]},
@@ -450,7 +450,7 @@ const TECHNIQUE_GROUPS = [
   {name: "Chromolithography", ids: ["AAT53272"]},
   {name: "Staining", ids: ["AAT53058"]},
   {name: "Tracing", ids: ["AAT53439"]},
-  {name: "Screen printing", ids: ["AAT53281"]},
+  {name: "Screen printing", ids: ["AAT53281", "x36290"]},
   {name: "Relief", ids: ["AAT53622"]},
   {name: "Transfer printing", ids: ["AAT53922"]},
   {name: "Writing", ids: ["AAT54698"]},
@@ -460,6 +460,11 @@ const TECHNIQUE_GROUPS = [
   {name: "Shoe making", ids: ["x40339"]},
   {name: "Hand painted", ids: ["x39976"]},
   {name: "Tin glazing", ids: ["x36216"]},
+  {name: "Illustration", ids: ["AAT54200"]},
+  {name: "Colouring", ids: ["AAT53043"]},
+  {name: "Collage", ids: ["AAT138699"]},
+  {name: "Linocut", ids: ["AAT60720"]},
+  {name: "Digital", ids: ["THES271371"]},
 ];
 
 function getTechniqueGroup(id) {
@@ -583,7 +588,8 @@ function normalizeTechnique(technique, id) {
     if (group) { return group.name; }
   }
   var lower = technique.toLowerCase().trim();
-  return TECHNIQUES[lower] || technique;
+  if (TECHNIQUES[lower]) { return TECHNIQUES[lower]; }
+  return lower.charAt(0).toUpperCase() + lower.slice(1);
 }
 
 function normalizeCollection(code) {
