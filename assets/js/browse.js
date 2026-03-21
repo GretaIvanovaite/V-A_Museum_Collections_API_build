@@ -1,6 +1,13 @@
 var apiBase = "https://api.vam.ac.uk/v2";
 var imageBase = "https://framemark.vam.ac.uk/collections";
 
+// Same batching constants as homepage.js to avoid API rate limits
+var batchSize = 8;
+var batchDelay = 150;
+
+// Global tracker — once an image ID is used anywhere on the page it will not appear again
+var usedImageIds = {};
+
 // Data sourced from va-api-clusters-2026-03-04.json, ordered by count descending.
 // Duplicates (same ID or effectively the same grouping) are removed using names.js as a guide.
 // The first 3 items in each section become preview cards.
@@ -58,17 +65,17 @@ var sections = [
     viewAllText: "Browse All Materials",
     cards: [
       // AAT14109 "paper (fiber product)" is skipped — same substance as x30308 "paper"
-      { name: "Paper",         id: "x30308"    },
-      { name: "Ink",           id: "AAT15012"  },
-      { name: "Printing ink",  id: "AAT187371" }
+      { name: "Paper",        id: "x30308"    },
+      { name: "Ink",          id: "AAT15012"  },
+      { name: "Printing ink", id: "AAT187371" }
     ],
     collage: [
-      { id: "x30347"    },
-      { id: "AAT14190"  },
-      { id: "x33202"    },
-      { id: "x30618"    },
-      { id: "AAT15045"  },
-      { id: "x29356"    }
+      { id: "x30347"   },
+      { id: "AAT14190" },
+      { id: "x33202"   },
+      { id: "x30618"   },
+      { id: "AAT15045" },
+      { id: "x29356"   }
     ]
   },
   {
@@ -95,23 +102,39 @@ var sections = [
   }
 ];
 
-// Fetch one image ID for a given filter
-function fetchOneImage(paramName, id) {
-  var url = apiBase + "/objects/search?" + paramName + "=" + id + "&images_exist=1&page_size=1";
-
-  return fetch(url)
-    .then(function(response) {
-      return response.json();
-    })
-    .then(function(data) {
-      if (data.records && data.records.length > 0 && data.records[0]._primaryImageId) {
-        return data.records[0]._primaryImageId;
+// Fetch up to 5 candidate image IDs for one grouping.
+// Returning multiple candidates allows the picker to skip any already used globally.
+async function fetchCandidateImages(paramName, id) {
+  var url = apiBase + "/objects/search?" + paramName + "=" + id + "&images_exist=1&page_size=5";
+  try {
+    var response = await fetch(url);
+    var data = await response.json();
+    var ids = [];
+    if (data.records) {
+      for (var i = 0; i < data.records.length; i++) {
+        var imgId = data.records[i]._primaryImageId;
+        if (imgId) {
+          ids.push(imgId);
+        }
       }
-      return null;
-    })
-    .catch(function() {
-      return null;
-    });
+    }
+    return ids;
+  } catch (e) {
+    return [];
+  }
+}
+
+// Pick the first candidate not yet used anywhere on the page, then mark it used.
+// Returns null if all candidates are already taken.
+function pickUnused(candidates) {
+  for (var i = 0; i < candidates.length; i++) {
+    var candidate = candidates[i];
+    if (!usedImageIds[candidate]) {
+      usedImageIds[candidate] = true;
+      return candidate;
+    }
+  }
+  return null;
 }
 
 // Build an image URL from a framemark image ID
@@ -156,8 +179,8 @@ function buildCard(item, sectionType, label, imageId) {
   return card;
 }
 
-// Build the "Browse All" card with a 3x2 collage of images from items 4–9
-function buildViewAllCard(section, collageImageIds) {
+// Build the "Browse All" card with a 3x2 collage using the pre-chosen image IDs
+function buildViewAllCard(section, chosenCollageIds) {
   var link = document.createElement("a");
   link.href = section.viewAllHref;
   link.className = "browse-view-all";
@@ -166,7 +189,7 @@ function buildViewAllCard(section, collageImageIds) {
   imagesDiv.className = "view-all-images";
 
   for (var i = 0; i < 6; i++) {
-    var imgId = collageImageIds[i % collageImageIds.length];
+    var imgId = chosenCollageIds[i % chosenCollageIds.length];
     var img = document.createElement("img");
     img.src = makeImageUrl(imgId, "300,300");
     img.alt = "";
@@ -185,53 +208,96 @@ function buildViewAllCard(section, collageImageIds) {
   return link;
 }
 
-// Populate one section: fetch all images in parallel, then build the cards
-function populateSection(section) {
+// Inject a completed section into the DOM.
+// candidateSets is a flat array: first section.cards.length entries are for cards,
+// then section.collage.length entries are for the collage.
+// pickUnused() draws from the global usedImageIds so no image repeats across sections.
+function buildSectionDOM(section, candidateSets) {
   var grid = document.getElementById(section.gridId);
   if (grid === null) {
     return;
   }
 
-  // Build one fetch per card item and one per collage item
-  var cardFetches = [];
-  for (var i = 0; i < section.cards.length; i++) {
-    cardFetches.push(fetchOneImage(section.paramName, section.cards[i].id));
+  var cardCount   = section.cards.length;
+  var collageCount = section.collage.length;
+
+  // Pick one unique image per card
+  for (var i = 0; i < cardCount; i++) {
+    var imageId = pickUnused(candidateSets[i]);
+    var card = buildCard(section.cards[i], section.type, section.label, imageId);
+    grid.appendChild(card);
   }
 
-  var collageFetches = [];
-  for (var i = 0; i < section.collage.length; i++) {
-    collageFetches.push(fetchOneImage(section.paramName, section.collage[i].id));
+  // Pick one unique image per collage slot
+  var chosenCollageIds = [];
+  for (var i = 0; i < collageCount; i++) {
+    var imageId = pickUnused(candidateSets[cardCount + i]);
+    if (imageId !== null) {
+      chosenCollageIds.push(imageId);
+    }
   }
 
-  var allFetches = cardFetches.concat(collageFetches);
-
-  Promise.all(allFetches).then(function(results) {
-    var cardImageIds = results.slice(0, section.cards.length);
-    var collageImageIds = results.slice(section.cards.length);
-
-    // Remove nulls from collage results
-    var validCollageIds = [];
-    for (var i = 0; i < collageImageIds.length; i++) {
-      if (collageImageIds[i] !== null) {
-        validCollageIds.push(collageImageIds[i]);
-      }
-    }
-
-    // Add the 3 preview cards
-    for (var i = 0; i < section.cards.length; i++) {
-      var card = buildCard(section.cards[i], section.type, section.label, cardImageIds[i]);
-      grid.appendChild(card);
-    }
-
-    // Add the "Browse All" card if we have any collage images
-    if (validCollageIds.length > 0) {
-      var viewAllCard = buildViewAllCard(section, validCollageIds);
-      grid.appendChild(viewAllCard);
-    }
-  });
+  if (chosenCollageIds.length > 0) {
+    var viewAllCard = buildViewAllCard(section, chosenCollageIds);
+    grid.appendChild(viewAllCard);
+  }
 }
 
-// Initialise all sections
-for (var i = 0; i < sections.length; i++) {
-  populateSection(sections[i]);
+// Build a flat list of all fetch tasks across all sections, then run them
+// in batches of 8 with a 150ms pause between batches (same as homepage.js).
+// Sections are processed in order so the global duplicate check is deterministic.
+async function loadAllSections() {
+  var allTasks = [];
+
+  for (var s = 0; s < sections.length; s++) {
+    var section = sections[s];
+
+    for (var c = 0; c < section.cards.length; c++) {
+      allTasks.push({ paramName: section.paramName, id: section.cards[c].id, sectionIndex: s });
+    }
+
+    for (var col = 0; col < section.collage.length; col++) {
+      allTasks.push({ paramName: section.paramName, id: section.collage[col].id, sectionIndex: s });
+    }
+  }
+
+  // Run all tasks in batches, collecting candidate arrays
+  var allCandidateSets = [];
+
+  for (var i = 0; i < allTasks.length; i += batchSize) {
+    var batchEnd = Math.min(i + batchSize, allTasks.length);
+    var batch = allTasks.slice(i, batchEnd);
+
+    var batchPromises = [];
+    for (var j = 0; j < batch.length; j++) {
+      batchPromises.push(fetchCandidateImages(batch[j].paramName, batch[j].id));
+    }
+
+    var batchResults = await Promise.all(batchPromises);
+    for (var j = 0; j < batchResults.length; j++) {
+      allCandidateSets.push(batchResults[j]);
+    }
+
+    if (batchEnd < allTasks.length) {
+      await new Promise(function(resolve) {
+        setTimeout(resolve, batchDelay);
+      });
+    }
+  }
+
+  // Distribute results back to each section and build the DOM in order.
+  // Because sections are built in order and pickUnused() marks each chosen ID globally,
+  // the same image cannot appear in two different sections.
+  var resultIndex = 0;
+
+  for (var s = 0; s < sections.length; s++) {
+    var section = sections[s];
+    var count = section.cards.length + section.collage.length;
+    var candidateSets = allCandidateSets.slice(resultIndex, resultIndex + count);
+    resultIndex += count;
+
+    buildSectionDOM(section, candidateSets);
+  }
 }
+
+loadAllSections();
