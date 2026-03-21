@@ -88,25 +88,111 @@ const cache = {};
 const categoryCache = {};
 let activeSubcategory = null;
 
+// Pagination state
+const shownIds = new Set();  // system numbers already on the page
+const categoryPool = {};     // id -> array of unshown items from already-fetched pages
+const categoryNextPage = {}; // id -> next page number to fetch from the API
+
 // Using batches because of API rate limits
 const batchSize = 8;
 const batchDelay = 150;
 
-async function fetchCategory(category) {
-  const searchUrl = apiBase + "/objects/search?id_category=" + category.id + "&images_exist=1&page_size=10&data_restrict=descriptive_only";
-  const response = await fetch(searchUrl);
-  const jsonData = await response.json();
-  let results = jsonData.records;
+async function fetchCategoryPageData(category, page) {
+  const searchUrl = apiBase + "/objects/search?id_category=" + category.id +
+    "&images_exist=1&page_size=10&page=" + page + "&data_restrict=descriptive_only";
+  try {
+    const response = await fetch(searchUrl);
+    const jsonData = await response.json();
+    if (jsonData.records == null) {
+      return [];
+    }
+    return jsonData.records;
+  } catch (e) {
+    return [];
+  }
+}
 
-  if (results == null) {
-    results = [];
+async function fetchCategory(category) {
+  categoryNextPage[category.id] = 1;
+  const results = await fetchCategoryPageData(category, 1);
+  categoryNextPage[category.id] = 2;
+
+  // Build a list of items not already shown
+  const fresh = [];
+  for (let i = 0; i < results.length; i++) {
+    if (!shownIds.has(results[i].systemNumber)) {
+      fresh.push(results[i]);
+    }
   }
 
-  if (results.length > 0) {
-    const randomNum = Math.floor(Math.random() * results.length);
-    cache[category.id] = results[randomNum];
+  if (fresh.length > 0) {
+    const randomIdx = Math.floor(Math.random() * fresh.length);
+    const chosen = fresh[randomIdx];
+    cache[category.id] = chosen;
+    shownIds.add(chosen.systemNumber);
+    // Store the remaining items in the pool for use by load more
+    categoryPool[category.id] = [];
+    for (let i = 0; i < fresh.length; i++) {
+      if (i !== randomIdx) {
+        categoryPool[category.id].push(fresh[i]);
+      }
+    }
   } else {
     cache[category.id] = null;
+    categoryPool[category.id] = [];
+  }
+}
+
+async function getNextItemForCategory(category) {
+  // Draw from the pool first (leftover items from previously fetched pages)
+  if (categoryPool[category.id] && categoryPool[category.id].length > 0) {
+    const pool = categoryPool[category.id];
+    const randomIdx = Math.floor(Math.random() * pool.length);
+    const chosen = pool[randomIdx];
+    const newPool = [];
+    for (let i = 0; i < pool.length; i++) {
+      if (i !== randomIdx) {
+        newPool.push(pool[i]);
+      }
+    }
+    categoryPool[category.id] = newPool;
+    shownIds.add(chosen.systemNumber);
+    return chosen;
+  }
+
+  // Pool empty — keep fetching pages until we find a fresh item or run out of pages
+  while (true) {
+    const page = categoryNextPage[category.id] || 2;
+    const results = await fetchCategoryPageData(category, page);
+    categoryNextPage[category.id] = page + 1;
+
+    if (results.length === 0) {
+      // No more pages left for this category
+      return null;
+    }
+
+    const fresh = [];
+    for (let i = 0; i < results.length; i++) {
+      if (!shownIds.has(results[i].systemNumber)) {
+        fresh.push(results[i]);
+      }
+    }
+
+    if (fresh.length === 0) {
+      // Every result on this page was already shown — try the next page
+      continue;
+    }
+
+    const randomIdx = Math.floor(Math.random() * fresh.length);
+    const chosen = fresh[randomIdx];
+    shownIds.add(chosen.systemNumber);
+    categoryPool[category.id] = [];
+    for (let i = 0; i < fresh.length; i++) {
+      if (i !== randomIdx) {
+        categoryPool[category.id].push(fresh[i]);
+      }
+    }
+    return chosen;
   }
 }
 
@@ -398,7 +484,9 @@ function makeCard(item, cssClass, subcategoryId) {
     if (gap > 350) {
       imagesToAdd = 2;
     }
-    imagesToAdd = Math.min(imagesToAdd, extraImageIds.length);
+    if (imagesToAdd > extraImageIds.length) {
+      imagesToAdd = extraImageIds.length;
+    }
 
     console.log('[extra images] adding', imagesToAdd, 'image(s)');
 
@@ -428,10 +516,16 @@ function makeCard(item, cssClass, subcategoryId) {
       } else {
         card.classList.remove('expand-left');
       }
-      const grid = card.closest('.objects-grid');
-      const visibleCards = Array.from(grid.querySelectorAll('.object-card')).filter(function(c) { return c.offsetParent !== null; });
+      const cardGrid = card.closest('.objects-grid');
+      const allGridCards = cardGrid.querySelectorAll('.object-card');
+      const visibleCards = [];
+      for (let i = 0; i < allGridCards.length; i++) {
+        if (allGridCards[i].offsetParent !== null) {
+          visibleCards.push(allGridCards[i]);
+        }
+      }
       const cardIndex = visibleCards.indexOf(card);
-      const columnCount = getComputedStyle(grid).gridTemplateColumns.trim().split(/\s+/).length;
+      const columnCount = getComputedStyle(cardGrid).gridTemplateColumns.trim().split(/\s+/).length;
       if (cardIndex >= visibleCards.length - columnCount) {
         card.classList.add('expand-up');
         const mainRect = document.querySelector('main').getBoundingClientRect();
@@ -530,19 +624,25 @@ function showCards(tier) {
     }
   }
 
+  // Shuffle the groups
   for (let i = groupItems.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [groupItems[i], groupItems[j]] = [groupItems[j], groupItems[i]];
+    const tmp = groupItems[i];
+    groupItems[i] = groupItems[j];
+    groupItems[j] = tmp;
   }
+  // Shuffle within each group
   for (let g = 0; g < groupItems.length; g++) {
     const items = groupItems[g];
     for (let i = items.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
-      [items[i], items[j]] = [items[j], items[i]];
+      const tmp = items[i];
+      items[i] = items[j];
+      items[j] = tmp;
     }
   }
 
-  // shuffle before placing
+  // Interleave groups so categories alternate, then do a final shuffle
   const ordered = [];
   let round = 0;
   while (true) {
@@ -559,7 +659,9 @@ function showCards(tier) {
 
   for (let i = ordered.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [ordered[i], ordered[j]] = [ordered[j], ordered[i]];
+    const tmp = ordered[i];
+    ordered[i] = ordered[j];
+    ordered[j] = tmp;
   }
 
   for (let i = 0; i < ordered.length; i++) {
@@ -572,8 +674,17 @@ async function fetchDetailCategories(systemNumber) {
   try {
     const response = await fetch(apiBase + "/museumobject/" + systemNumber);
     const jsonData = await response.json();
-    const cats = jsonData.record.categories || [];
-    categoryCache[systemNumber] = cats.map(function(c) { return c.id; }).filter(Boolean);
+    let cats = jsonData.record.categories;
+    if (cats == null) {
+      cats = [];
+    }
+    const ids = [];
+    for (let i = 0; i < cats.length; i++) {
+      if (cats[i].id) {
+        ids.push(cats[i].id);
+      }
+    }
+    categoryCache[systemNumber] = ids;
   } catch (e) {
     categoryCache[systemNumber] = [];
   }
@@ -582,15 +693,19 @@ async function fetchDetailCategories(systemNumber) {
 async function loadAllDetailCategories() {
   const cards = document.querySelectorAll('.object-card');
   const sysNums = [];
-  cards.forEach(function(card) {
-    if (card.dataset.systemNumber) {
-      sysNums.push(card.dataset.systemNumber);
+  for (let i = 0; i < cards.length; i++) {
+    if (cards[i].dataset.systemNumber) {
+      sysNums.push(cards[i].dataset.systemNumber);
     }
-  });
+  }
 
   for (let i = 0; i < sysNums.length; i += batchSize) {
     const batch = sysNums.slice(i, i + batchSize);
-    await Promise.all(batch.map(fetchDetailCategories));
+    const fetchPromises = [];
+    for (let j = 0; j < batch.length; j++) {
+      fetchPromises.push(fetchDetailCategories(batch[j]));
+    }
+    await Promise.all(fetchPromises);
     if (i + batchSize < sysNums.length) {
       await new Promise(function(resolve) { setTimeout(resolve, batchDelay); });
     }
@@ -606,25 +721,37 @@ function setCardGroupClass(card, groupClass) {
 
 function clearFilter() {
   activeSubcategory = null;
-  document.querySelectorAll('.object-card').forEach(card => {
+  const allCards = document.querySelectorAll('.object-card');
+  for (let i = 0; i < allCards.length; i++) {
+    const card = allCards[i];
     setCardGroupClass(card, card.dataset.originalGroup);
-    card.classList.remove('disabled', 'selected');
-  });
-  document.querySelectorAll('#filter-groups li').forEach(li => {
+    card.classList.remove('disabled');
+    card.classList.remove('selected');
+  }
+  const filterItems = document.querySelectorAll('#filter-groups li');
+  for (let i = 0; i < filterItems.length; i++) {
+    const li = filterItems[i];
     li.classList.remove('selected');
     const btn = li.querySelector('button');
-    if (btn) btn.setAttribute('aria-pressed', 'false');
-  });
+    if (btn) {
+      btn.setAttribute('aria-pressed', 'false');
+    }
+  }
 }
 
 function filterByGroup(groupName) {
   const activeBtn = document.querySelector('#filter-groups li.selected button');
-  if (activeBtn && activeBtn.closest('li').className.replace(' selected', '') === groupName) {
-    clearFilter();
-    return;
+  if (activeBtn) {
+    const liClass = activeBtn.closest('li').className.replace(' selected', '');
+    if (liClass === groupName) {
+      clearFilter();
+      return;
+    }
   }
   activeSubcategory = null;
-  document.querySelectorAll('.object-card').forEach(card => {
+  const allCards = document.querySelectorAll('.object-card');
+  for (let i = 0; i < allCards.length; i++) {
+    const card = allCards[i];
     setCardGroupClass(card, card.dataset.originalGroup);
     if (card.dataset.group !== groupName) {
       card.classList.add('disabled');
@@ -633,13 +760,26 @@ function filterByGroup(groupName) {
       card.classList.remove('disabled');
       card.classList.add('selected');
     }
-  });
-  document.querySelectorAll('#filter-groups li').forEach(li => {
-    const pressed = li.className.replace(' selected', '') === groupName;
-    li.classList.toggle('selected', pressed);
+  }
+  const filterItems = document.querySelectorAll('#filter-groups li');
+  for (let i = 0; i < filterItems.length; i++) {
+    const li = filterItems[i];
+    const liClass = li.className.replace(' selected', '');
+    const pressed = liClass === groupName;
+    if (pressed) {
+      li.classList.add('selected');
+    } else {
+      li.classList.remove('selected');
+    }
     const btn = li.querySelector('button');
-    if (btn) btn.setAttribute('aria-pressed', pressed ? 'true' : 'false');
-  });
+    if (btn) {
+      if (pressed) {
+        btn.setAttribute('aria-pressed', 'true');
+      } else {
+        btn.setAttribute('aria-pressed', 'false');
+      }
+    }
+  }
 }
 
 function filterBySubgroup(groupClass, subcategoryId) {
@@ -648,12 +788,22 @@ function filterBySubgroup(groupClass, subcategoryId) {
     return;
   }
   activeSubcategory = subcategoryId;
-  document.querySelectorAll('.object-card').forEach(card => {
+  const allCards = document.querySelectorAll('.object-card');
+  for (let i = 0; i < allCards.length; i++) {
+    const card = allCards[i];
     const sysNum = card.dataset.systemNumber;
     const apiCats = categoryCache[sysNum];
-    const matches = apiCats
-      ? apiCats.includes(subcategoryId)
-      : card.dataset.subcategory === subcategoryId;
+    let matches = false;
+    if (apiCats) {
+      for (let j = 0; j < apiCats.length; j++) {
+        if (apiCats[j] === subcategoryId) {
+          matches = true;
+          break;
+        }
+      }
+    } else {
+      matches = card.dataset.subcategory === subcategoryId;
+    }
     if (!matches) {
       setCardGroupClass(card, card.dataset.originalGroup);
       card.classList.add('disabled');
@@ -663,13 +813,26 @@ function filterBySubgroup(groupClass, subcategoryId) {
       card.classList.remove('disabled');
       card.classList.add('selected');
     }
-  });
-  document.querySelectorAll('#filter-groups li').forEach(li => {
-    const pressed = li.className.replace(' selected', '') === groupClass;
-    li.classList.toggle('selected', pressed);
+  }
+  const filterItems = document.querySelectorAll('#filter-groups li');
+  for (let i = 0; i < filterItems.length; i++) {
+    const li = filterItems[i];
+    const liClass = li.className.replace(' selected', '');
+    const pressed = liClass === groupClass;
+    if (pressed) {
+      li.classList.add('selected');
+    } else {
+      li.classList.remove('selected');
+    }
     const btn = li.querySelector('button');
-    if (btn) btn.setAttribute('aria-pressed', pressed ? 'true' : 'false');
-  });
+    if (btn) {
+      if (pressed) {
+        btn.setAttribute('aria-pressed', 'true');
+      } else {
+        btn.setAttribute('aria-pressed', 'false');
+      }
+    }
+  }
 }
 
 async function startPage() {
@@ -686,8 +849,16 @@ async function startPage() {
 }
 
 function applyDensity(value) {
-  grid.classList.toggle('compact', value === 1);
-  grid.classList.toggle('dense', value === 3);
+  if (value === 1) {
+    grid.classList.add('compact');
+  } else {
+    grid.classList.remove('compact');
+  }
+  if (value === 3) {
+    grid.classList.add('dense');
+  } else {
+    grid.classList.remove('dense');
+  }
 }
 
 slider.addEventListener('input', function() {
@@ -709,5 +880,96 @@ document.querySelector('label.more').addEventListener('click', function(e) {
   slider.value = Math.min(Number(slider.max), Number(slider.value) + 1);
   slider.dispatchEvent(new Event('input'));
 });
+
+async function loadMore() {
+  const loadMoreBtn = document.getElementById('load-more');
+  loadMoreBtn.disabled = true;
+  loadMoreBtn.textContent = 'Loading...';
+
+  // Log all system numbers already on the page so we can confirm no repeats
+  const alreadyShown = [];
+  shownIds.forEach(function(id) {
+    alreadyShown.push(id);
+  });
+  console.log('[load-more] System numbers already shown:', alreadyShown);
+
+  const sliderValue = Number(slider.value);
+  const tier = tierMap[sliderValue];
+
+  // Collect only the categories that are active at the current tier.
+  // This means tier 1 (value 20) loads fewer items than tier 3 (value 40),
+  // matching the number of cards shown by the initial load at that tier.
+  const activeCategories = [];
+  for (let i = 0; i < groups.length; i++) {
+    const group = groups[i];
+    for (let j = 0; j < group.subcategories.length; j++) {
+      const category = group.subcategories[j];
+      if (category.minTier <= tier) {
+        activeCategories.push({ category: category, cssClass: group.class });
+      }
+    }
+  }
+
+  // Fetch one new item per active category, in batches to respect rate limits
+  const newItems = [];
+  for (let i = 0; i < activeCategories.length; i += batchSize) {
+    const batch = activeCategories.slice(i, i + batchSize);
+
+    // Kick off all fetches in this batch at once
+    const fetchPromises = [];
+    for (let k = 0; k < batch.length; k++) {
+      fetchPromises.push(getNextItemForCategory(batch[k].category));
+    }
+    const results = await Promise.all(fetchPromises);
+
+    // Pair each result back with its category info
+    for (let k = 0; k < results.length; k++) {
+      if (results[k] != null) {
+        newItems.push({
+          item: results[k],
+          cssClass: batch[k].cssClass,
+          subcategoryId: batch[k].category.id
+        });
+      }
+    }
+
+    if (i + batchSize < activeCategories.length) {
+      await new Promise(function(resolve) { setTimeout(resolve, batchDelay); });
+    }
+  }
+
+  // Log the newly added system numbers
+  const newIds = [];
+  for (let i = 0; i < newItems.length; i++) {
+    newIds.push(newItems[i].item.systemNumber);
+  }
+  console.log('[load-more] New system numbers added:', newIds);
+
+  // If every category came back empty there is nothing left to show
+  if (newItems.length === 0) {
+    loadMoreBtn.disabled = true;
+    loadMoreBtn.textContent = 'No more items to load';
+    return;
+  }
+
+  // Shuffle the new items before appending
+  for (let i = newItems.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const tmp = newItems[i];
+    newItems[i] = newItems[j];
+    newItems[j] = tmp;
+  }
+
+  for (let i = 0; i < newItems.length; i++) {
+    grid.appendChild(makeCard(newItems[i].item, newItems[i].cssClass, newItems[i].subcategoryId));
+  }
+
+  loadAllDetailCategories();
+
+  loadMoreBtn.disabled = false;
+  loadMoreBtn.textContent = 'Load More';
+}
+
+document.getElementById('load-more').addEventListener('click', loadMore);
 
 startPage();
