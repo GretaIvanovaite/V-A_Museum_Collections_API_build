@@ -907,17 +907,30 @@ nav[aria-label="Breadcrumb"] {
 
 .back-to-top {
   position: fixed;
-  bottom: var(--space-2xl);
-  left: var(--space-2xl);
+  bottom: calc(var(--space-2xl) + 8rem + var(--space-s));
+  right: var(--space-2xl);
   z-index: var(--z-chat-button);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.2s ease;
+  padding: var(--space-m) var(--space-xl);
+  background-color: var(--color-primary-teal);
+  color: var(--color-text-white);
+  border-radius: var(--radius-pill);
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-bold);
+  box-shadow: var(--shadow-hover);
 }
 
 .back-to-top.visible {
   opacity: 1;
   pointer-events: auto;
+}
+
+.back-to-top:hover,
+.back-to-top:focus-visible {
+  background-color: var(--color-primary-teal-hover);
+  outline: none;
 }
 
 /* AI CHAT BUTTON — FIXED POSITION */
