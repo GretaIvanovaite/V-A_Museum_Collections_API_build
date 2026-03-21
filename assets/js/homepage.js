@@ -965,6 +965,17 @@ document.querySelector('span.more').addEventListener('click', function() {
   slider.dispatchEvent(new Event('input'));
 });
 
+var filterToggle = document.getElementById('filter-toggle');
+if (filterToggle) {
+  filterToggle.addEventListener('click', function() {
+    var filterList = document.getElementById('filter-groups');
+    var isOpen = filterList.classList.toggle('open');
+    filterToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    var arrow = filterToggle.querySelector('span[aria-hidden]');
+    if (arrow) { arrow.textContent = isOpen ? '▴' : '▾'; }
+  });
+}
+
 async function loadMore() {
   const loadMoreBtn = document.getElementById('load-more');
   loadMoreBtn.disabled = true;
