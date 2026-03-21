@@ -14,6 +14,7 @@ else if (pathname.indexOf('/creators/')    !== -1) { pageType = 'creators';    }
 
 const urlParams         = new URLSearchParams(window.location.search);
 const propertyId        = urlParams.get('id');
+const propertyIds       = propertyId ? propertyId.split(',') : [];
 const propertyNameParam = urlParams.get('name');
 
 // API filter parameter name per type
@@ -270,7 +271,7 @@ function makeCard(item) {
         for (let i = 0; i < categoryList.length; i++) {
           const cat           = categoryList[i];
           const categoryText  = cat.text || cat.name || '';
-          const categoryLabel = normalizeCategory(categoryText);
+          const categoryLabel = normalizeCategory(categoryText, cat.id);
           if (cat.id) {
             metaHtml += '<dd><a href="../categories/property.html?id=' + cat.id + '" class="meta-link">' + splitLabel(categoryLabel) + '</a></dd>';
           } else {
@@ -287,7 +288,7 @@ function makeCard(item) {
           const originEntry = itemInfo.placesOfOrigin[0];
           if (originEntry.place) { originId = originEntry.place.id; }
         }
-        const originLabel = normalizePlace(itemPlace);
+        const originLabel = normalizePlace(itemPlace, originId);
         const originLink = originId
           ? '<a href="../origins/property.html?id=' + originId + '" class="meta-link">' + splitLabel(originLabel) + '</a>'
           : originLabel;
@@ -398,8 +399,10 @@ let pageQueue       = [];  // shuffled list of page numbers not yet fetched
 
 function buildApiUrl(page) {
   let url = apiBase + '/objects/search?images_exist=1&page_size=' + fetchPageSize + '&page=' + page;
-  if (propertyId && apiParam) {
-    url += '&' + apiParam + '=' + propertyId;
+  if (propertyIds.length > 0 && apiParam) {
+    for (let i = 0; i < propertyIds.length; i++) {
+      url += '&' + apiParam + '=' + propertyIds[i];
+    }
   } else if (pageType === 'creators' && propertyNameParam) {
     url += '&q=' + encodeURIComponent(propertyNameParam);
   }
@@ -508,10 +511,14 @@ async function loadMore() {
     try {
       const poolBefore = pool.length;
       while (pageQueue.length > 0 && pool.length === poolBefore) {
-        const page    = pageQueue.shift();
-        const data    = await fetchPage(page);
-        const records = data.records || [];
-        poolRecords(records);
+        const page = pageQueue.shift();
+        try {
+          const data    = await fetchPage(page);
+          const records = data.records || [];
+          poolRecords(records);
+        } catch (e) {
+          // Page returned a server error (e.g. page number out of API range); skip it
+        }
       }
       if (pageQueue.length === 0) { hasMore = false; }
       if (pool.length > poolBefore) {
@@ -535,7 +542,9 @@ document.getElementById('load-more').addEventListener('click', loadMore);
 // ─── Page initialisation ──────────────────────────────────────────────────────
 
 async function startPage() {
-  const displayName = propertyNameParam || NAME_MAP[propertyId] || propertyId || 'Results';
+  const group = (pageType === 'materials' && propertyIds.length > 1 && typeof getMaterialGroup === 'function')
+    ? getMaterialGroup(propertyIds[0]) : null;
+  const displayName = propertyNameParam || (group && group.name) || NAME_MAP[propertyId] || propertyId || 'Results';
   const pageTitle         = document.getElementById('page-title');
   const breadcrumbCurrent = document.getElementById('breadcrumb-current');
 

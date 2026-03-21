@@ -385,7 +385,7 @@ function makeCard(item, cssClass, subcategoryId) {
         for (let i = 0; i < categoryList.length; i++) {
           const cat = categoryList[i];
           const categoryText = cat.text || cat.name || '';
-          const categoryLabel = normalizeCategory(categoryText);
+          const categoryLabel = normalizeCategory(categoryText, cat.id);
           if (cat.id) {
             metaHtml += '<dd><a href="browse/categories/property.html?id=' + cat.id + '" class="meta-link">' + splitLabel(categoryLabel) + '</a></dd>';
           } else {
@@ -405,7 +405,7 @@ function makeCard(item, cssClass, subcategoryId) {
             originId = originEntry.place.id;
           }
         }
-        const originLabel = normalizePlace(itemPlace);
+        const originLabel = normalizePlace(itemPlace, originId);
         let originLink;
         if (originId) {
           originLink = '<a href="browse/origins/property.html?id=' + originId + '" class="meta-link">' + splitLabel(originLabel) + '</a>';

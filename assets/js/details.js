@@ -122,11 +122,11 @@ function renderDetails(record) {
     if (dateObj) addGroup('Date', `${dateObj.date.text}${dateObj.association?.text ? ` (${dateObj.association.text})` : ''}`);
 
     const placeObj = record.placesOfOrigin?.[0];
-    if (placeObj) addGroup('Place of Origin', `${createLink(normalizePlace(placeObj.place.text), '', 'origins')}${placeObj.association?.text ? ` (${placeObj.association.text})` : ''}`);
+    if (placeObj) addGroup('Place of Origin', `${createLink(normalizePlace(placeObj.place.text, placeObj.place.id), placeObj.place.id, 'origins')}${placeObj.association?.text ? ` (${placeObj.association.text})` : ''}`);
 
     if (record.categories?.length) {
       html += `<dt>Categories</dt>`;
-      record.categories.forEach(c => html += `<dd>${createLink(normalizeCategory(c.text), c.id, 'categories')}</dd>`);
+      record.categories.forEach(c => html += `<dd>${createLink(normalizeCategory(c.text, c.id), c.id, 'categories')}</dd>`);
     }
 
     quickFactsDl.innerHTML = html;
@@ -149,8 +149,16 @@ function renderDetails(record) {
 
   // --- SECTION 2: PHYSICAL CHARACTERISTICS ---
   let physHtml = '';
-  if (record.materials?.length) physHtml += `<dt>Materials</dt>${record.materials.map(m => `<dd>${m.text}</dd>`).join('')}`;
-  if (record.materials?.length) console.log(record.materials[0].text)
+  if (record.materials?.length) {
+    physHtml += `<dt>Materials</dt>${record.materials.map(m => {
+      const group = (typeof getMaterialGroup === 'function') ? getMaterialGroup(m.id) : null;
+      const href  = group
+        ? `../browse/materials/property.html?id=${group.ids.join(',')}`
+        : (m.id ? `../browse/materials/property.html?id=${m.id}` : null);
+      const label = (group && group.name) || m.text;
+      return href ? `<dd><a href="${href}">${label}</a></dd>` : `<dd>${label}</dd>`;
+    }).join('')}`;
+  }
   if (record.techniques?.length) physHtml += `<dt>Techniques</dt>${record.techniques.map(t => `<dd>${t.text}</dd>`).join('')}`;
   
   if (record.dimensions?.length) {
