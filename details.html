@@ -11,6 +11,9 @@
   <title>Object Title | Collections &amp; Archives</title>
 </head>
 <body class="details-view">
+  <div class="loading-overlay" id="loading-overlay" role="status" aria-label="Loading">
+    <div class="loading-spinner" aria-hidden="true"></div>
+  </div>
   <a href="#main-content" id="skip-link">Skip to main content</a>
   <header>
     <a href="index.html" aria-label="Collections &amp; Archives home">
@@ -152,7 +155,7 @@
     Chat
   </button>
 
-  <dialog id="ai-chat" popover="manual" aria-labelledby="chat-title">
+  <dialog id="ai-chat" popover="manual" aria-labelledby="chat-title" aria-modal="true">
     <div>
       <header>
         <h2 id="chat-title">Ask about this object</h2>
