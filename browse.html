@@ -96,22 +96,25 @@
 
   <main id="main-content">
     <h1>Browse</h1>
+
     <section aria-labelledby="collections-heading">
       <h2 id="collections-heading">Collections</h2>
-      <div class="browse-collection-grid">
-        <article class="browse-collection-card">
-          <picture>
-            <source srcset="category-bg.avif" type="image/avif">
-            <img src="category-bg.jpg" alt="Prints, Drawings &amp; Paintings collection preview" loading="lazy">
-          </picture>
-          <div class="card-label">
-            <a href="browse/collections/property.html?id=THES48595">Prints, Drawings &amp; Paintings</a>
-          </div>
-        </article>
-        <a href="browse/collections/all.html" class="browse-view-all">
-          View All Collections
-        </a>
-      </div>
+      <div class="browse-collection-grid" id="collections-grid"></div>
+    </section>
+
+    <section aria-labelledby="categories-heading">
+      <h2 id="categories-heading">Categories</h2>
+      <div class="browse-collection-grid" id="categories-grid"></div>
+    </section>
+
+    <section aria-labelledby="materials-heading">
+      <h2 id="materials-heading">Materials</h2>
+      <div class="browse-collection-grid" id="materials-grid"></div>
+    </section>
+
+    <section aria-labelledby="origins-heading">
+      <h2 id="origins-heading">Origins</h2>
+      <div class="browse-collection-grid" id="origins-grid"></div>
     </section>
   </main>
 
@@ -142,5 +145,6 @@
     </div>
   </dialog>
 
+  <script src="assets/js/browse.js"></script>
 </body>
 </html>

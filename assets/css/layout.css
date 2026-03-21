@@ -851,6 +851,12 @@ nav[aria-label="Breadcrumb"] {
   }
 }
 
+@media (min-width: 1100px) {
+  .browse-collection-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
 /* AI CHAT BUTTON — FIXED POSITION */
 
 .chat-trigger {

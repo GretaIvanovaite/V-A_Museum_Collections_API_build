@@ -555,51 +555,100 @@ nav[aria-label="Breadcrumb"] [aria-current="page"] {
 /* BROWSE LANDING PAGE */
 
 .browse-collection-card {
-  position: relative;
+  display: flex;
+  flex-direction: column;
   border-radius: var(--radius-m);
   overflow: hidden;
-  background-color: var(--color-bg-card);
   box-shadow: var(--shadow-card);
-  color: var(--color-text-primary);
+  text-decoration: none;
+  color: inherit;
 }
 
-.browse-collection-card picture img {
+.browse-collection-card:hover,
+.browse-collection-card:focus-visible {
+  box-shadow: var(--shadow-hover);
+  outline: none;
+}
+
+.card-header {
+  background-color: var(--color-accent-brown);
+  padding: var(--space-m) var(--space-l);
+}
+
+.card-header .card-type {
+  display: block;
+  font-size: var(--font-size-small);
+  color: var(--color-text-white);
+  line-height: var(--line-height-small);
+}
+
+.card-header .card-name {
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-white);
+  line-height: var(--line-height-h3);
+  margin: 0;
+}
+
+.card-image {
+  background-color: var(--color-bg-image);
+  flex: 1;
+}
+
+.card-image img {
   width: 100%;
   aspect-ratio: 4 / 3;
+  object-fit: contain;
+  display: block;
+}
+
+.browse-view-all {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-m);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  background-color: var(--color-bg-image);
+}
+
+.browse-view-all:focus-visible {
+  outline: var(--space-xs) solid var(--color-primary-teal);
+  outline-offset: var(--space-s);
+}
+
+.view-all-images {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  flex: 1;
+  min-height: 0;
+}
+
+.view-all-images img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   display: block;
 }
 
-.browse-collection-card .card-label {
+.view-all-label {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: var(--space-m) var(--space-l);
-  background: linear-gradient(transparent, rgba(31, 38, 50, 0.75));
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(31, 38, 50, 0.55);
   color: var(--color-text-white);
-  font-size: var(--font-size-body);
-  font-weight: var(--font-weight-bold);
-}
-
-.browse-view-all {
-  display: block;
-  border-radius: var(--radius-m);
-  overflow: hidden;
-  background-color: var(--color-bg-clickable);
-  box-shadow: var(--shadow-card);
-  color: var(--color-text-teal);
-  text-align: center;
   font-size: var(--font-size-h3);
   font-weight: var(--font-weight-bold);
-  border: var(--border-width-standard) solid var(--color-primary-teal);
+  text-align: center;
+  padding: var(--space-l);
 }
 
-.browse-view-all:hover,
-.browse-view-all:focus-visible {
-  background-color: var(--color-primary-teal);
-  color: var(--color-text-white);
-  outline: none;
+.browse-view-all:hover .view-all-label,
+.browse-view-all:focus-visible .view-all-label {
+  background-color: rgba(31, 38, 50, 0.75);
 }
 
 /* DETAILS PAGE — IMAGES */
