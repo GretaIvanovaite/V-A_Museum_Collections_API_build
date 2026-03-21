@@ -6,9 +6,12 @@
   <link rel="stylesheet" href="../../assets/css/layout.css">
   <link rel="stylesheet" href="../../assets/css/styles.css">
   <link rel="icon" type="image/x-icon" href="../../images/Favicon.ico">
-  <title>Selected Category | Collections &amp; Archives</title>
+  <title>Category | Collections &amp; Archives</title>
 </head>
 <body>
+  <div class="loading-overlay" id="loading-overlay" role="status" aria-label="Loading">
+    <div class="loading-spinner" aria-hidden="true"></div>
+  </div>
   <a href="#main-content" id="skip-link">Skip to main content</a>
   <header>
     <a href="../../index.html" aria-label="Collections &amp; Archives home">
@@ -45,13 +48,13 @@
           </button>
           <ul id="cat-menu" popover>
             <li>Most represented categories</li>
-            <li><a href="../categories/property.html?id=THES48903">Prints</a></li>
-            <li><a href="../categories/property.html?id=THES48968">Designs</a></li>
-            <li><a href="../categories/property.html?id=THES48966">Drawings</a></li>
-            <li><a href="../categories/property.html?id=THES48910">Photographs</a></li>
-            <li><a href="../categories/property.html?id=THES48885">Textiles</a></li>
+            <li><a href="property.html?id=THES48903">Prints</a></li>
+            <li><a href="property.html?id=THES48968">Designs</a></li>
+            <li><a href="property.html?id=THES48966">Drawings</a></li>
+            <li><a href="property.html?id=THES48910">Photographs</a></li>
+            <li><a href="property.html?id=THES48885">Textiles</a></li>
             <li><hr aria-hidden="true"></li>
-            <li><a href="../categories/all.html">See all categories</a></li>
+            <li><a href="all.html">See all categories</a></li>
           </ul>
         </li>
         <li>
@@ -98,43 +101,24 @@
     <ol>
       <li><a href="../../index.html">Home</a></li>
       <li><a href="../../browse.html">Browse</a></li>
-      <li><a href="all.html" id="breadcrumb-parent">Categories</a></li>
-      <li id="breadcrumb-current" aria-current="page">Loading Filter...</li>
+      <li><a href="all.html">Categories</a></li>
+      <li id="breadcrumb-current" aria-current="page">Loading&hellip;</li>
     </ol>
   </nav>
 
-  <main id="main-content" class="property-page">
-    <aside aria-label="Refine search">
-      <h2>Refine Search</h2>
+  <main id="main-content" class="property-objects-page">
+    <h1 id="page-title">Loading&hellip;</h1>
 
-      <details open>
-        <summary>Materials</summary>
-        <ul>
-          <li><label><input type="checkbox"> Paper</label></li>
-          <li><label><input type="checkbox"> Pencil</label></li>
-          <li><label><input type="checkbox"> Ink</label></li>
-        </ul>
-      </details>
+    <div id="density-controls">
+      <label for="density-slider" class="less">Fewer Objects</label>
+      <input type="range" id="density-slider" min="1" max="3" value="2" step="1">
+      <label for="density-slider" class="more">More Objects</label>
+    </div>
 
-      <details>
-        <summary>Origins</summary>
-        <ul>
-          <li><label><input type="checkbox"> Great Britain</label></li>
-          <li><label><input type="checkbox"> London</label></li>
-          <li><label><input type="checkbox"> Japan</label></li>
-        </ul>
-      </details>
-    </aside>
+    <section id="objects-grid" class="objects-grid" aria-label="Objects in this category"></section>
 
     <div>
-      <h1 id="page-title">Loading Results...</h1>
-
-      <section class="objects-grid" id="api-grid" aria-label="Objects in this category">
-      </section>
-
-      <div>
-        <button type="button" id="load-more">Load More</button>
-      </div>
+      <button type="button" id="load-more">Load More</button>
     </div>
   </main>
 
@@ -146,7 +130,7 @@
 
   <button type="button" class="chat-trigger" popovertarget="ai-chat" aria-label="Open support chat">Chat</button>
 
-  <dialog id="ai-chat" popover="manual" aria-labelledby="chat-title">
+  <dialog id="ai-chat" popover="manual" aria-labelledby="chat-title" aria-modal="true">
     <div>
       <header>
         <h2 id="chat-title">Ask about this category</h2>
@@ -165,5 +149,7 @@
     </div>
   </dialog>
 
+  <script src="../../assets/js/names.js" defer></script>
+  <script src="../../assets/js/browse-property.js" defer></script>
 </body>
 </html>

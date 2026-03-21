@@ -6,9 +6,12 @@
   <link rel="stylesheet" href="../../assets/css/layout.css">
   <link rel="stylesheet" href="../../assets/css/styles.css">
   <link rel="icon" type="image/x-icon" href="../../images/Favicon.ico">
-  <title>Prints, Drawings &amp; Paintings | Collections &amp; Archives</title>
+  <title>Collection | Collections &amp; Archives</title>
 </head>
 <body>
+  <div class="loading-overlay" id="loading-overlay" role="status" aria-label="Loading">
+    <div class="loading-spinner" aria-hidden="true"></div>
+  </div>
   <a href="#main-content" id="skip-link">Skip to main content</a>
   <header>
     <a href="../../index.html" aria-label="Collections &amp; Archives home">
@@ -27,13 +30,13 @@
           </button>
           <ul id="coll-menu" popover>
             <li>Largest collections</li>
-            <li><a href="../collections/property.html?id=THES48595">Prints, Drawings &amp; Paintings</a></li>
-            <li><a href="../collections/property.html?id=THES48602">Theatre and Performance</a></li>
-            <li><a href="../collections/property.html?id=THES48601">Textiles and Fashion</a></li>
-            <li><a href="../collections/property.html?id=THES48596">East Asia</a></li>
-            <li><a href="../collections/property.html?id=THES48594">Ceramics</a></li>
+            <li><a href="property.html?id=THES48595">Prints, Drawings &amp; Paintings</a></li>
+            <li><a href="property.html?id=THES48602">Theatre and Performance</a></li>
+            <li><a href="property.html?id=THES48601">Textiles and Fashion</a></li>
+            <li><a href="property.html?id=THES48596">East Asia</a></li>
+            <li><a href="property.html?id=THES48594">Ceramics</a></li>
             <li><hr aria-hidden="true"></li>
-            <li><a href="../collections/all.html">See all collections</a></li>
+            <li><a href="all.html">See all collections</a></li>
           </ul>
         </li>
         <li>
@@ -99,57 +102,23 @@
       <li><a href="../../index.html">Home</a></li>
       <li><a href="../../browse.html">Browse</a></li>
       <li><a href="all.html">Collections</a></li>
-      <li aria-current="page">Prints, Drawings &amp; Paintings</li>
+      <li id="breadcrumb-current" aria-current="page">Loading&hellip;</li>
     </ol>
   </nav>
 
-  <main id="main-content" class="property-page">
-    <aside aria-label="Refine search">
-      <h2>Refine Search</h2>
+  <main id="main-content" class="property-objects-page">
+    <h1 id="page-title">Loading&hellip;</h1>
 
-      <details open>
-        <summary>Materials</summary>
-        <ul>
-          <li><label><input type="checkbox"> Paper</label></li>
-          <li><label><input type="checkbox"> Pencil</label></li>
-          <li><label><input type="checkbox"> Ink</label></li>
-        </ul>
-      </details>
+    <div id="density-controls">
+      <label for="density-slider" class="less">Fewer Objects</label>
+      <input type="range" id="density-slider" min="1" max="3" value="2" step="1">
+      <label for="density-slider" class="more">More Objects</label>
+    </div>
 
-      <details>
-        <summary>Categories</summary>
-        <ul>
-          <li><label><input type="checkbox"> Prints</label></li>
-          <li><label><input type="checkbox"> Designs</label></li>
-          <li><label><input type="checkbox"> Drawings</label></li>
-        </ul>
-      </details>
-    </aside>
+    <section id="objects-grid" class="objects-grid" aria-label="Objects in this collection"></section>
 
     <div>
-      <h1>Prints, Drawings &amp; Paintings</h1>
-
-      <section class="active-filters" aria-label="Active filters">
-        <div class="filter-tag">
-          <span>Collection: Prints, Drawings &amp; Paintings</span>
-          <button type="button" aria-label="Remove filter: Prints, Drawings &amp; Paintings">&times;</button>
-        </div>
-      </section>
-
-      <div class="objects-grid" aria-label="Objects in this collection">
-        <article>
-          <picture>
-            <source srcset="pdp-item.avif" type="image/avif">
-            <img src="pdp-item.jpg" alt="Historical print" loading="lazy">
-          </picture>
-          <h3>Artwork Title</h3>
-          <p>London, UK</p>
-        </article>
-      </div>
-
-      <div>
-        <button type="button" id="load-more">Load More</button>
-      </div>
+      <button type="button" id="load-more">Load More</button>
     </div>
   </main>
 
@@ -161,7 +130,7 @@
 
   <button type="button" class="chat-trigger" popovertarget="ai-chat" aria-label="Open support chat">Chat</button>
 
-  <dialog id="ai-chat" popover="manual" aria-labelledby="chat-title">
+  <dialog id="ai-chat" popover="manual" aria-labelledby="chat-title" aria-modal="true">
     <div>
       <header>
         <h2 id="chat-title">Ask about this collection</h2>
@@ -180,5 +149,7 @@
     </div>
   </dialog>
 
+  <script src="../../assets/js/names.js" defer></script>
+  <script src="../../assets/js/browse-property.js" defer></script>
 </body>
 </html>

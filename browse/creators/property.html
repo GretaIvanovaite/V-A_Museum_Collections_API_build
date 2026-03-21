@@ -6,9 +6,12 @@
   <link rel="stylesheet" href="../../assets/css/layout.css">
   <link rel="stylesheet" href="../../assets/css/styles.css">
   <link rel="icon" type="image/x-icon" href="../../images/Favicon.ico">
-  <title>Selected Creator | Collections &amp; Archives</title>
+  <title>Creator | Collections &amp; Archives</title>
 </head>
 <body>
+  <div class="loading-overlay" id="loading-overlay" role="status" aria-label="Loading">
+    <div class="loading-spinner" aria-hidden="true"></div>
+  </div>
   <a href="#main-content" id="skip-link">Skip to main content</a>
   <header>
     <a href="../../index.html" aria-label="Collections &amp; Archives home">
@@ -98,43 +101,23 @@
     <ol>
       <li><a href="../../index.html">Home</a></li>
       <li><a href="../../browse.html">Browse</a></li>
-      <li id="breadcrumb-parent" aria-label="Creator">Creator</li>
-      <li id="breadcrumb-current" aria-current="page">Loading Filter...</li>
+      <li id="breadcrumb-current" aria-current="page">Loading&hellip;</li>
     </ol>
   </nav>
 
-  <main id="main-content" class="property-page">
-    <aside aria-label="Refine search">
-      <h2>Refine Search</h2>
+  <main id="main-content" class="property-objects-page">
+    <h1 id="page-title">Loading&hellip;</h1>
 
-      <details open>
-        <summary>Categories</summary>
-        <ul>
-          <li><label><input type="checkbox"> Prints</label></li>
-          <li><label><input type="checkbox"> Designs</label></li>
-          <li><label><input type="checkbox"> Drawings</label></li>
-        </ul>
-      </details>
+    <div id="density-controls">
+      <label for="density-slider" class="less">Fewer Objects</label>
+      <input type="range" id="density-slider" min="1" max="3" value="2" step="1">
+      <label for="density-slider" class="more">More Objects</label>
+    </div>
 
-      <details>
-        <summary>Materials</summary>
-        <ul>
-          <li><label><input type="checkbox"> Paper</label></li>
-          <li><label><input type="checkbox"> Pencil</label></li>
-          <li><label><input type="checkbox"> Ink</label></li>
-        </ul>
-      </details>
-    </aside>
+    <section id="objects-grid" class="objects-grid" aria-label="Objects by this creator"></section>
 
     <div>
-      <h1 id="page-title">Loading Results...</h1>
-
-      <section class="objects-grid" id="api-grid" aria-label="Objects by this creator">
-      </section>
-
-      <div>
-        <button type="button" id="load-more">Load More</button>
-      </div>
+      <button type="button" id="load-more">Load More</button>
     </div>
   </main>
 
@@ -146,7 +129,7 @@
 
   <button type="button" class="chat-trigger" popovertarget="ai-chat" aria-label="Open support chat">Chat</button>
 
-  <dialog id="ai-chat" popover="manual" aria-labelledby="chat-title">
+  <dialog id="ai-chat" popover="manual" aria-labelledby="chat-title" aria-modal="true">
     <div>
       <header>
         <h2 id="chat-title">Ask about this creator</h2>
@@ -165,5 +148,7 @@
     </div>
   </dialog>
 
+  <script src="../../assets/js/names.js" defer></script>
+  <script src="../../assets/js/browse-property.js" defer></script>
 </body>
 </html>

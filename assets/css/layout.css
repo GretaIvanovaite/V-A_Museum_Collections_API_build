@@ -277,6 +277,7 @@ select {
 
   .objects-grid.compact {
     grid-template-columns: repeat(var(--grid-columns-compact), 1fr);
+    gap: var(--space-xl);
   }
 
   .objects-grid.dense {
@@ -462,6 +463,10 @@ select {
   .objects-grid {
     gap: var(--space-xl);
     padding: var(--space-2xl) 0;
+  }
+
+  .objects-grid.compact {
+    gap: var(--space-2xl);
   }
 
   .objects-grid article {
@@ -748,6 +753,28 @@ nav[aria-label="Breadcrumb"] {
   }
 }
 
+/* PROPERTY OBJECTS PAGES — OBJECT GRID WITH DENSITY SLIDER */
+
+@media (min-width: 0) {
+  main.property-objects-page {
+    display: flex;
+    flex-direction: column;
+    padding-top: var(--space-xl);
+  }
+
+  main.property-objects-page h1 {
+    margin-bottom: var(--space-l);
+  }
+
+  main.property-objects-page #density-controls {
+    width: clamp(18rem, 30%, 32rem);
+  }
+}
+
+.objects-grid .object-card.card-hidden {
+  display: none;
+}
+
 /* PROPERTY PAGES — ASIDE + CONTENT LAYOUT */
 
 @media (min-width: 0) {
@@ -874,6 +901,23 @@ nav[aria-label="Breadcrumb"] {
   .browse-collection-grid {
     grid-template-columns: repeat(4, 1fr);
   }
+}
+
+/* BACK TO TOP BUTTON */
+
+.back-to-top {
+  position: fixed;
+  bottom: var(--space-2xl);
+  left: var(--space-2xl);
+  z-index: var(--z-chat-button);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.back-to-top.visible {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 /* AI CHAT BUTTON — FIXED POSITION */
