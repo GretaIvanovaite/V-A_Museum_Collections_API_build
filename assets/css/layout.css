@@ -211,20 +211,21 @@ select {
 
   #density-controls {
     margin-top: var(--space-xl);
-    padding: var(--space-xs) 0;
     line-height: var(--space-xl);
     display: flex;
     justify-content: center;
+    align-items: center;
     gap: var(--space-m);
     align-self: center;
   }
 
-  #density-controls label {
+  #density-controls span {
     flex: 1;
     overflow-wrap: break-word;
-    align-self: stretch;
     display: flex;
     align-items: center;
+    padding-top: var(--space-s);
+    padding-bottom: var(--space-s);
   }
 
   #density-controls input[type="range"] {
@@ -688,12 +689,14 @@ nav[aria-label="Breadcrumb"] {
     flex-direction: row;
     gap: var(--space-s);
     overflow-x: auto;
-    padding-bottom: var(--space-xs);
+    background-color: var(--color-bg-thumbnails);
+    border-radius: var(--radius-m);
+    padding: var(--space-xs) var(--space-m);
   }
 
   .thumbnail-strip button {
-    flex: 0 0 5rem;
-    height: 5rem;
+    flex: 0 0 7rem;
+    height: 7rem;
   }
 
   .quick-facts {
@@ -1004,4 +1007,16 @@ main > div > section {
 main > section:last-child,
 main > div > section:last-child {
   border-bottom: none;
+}
+
+/* DETAILS PAGE — section dividers only between lower content sections */
+
+body.details-view main > section {
+  border-bottom: none;
+}
+
+body.details-view section[aria-labelledby="phys-heading"],
+body.details-view section[aria-labelledby="museum-heading"],
+body.details-view section[aria-labelledby="related-heading"] {
+  border-top: var(--border-width-thin) solid var(--color-divider-main);
 }

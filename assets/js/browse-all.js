@@ -224,7 +224,7 @@ async function loadAllItems() {
   var paramName = paramNames[pageType];
 
   if (items.length === 0) {
-    grid.innerHTML = "<p class=\"error\">Sorry, we couldn\u2019t load the data right now.</p>";
+    grid.innerHTML = "<p class=\"error\" role=\"alert\">Sorry, we couldn\u2019t load the data right now.</p>";
     removeOverlay();
     return;
   }

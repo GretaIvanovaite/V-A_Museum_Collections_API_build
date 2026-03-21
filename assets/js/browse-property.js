@@ -573,7 +573,7 @@ async function startPage() {
     applyTier(Number(slider.value)); // default slider=2 → show 30, cache 10
   } catch (error) {
     console.error('Error loading data:', error);
-    grid.innerHTML = '<p class="error">Sorry, we couldn\u2019t load the data right now.</p>';
+    grid.innerHTML = '<p class="error" role="alert">Sorry, we couldn\u2019t load the data right now.</p>';
   }
 
   // Remove loading overlay and inert

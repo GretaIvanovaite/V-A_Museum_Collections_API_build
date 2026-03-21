@@ -112,7 +112,7 @@
 
     <section aria-label="Object images">
       <figure class="main-display"></figure>
-      <div class="thumbnail-strip" role="group"></div>
+      <div class="thumbnail-strip" role="group" aria-label="Gallery thumbnails"></div>
     </section>
 
     <aside aria-label="Object quick facts" class="quick-facts">
@@ -131,12 +131,14 @@
 
     <section aria-labelledby="phys-heading">
       <h2 id="phys-heading">Physical Characteristics</h2>
-      <dl></dl>
+      <ul class="data-list"></ul>
     </section>
 
     <section aria-labelledby="museum-heading">
-      <h2 id="museum-heading">Museum Information</h2>
-      <dl></dl>
+      <details>
+        <summary id="museum-heading">Museum Information</summary>
+        <ul class="data-list"></ul>
+      </details>
     </section>
 
     <section aria-labelledby="related-heading">
@@ -172,7 +174,7 @@
         <p>AI-generated responses may be inaccurate. Please verify historical facts with the museum records.</p>
         <form method="dialog">
           <label for="chat-input" class="visually-hidden">Your question</label>
-          <input type="text" id="chat-input" name="question" placeholder="Ask a question..." required autofocus>
+          <input type="text" id="chat-input" name="question" placeholder="Ask a question..." required>
           <button type="submit">Send</button>
         </form>
       </footer>

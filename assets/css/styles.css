@@ -117,8 +117,14 @@
   header a:hover,
   header a:focus-visible {
     background-color: var(--color-primary-teal-hover);
-    outline: none;
     border-radius: var(--radius-s);
+  }
+
+  header nav li a:focus-visible,
+  header nav li button:focus-visible,
+  header a:focus-visible {
+    outline: 2px solid rgba(255, 255, 255, 0.85);
+    outline-offset: -2px;
   }
 
   #skip-link {
@@ -220,7 +226,7 @@
     background-color: var(--color-bg-slider);
   }
 
-  #density-controls label {
+  #density-controls span {
     cursor: pointer;
   }
 
@@ -447,7 +453,11 @@
 .meta-link:focus-visible {
   border-color: var(--color-primary-teal-hover);
   font-weight: var(--font-weight-bold);
-  outline: none;
+}
+
+.meta-link:focus-visible {
+  outline: 2px solid var(--color-primary-teal);
+  outline-offset: 2px;
 }
 
 /* CLEAR FILTER BUTTON */
@@ -497,7 +507,11 @@
 #filter-groups #clear-filter-btn.active:hover,
 #filter-groups #clear-filter-btn.active:focus-visible {
   background-color: var(--color-accent-brown);
-  outline: none;
+}
+
+#filter-groups #clear-filter-btn.active:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.85);
+  outline-offset: -2px;
 }
 
 #filter-groups #clear-filter-btn.active:hover .filter-clear-text,
@@ -523,7 +537,11 @@
 #load-more:hover,
 #load-more:focus-visible {
   background-color: var(--color-accent-brown-hover);
-  outline: none;
+}
+
+#load-more:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.85);
+  outline-offset: -2px;
 }
 
 /* HEADINGS */
@@ -579,6 +597,12 @@ nav[aria-label="Breadcrumb"] a:focus-visible {
   font-weight: var(--font-weight-bold);
 }
 
+nav[aria-label="Breadcrumb"] a:focus-visible {
+  outline: 2px solid var(--color-primary-teal);
+  outline-offset: 2px;
+  border-radius: var(--radius-xs);
+}
+
 nav[aria-label="Breadcrumb"] [aria-current="page"] {
   color: var(--color-text-primary);
 }
@@ -598,7 +622,11 @@ nav[aria-label="Breadcrumb"] [aria-current="page"] {
 .browse-cards a:hover,
 .browse-cards a:focus-visible {
   box-shadow: var(--shadow-hover);
-  outline: none;
+}
+
+.browse-cards a:focus-visible {
+  outline: 2px solid var(--color-primary-teal);
+  outline-offset: 2px;
 }
 
 .browse-cards a picture img {
@@ -634,7 +662,11 @@ nav[aria-label="Breadcrumb"] [aria-current="page"] {
 .browse-collection-card:hover,
 .browse-collection-card:focus-visible {
   box-shadow: var(--shadow-hover-lg);
-  outline: none;
+}
+
+.browse-collection-card:focus-visible {
+  outline: 2px solid var(--color-primary-teal);
+  outline-offset: 2px;
 }
 
 .browse-collection-card:hover .card-header,
@@ -760,6 +792,7 @@ nav[aria-label="Breadcrumb"] [aria-current="page"] {
 .main-display picture img {
   border-radius: var(--radius-m);
   width: 100%;
+  max-height: 60vh;
   object-fit: contain;
   background-color: var(--color-bg-image);
 }
@@ -768,7 +801,7 @@ nav[aria-label="Breadcrumb"] [aria-current="page"] {
   border-radius: var(--radius-s);
   overflow: hidden;
   border: var(--border-width-standard) solid transparent;
-  background-color: var(--color-bg-thumbnails);
+  background-color: transparent;
   padding: 0;
 }
 
@@ -776,7 +809,11 @@ nav[aria-label="Breadcrumb"] [aria-current="page"] {
 .thumbnail-strip button:focus-visible,
 .thumbnail-strip button[aria-pressed="true"] {
   border-color: var(--color-primary-teal);
-  outline: none;
+}
+
+.thumbnail-strip button:focus-visible {
+  outline: 2px solid var(--color-primary-teal);
+  outline-offset: 2px;
 }
 
 .thumbnail-strip img {
@@ -818,25 +855,49 @@ details > summary::-webkit-details-marker {
 details > summary:hover,
 details > summary:focus-visible {
   color: var(--color-primary-teal-hover);
-  outline: none;
+}
+
+details > summary:focus-visible {
+  outline: 2px solid var(--color-primary-teal);
+  outline-offset: 2px;
 }
 
 /* DETAILS PAGE — DATA LISTS */
 
-.physical-characteristics dt,
-.museum-info dt {
-  font-size: var(--font-size-small);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text-primary);
-  text-transform: uppercase;
-  letter-spacing: var(--letter-spacing-wide);
+.data-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-m);
 }
 
-.physical-characteristics dd,
-.museum-info dd {
-  font-size: var(--font-size-body);
-  line-height: var(--line-height-body);
+.data-list li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs) var(--space-s);
+  align-items: center;
+}
+
+.data-label {
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-bold);
   color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+  white-space: nowrap;
+}
+
+.data-list li span:not(.data-label) {
+  font-size: var(--font-size-body);
+  color: var(--color-text-primary);
+}
+
+section[aria-labelledby="museum-heading"] details > summary {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  padding: 0;
+  margin-bottom: var(--space-m);
 }
 
 /* QUICK FACTS ASIDE */
@@ -875,7 +936,12 @@ details > summary:focus-visible {
 .quick-facts dd a:hover,
 .quick-facts dd a:focus-visible {
   text-decoration: underline;
-  outline: none;
+}
+
+.quick-facts dd a:focus-visible {
+  outline: 2px solid var(--color-primary-teal);
+  outline-offset: 2px;
+  border-radius: var(--radius-xs);
 }
 
 /* REFINE SEARCH (PROPERTY PAGE ASIDE) */
@@ -943,7 +1009,12 @@ aside[aria-label="Refine search"] input[type="checkbox"] {
 .filter-tag button:hover,
 .filter-tag button:focus-visible {
   color: var(--color-accent-brown);
-  outline: none;
+}
+
+.filter-tag button:focus-visible {
+  outline: 2px solid var(--color-accent-brown);
+  outline-offset: 2px;
+  border-radius: var(--radius-xs);
 }
 
 /* AI CHAT BUTTON */
@@ -961,7 +1032,11 @@ aside[aria-label="Refine search"] input[type="checkbox"] {
 .chat-trigger:hover,
 .chat-trigger:focus-visible {
   background-color: var(--color-primary-teal-hover);
-  outline: none;
+}
+
+.chat-trigger:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.85);
+  outline-offset: 2px;
 }
 
 /* AI CHAT DIALOG */
@@ -996,7 +1071,11 @@ dialog#ai-chat > div > header button {
 dialog#ai-chat > div > header button:hover,
 dialog#ai-chat > div > header button:focus-visible {
   background-color: var(--color-primary-teal-hover);
-  outline: none;
+}
+
+dialog#ai-chat > div > header button:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.85);
+  outline-offset: -2px;
 }
 
 dialog#ai-chat [role="log"] {
@@ -1050,5 +1129,9 @@ dialog#ai-chat form button[type="submit"] {
 dialog#ai-chat form button[type="submit"]:hover,
 dialog#ai-chat form button[type="submit"]:focus-visible {
   background-color: var(--color-accent-brown-hover);
-  outline: none;
+}
+
+dialog#ai-chat form button[type="submit"]:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.85);
+  outline-offset: -2px;
 }

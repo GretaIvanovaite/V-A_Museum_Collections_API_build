@@ -11,6 +11,11 @@ if (!objectId) {
   loadObject(objectId);
 }
 
+function removeOverlay() {
+  var overlay = document.getElementById('loading-overlay');
+  if (overlay) { overlay.classList.add('hidden'); }
+}
+
 async function loadObject(id) {
   try {
     var res = await fetch(API_BASE + '/museumobject/' + id);
@@ -20,7 +25,9 @@ async function loadObject(id) {
   } catch (err) {
     console.error('Failed to load object:', err);
     var mainContent = document.getElementById('main-content');
-    if (mainContent) { mainContent.innerHTML = '<p>Failed to load object details.</p>'; }
+    if (mainContent) { mainContent.innerHTML = '<p role="alert">Failed to load object details.</p>'; }
+  } finally {
+    removeOverlay();
   }
 }
 
@@ -50,7 +57,9 @@ function renderGallery(record, title) {
       '</picture>';
 
     var strip = document.querySelector('.thumbnail-strip');
+    if (strip) { strip.style.display = 'none'; }
     if (strip && allImages.length > 1) {
+      strip.style.display = '';
       var thumbHtml = '';
       var limit = allImages.length < 6 ? allImages.length : 6;
       for (var i = 0; i < limit; i++) {
@@ -171,7 +180,7 @@ function renderDetails(record) {
 
   var physHtml = '';
   if (record.materials && record.materials.length > 0) {
-    physHtml += '<dt>Materials</dt>';
+    physHtml += '<li><span class="data-label">Materials</span>';
     for (var k = 0; k < record.materials.length; k++) {
       var mat = record.materials[k];
       var group = (typeof getMaterialGroup === 'function') ? getMaterialGroup(mat.id) : null;
@@ -183,39 +192,43 @@ function renderDetails(record) {
       }
       var label = (group && group.name) ? group.name : mat.text;
       if (href) {
-        physHtml += '<dd><a href="' + href + '">' + label + '</a></dd>';
+        physHtml += '<a href="' + href + '" class="meta-link">' + label + '</a>';
       } else {
-        physHtml += '<dd>' + label + '</dd>';
+        physHtml += '<span>' + label + '</span>';
       }
     }
+    physHtml += '</li>';
   }
   if (record.techniques && record.techniques.length > 0) {
-    physHtml += '<dt>Techniques</dt>';
+    var techValues = [];
     for (var t = 0; t < record.techniques.length; t++) {
-      physHtml += '<dd>' + record.techniques[t].text + '</dd>';
+      var tech = record.techniques[t];
+      techValues.push(normalizeTechnique(tech.text, tech.id));
     }
+    physHtml += '<li><span class="data-label">Techniques</span><span>' + techValues.join(', ') + '</span></li>';
   }
   if (record.dimensions && record.dimensions.length > 0) {
-    physHtml += '<dt>Dimensions</dt>';
+    physHtml += '<li><span class="data-label">Dimensions</span>';
     for (var d = 0; d < record.dimensions.length; d++) {
       var dim = record.dimensions[d];
-      physHtml += '<dd>' + dim.dimension + ': ' + dim.value + ' ' + (dim.unit || '') + '</dd>';
+      physHtml += '<span>' + dim.dimension + ': ' + dim.value + ' ' + (dim.unit || '') + '</span>';
     }
-    if (record.dimensionsNote) { physHtml += '<dd class="note"><em>' + record.dimensionsNote + '</em></dd>'; }
+    if (record.dimensionsNote) { physHtml += '<span><em>' + record.dimensionsNote + '</em></span>'; }
+    physHtml += '</li>';
   }
   if (record.physicalDescription) {
-    physHtml += '<dt>Physical Description</dt><dd>' + record.physicalDescription + '</dd>';
+    physHtml += '<li><span class="data-label">Physical Description</span><span>' + record.physicalDescription + '</span></li>';
   }
-  toggleSection('.physical-characteristics dl', physHtml);
+  toggleSection('section[aria-labelledby="phys-heading"] ul', physHtml);
 
   var museumHtml = '';
   if (record.galleryLocations && record.galleryLocations.length > 0 && record.galleryLocations[0].current) {
-    museumHtml += '<dt>Gallery Location</dt><dd>' + record.galleryLocations[0].current.text + '</dd>';
+    museumHtml += '<li><span class="data-label">Gallery Location</span><span>' + record.galleryLocations[0].current.text + '</span></li>';
   }
-  museumHtml += '<dt>Museum Number</dt><dd>' + record.accessionNumber + '</dd>';
-  if (record.creditLine) { museumHtml += '<dt>Credit Line</dt><dd>' + record.creditLine + '</dd>'; }
-  museumHtml += '<dt>Copyright</dt><dd>\u00a9 Victoria and Albert Museum, London</dd>';
-  toggleSection('.museum-info dl', museumHtml);
+  museumHtml += '<li><span class="data-label">Museum Number</span><span>' + record.accessionNumber + '</span></li>';
+  if (record.creditLine) { museumHtml += '<li><span class="data-label">Credit Line</span><span>' + record.creditLine + '</span></li>'; }
+  museumHtml += '<li><span class="data-label">Copyright</span><span>\u00a9 Victoria and Albert Museum, London</span></li>';
+  toggleSection('section[aria-labelledby="museum-heading"] ul', museumHtml);
 
   var relatedData = record.associatedObjects || [];
   var relatedGrid = document.querySelector('.objects-grid');

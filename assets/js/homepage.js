@@ -930,7 +930,7 @@ async function startPage() {
     loadAllDetailCategories();
   } catch (error) {
     console.error('Error loading museum data:', error);
-    grid.innerHTML = '<p class="error">Sorry, we couldn\'t load the gallery right now.</p>';
+    grid.innerHTML = '<p class="error" role="alert">Sorry, we couldn\'t load the gallery right now.</p>';
   }
 }
 
@@ -955,14 +955,12 @@ slider.addEventListener('input', function() {
   loadAllDetailCategories();
 });
 
-document.querySelector('label.less').addEventListener('click', function(e) {
-  e.preventDefault();
+document.querySelector('span.less').addEventListener('click', function() {
   slider.value = Math.max(Number(slider.min), Number(slider.value) - 1);
   slider.dispatchEvent(new Event('input'));
 });
 
-document.querySelector('label.more').addEventListener('click', function(e) {
-  e.preventDefault();
+document.querySelector('span.more').addEventListener('click', function() {
   slider.value = Math.min(Number(slider.max), Number(slider.value) + 1);
   slider.dispatchEvent(new Event('input'));
 });
