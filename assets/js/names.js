@@ -343,34 +343,30 @@ function getCategoryGroup(id) {
 }
 
 const COLLECTION_GROUPS = [
-  {name: "Prints, Drawings and Paintings", ids: ["PDP"]},
-  {name: "Furniture and Woodwork", ids: ["FE", "FURN", "FWK"]},
-  {name: "Metalwork", ids: ["MET"]},
-  {name: "Ceramics", ids: ["CER"]},
-  {name: "Sculpture", ids: ["SCUL", "SCP"]},
-  {name: "Textiles and Fashion", ids: ["T", "T&F", "TEX"]},
-  {name: "Circulation Department", ids: ["CIRC"]},
-  {name: "National Art Library", ids: ["NAL"]},
-  {name: "Archive of Art and Design", ids: ["AAD"]},
+  {name: "Prints, Drawings & Paintings", ids: ["THES48595", "PDP"]},
+  {name: "Theatre and Performance", ids: ["THES48602", "T&P", "TH"]},
+  {name: "East Asia", ids: ["THES48596", "EA", "EAS", "FEA"]},
+  {name: "Textiles and Fashion", ids: ["THES48601", "T", "T&F", "TEX"]},
+  {name: "Ceramics", ids: ["THES48594", "CER", "GLASS"]},
+  {name: "South & South East Asia", ids: ["THES48598", "SAS", "SSEA"]},
+  {name: "Department of Photography", ids: ["THES291628", "PH", "PHOTO", "DOP"]},
+  {name: "Metalwork", ids: ["THES48599", "MET"]},
+  {name: "Young V&A", ids: ["THES48593", "YVA"]},
+  {name: "V&A Wedgwood Collection", ids: ["THES270009", "WED"]},
+  {name: "Sculpture", ids: ["THES48600", "SCUL", "SCP"]},
+  {name: "Middle East", ids: ["THES48607", "ME", "MES"]},
+  {name: "Furniture and Woodwork", ids: ["THES48597", "FE", "FURN", "FWK"]},
+  {name: "National Art Library", ids: ["THES48605", "NAL"]},
+  {name: "Design, Architecture & Digital", ids: ["THES260586", "DAD", "ARC"]},
+  {name: "Exhibitions Department", ids: ["THES264787"]},
+  {name: "V&A East", ids: ["THES359557"]},
+  {name: "Archive of Art and Design", ids: ["THES48604", "AAD"]},
+  {name: "Circulation Department", ids: ["THES48606", "CIRC"]},
+  {name: "Asian", ids: ["AS"]},
+  {name: "Word and Image", ids: ["W"]},
+  {name: "Indian Section", ids: ["INDIA"]},
   {name: "London Day School of Art Library", ids: ["LDSAL"]},
   {name: "Museum of Childhood", ids: ["MoC"]},
-  {name: "Theatre and Performance", ids: ["T&P", "TH"]},
-  {name: "Photographs", ids: ["PH", "PHOTO"]},
-  {name: "Photography", ids: ["DOP"]},
-  {name: "Architecture", ids: ["ARC"]},
-  {name: "Design, Architecture and Digital", ids: ["DAD"]},
-  {name: "Asian", ids: ["AS"]},
-  {name: "South and South East Asia", ids: ["SAS"]},
-  {name: "South & South East Asia", ids: ["SSEA"]},
-  {name: "Middle East", ids: ["ME", "MES"]},
-  {name: "Far Eastern", ids: ["FEA"]},
-  {name: "East Asia", ids: ["EA"]},
-  {name: "East Asian", ids: ["EAS"]},
-  {name: "Word and Image", ids: ["W"]},
-  {name: "V&A Wedgwood Collection", ids: ["WED"]},
-  {name: "Young V&A", ids: ["YVA"]},
-  {name: "Indian Section", ids: ["INDIA"]},
-  {name: "Glass and Ceramics", ids: ["GLASS"]},
   {name: "Jewellery", ids: ["JEWEL"]},
 ];
 
@@ -424,9 +420,92 @@ function normalizePlace(place, id) {
   return PLACES[lower] || place;
 }
 
+// Merge cluster items that share a group entry into one, using getGroupFn(id).
+// Non-grouped items pass through unchanged. Used by browse-all.js and homepage.js.
+function mergeGroups(items, getGroupFn) {
+  var seenGroupNames = {};
+  var result = [];
+  for (var i = 0; i < items.length; i++) {
+    var item = items[i];
+    var group = (typeof getGroupFn === 'function') ? getGroupFn(item.id) : null;
+    if (group) {
+      if (seenGroupNames[group.name]) { continue; }
+      seenGroupNames[group.name] = true;
+      result.push({ id: group.ids[0], ids: group.ids, name: group.name });
+    } else {
+      result.push({ id: item.id, ids: [item.id], name: item.name });
+    }
+  }
+  return result;
+}
+
 function normalizeAssociation(association) {
   const lower = association.toLowerCase().trim();
   const mapped = ASSOCIATIONS[lower];
   if (mapped) return mapped;
   return lower.charAt(0).toUpperCase() + lower.slice(1);
 }
+
+// ── Nav popover population ────────────────────────────────────────────────────
+
+var NAV_POPOVER_CONFIG = [
+  {id: 'coll-menu', field: 'collection', type: 'collections', getGroupFn: getCollectionGroup},
+  {id: 'cat-menu',  field: 'category',   type: 'categories',  getGroupFn: getCategoryGroup},
+  {id: 'mat-menu',  field: 'material',   type: 'materials',   getGroupFn: getMaterialGroup},
+  {id: 'org-menu',  field: 'place',      type: 'origins',     getGroupFn: getOriginGroup}
+];
+
+// Returns the path prefix to reach browse/{type}/property.html from the current page.
+// Root pages (index.html etc.) need "browse/", pages inside browse/type/ need "../".
+function getBrowsePrefix() {
+  var parts = window.location.pathname.split('/');
+  if (parts.length <= 2) { return 'browse/'; }
+  return '../';
+}
+
+async function fetchNavItems(field, getGroupFn) {
+  try {
+    var response = await fetch('https://api.vam.ac.uk/v2/objects/clusters/' + field + '/search?cluster_size=50');
+    var data = await response.json();
+    var records = Array.isArray(data) ? data : [];
+    var items = [];
+    for (var i = 0; i < records.length; i++) {
+      items.push({id: records[i].id, ids: [records[i].id], name: records[i].value});
+    }
+    return mergeGroups(items, getGroupFn);
+  } catch (e) {
+    return [];
+  }
+}
+
+function fillNavPopover(ul, items, type) {
+  var lis = ul.querySelectorAll('li');
+  var hrLi = lis[lis.length - 2];
+  for (var i = lis.length - 3; i >= 1; i--) {
+    lis[i].remove();
+  }
+  var prefix = getBrowsePrefix();
+  var limit = items.length < 5 ? items.length : 5;
+  for (var j = 0; j < limit; j++) {
+    var li = document.createElement('li');
+    var a = document.createElement('a');
+    a.href = prefix + type + '/property.html?id=' + items[j].ids.join(',');
+    a.textContent = items[j].name;
+    li.appendChild(a);
+    ul.insertBefore(li, hrLi);
+  }
+}
+
+async function populateNavPopovers() {
+  for (var i = 0; i < NAV_POPOVER_CONFIG.length; i++) {
+    var cfg = NAV_POPOVER_CONFIG[i];
+    var ul = document.getElementById(cfg.id);
+    if (!ul) { continue; }
+    var items = await fetchNavItems(cfg.field, cfg.getGroupFn);
+    if (items.length > 0) { fillNavPopover(ul, items, cfg.type); }
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  populateNavPopovers();
+});

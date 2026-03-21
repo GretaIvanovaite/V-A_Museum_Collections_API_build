@@ -17,17 +17,20 @@ const tierMap = { 1: 20, 2: 30, 3: 40 };
 
 // Move keyboard focus into a nav popover when it opens, and return it to the trigger on close
 function initPopoverFocus() {
-  document.querySelectorAll('nav [popover]').forEach(function(pop) {
-    pop.addEventListener('toggle', function(evt) {
-      if (evt.newState === 'open') {
-        const first = pop.querySelector('a');
-        if (first) { first.focus(); }
-      } else {
-        const trigger = document.querySelector('[popovertarget="' + pop.id + '"]');
-        if (trigger) { trigger.focus(); }
-      }
-    });
-  });
+  var popovers = document.querySelectorAll('nav [popover]');
+  for (var i = 0; i < popovers.length; i++) {
+    (function(pop) {
+      pop.addEventListener('toggle', function(evt) {
+        if (evt.newState === 'open') {
+          var first = pop.querySelector('a');
+          if (first) { first.focus(); }
+        } else {
+          var trigger = document.querySelector('[popovertarget="' + pop.id + '"]');
+          if (trigger) { trigger.focus(); }
+        }
+      });
+    }(popovers[i]));
+  }
 }
 initPopoverFocus();
 
@@ -970,10 +973,7 @@ async function loadMore() {
   loadMoreBtn.textContent = 'Loading...';
 
   // Log all system numbers already on the page so we can confirm no repeats
-  const alreadyShown = [];
-  shownIds.forEach(function(id) {
-    alreadyShown.push(id);
-  });
+  var alreadyShown = Array.from(shownIds);
   console.log('[load-more] System numbers already shown:', alreadyShown);
 
   const sliderValue = Number(slider.value);

@@ -148,17 +148,20 @@ const NAME_MAP = {
 
 // Move focus into nav popovers on open, return to trigger on close
 function initPopoverFocus() {
-  document.querySelectorAll('nav [popover]').forEach(function(pop) {
-    pop.addEventListener('toggle', function(evt) {
-      if (evt.newState === 'open') {
-        const first = pop.querySelector('a');
-        if (first) { first.focus(); }
-      } else {
-        const trigger = document.querySelector('[popovertarget="' + pop.id + '"]');
-        if (trigger) { trigger.focus(); }
-      }
-    });
-  });
+  var popovers = document.querySelectorAll('nav [popover]');
+  for (var i = 0; i < popovers.length; i++) {
+    (function(pop) {
+      pop.addEventListener('toggle', function(evt) {
+        if (evt.newState === 'open') {
+          var first = pop.querySelector('a');
+          if (first) { first.focus(); }
+        } else {
+          var trigger = document.querySelector('[popovertarget="' + pop.id + '"]');
+          if (trigger) { trigger.focus(); }
+        }
+      });
+    }(popovers[i]));
+  }
 }
 initPopoverFocus();
 
@@ -382,7 +385,8 @@ function makeCard(item) {
   card.addEventListener('mouseleave', function() {
     clearTimeout(hoverTimer);
     card.classList.remove('is-hovered');
-    card.querySelectorAll('.extra-image').forEach(function(img) { img.remove(); });
+    var extras = card.querySelectorAll('.extra-image');
+    for (var ei = 0; ei < extras.length; ei++) { extras[ei].remove(); }
   });
 
   return card;
@@ -548,9 +552,8 @@ async function startPage() {
   const pageTitle         = document.getElementById('page-title');
   const breadcrumbCurrent = document.getElementById('breadcrumb-current');
 
-  const PAGE_SUFFIX = { collections: ' Collection', categories: '', materials: '', origins: '', creators: '' };
   if (pageTitle) {
-    pageTitle.textContent = displayName + (PAGE_SUFFIX[pageType] || '');
+    pageTitle.textContent = displayName;
     document.title        = displayName + ' | Collections \u0026 Archives';
   }
   if (breadcrumbCurrent) { breadcrumbCurrent.textContent = displayName; }

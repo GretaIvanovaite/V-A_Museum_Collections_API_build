@@ -26,9 +26,11 @@ async function fetchClusters() {
     var response = await fetch(url);
     var data = await response.json();
     var records = Array.isArray(data) ? data : [];
-    return records.map(function(t) {
-      return { id: t.id, ids: [t.id], name: t.value };
-    });
+    var items = [];
+    for (var i = 0; i < records.length; i++) {
+      items.push({ id: records[i].id, ids: [records[i].id], name: records[i].value });
+    }
+    return items;
   } catch (e) {
     console.error("[fetchClusters] error:", e);
     return [];
@@ -87,7 +89,11 @@ if (pathname.indexOf("/collections/") !== -1) {
 // page_size=3 gives fallback image candidates; record_count is the total matching.
 async function fetchItemData(paramName, ids) {
   var idArray = Array.isArray(ids) ? ids : [ids];
-  var query = idArray.map(function(id) { return paramName + "=" + id; }).join("&");
+  var queryParts = [];
+  for (var i = 0; i < idArray.length; i++) {
+    queryParts.push(paramName + "=" + idArray[i]);
+  }
+  var query = queryParts.join("&");
   var url = apiBase + "/objects/search?" + query + "&images_exist=1&page_size=3";
   try {
     var response = await fetch(url);
@@ -124,24 +130,6 @@ function makeImageUrl(imageId, size) {
   return imageBase + "/" + imageId + "/full/!" + size + "/0/default.jpg";
 }
 
-// Merge cluster terms that share a group entry into a single tile.
-// getGroupFn(id) should return {name, ids} or null. Non-grouped terms pass through unchanged.
-function mergeGroups(items, getGroupFn) {
-  var seenGroupNames = {};
-  var result = [];
-  for (var i = 0; i < items.length; i++) {
-    var item = items[i];
-    var group = (typeof getGroupFn === 'function') ? getGroupFn(item.id) : null;
-    if (group) {
-      if (seenGroupNames[group.name]) { continue; }
-      seenGroupNames[group.name] = true;
-      result.push({ id: group.ids[0], ids: group.ids, name: group.name });
-    } else {
-      result.push({ id: item.id, ids: [item.id], name: item.name });
-    }
-  }
-  return result;
-}
 
 // Build a placeholder card with just the name — image and count populated lazily
 function buildPlaceholderCard(item) {
