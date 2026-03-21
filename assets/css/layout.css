@@ -207,7 +207,7 @@ select {
   }
 
   #density-controls {
-    padding: var(--space-xs) var(--space-xl);
+    padding: var(--space-xs) 0;
     line-height: var(--space-xl);
     display: inline-flex;
     justify-content: center;
@@ -216,17 +216,26 @@ select {
   }
 
   #density-controls label {
-    max-width: 35%;
+    flex: 1;
     overflow-wrap: break-word;
-    align-self: center;
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+  }
+
+  #density-controls input[type="range"] {
+    flex: 2;
   }
 
   #density-controls .less {
+    justify-content: flex-end;
     text-align: right;
+    padding-left: var(--space-xl);
   }
 
   #density-controls .more {
-    text-align: left;
+    justify-content: flex-start;
+    padding-right: var(--space-xl);
   }
 
   #filter-groups {
@@ -236,6 +245,7 @@ select {
     align-items: center;
     gap: var(--space-m);
     max-width: 70%;
+    padding: 0 var(--space-m);
   }
 
   #filter-groups button {
@@ -489,17 +499,21 @@ select {
     width: min(calc(300% + 2 * var(--space-s)), 100vw);
   }
 
+  .objects-grid.dense article.is-hovered picture img,
+  .objects-grid.dense article:focus-within picture img {
+    max-height: none;
+  }
+
   .objects-grid article.is-hovered picture img,
   .objects-grid article:focus-within picture img {
-    max-height: 16rem;
-    width: auto;
+    width: 100%;
   }
 
   .objects-grid article.is-hovered figure,
   .objects-grid article:focus-within figure {
     grid-column: 1;
     grid-row: 1;
-    justify-self: center;
+    justify-self: stretch;
     display: flex;
     flex-direction: column;
     gap: var(--space-s);

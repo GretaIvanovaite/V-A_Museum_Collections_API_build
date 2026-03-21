@@ -8,6 +8,39 @@ var batchDelay = 150;
 // Global tracker — once an image ID is used anywhere on the page it will not appear again
 var usedImageIds = {};
 
+// Prevent keyboard navigation behind the loading overlay while content loads
+(function() {
+  var children = document.body.children;
+  for (var i = 0; i < children.length; i++) {
+    if (children[i].id !== 'loading-overlay') {
+      children[i].setAttribute('inert', '');
+    }
+  }
+  var main = document.getElementById('main-content');
+  if (main !== null) {
+    main.setAttribute('aria-busy', 'true');
+  }
+}());
+
+// Move keyboard focus into a nav popover when it opens, and return it to the trigger on close
+function initPopoverFocus() {
+  var popovers = document.querySelectorAll('nav [popover]');
+  for (var i = 0; i < popovers.length; i++) {
+    (function(pop) {
+      pop.addEventListener('toggle', function(evt) {
+        if (evt.newState === 'open') {
+          var first = pop.querySelector('a');
+          if (first !== null) { first.focus(); }
+        } else {
+          var trigger = document.querySelector('[popovertarget="' + pop.id + '"]');
+          if (trigger !== null) { trigger.focus(); }
+        }
+      });
+    }(popovers[i]));
+  }
+}
+initPopoverFocus();
+
 // Data sourced from va-api-clusters-2026-03-04.json, ordered by count descending.
 // Duplicates (same ID or effectively the same grouping) are removed using names.js as a guide.
 // The first 3 items in each section become preview cards.
@@ -297,6 +330,19 @@ async function loadAllSections() {
     resultIndex += count;
 
     buildSectionDOM(section, candidateSets);
+  }
+
+  var overlay = document.getElementById("loading-overlay");
+  if (overlay !== null) {
+    overlay.classList.add("hidden");
+  }
+  var bodyChildren = document.body.children;
+  for (var i = 0; i < bodyChildren.length; i++) {
+    bodyChildren[i].removeAttribute('inert');
+  }
+  var main = document.getElementById('main-content');
+  if (main !== null) {
+    main.removeAttribute('aria-busy');
   }
 }
 

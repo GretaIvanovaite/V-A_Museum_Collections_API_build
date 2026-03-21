@@ -11,6 +11,9 @@
   <title>Home | Collections & Archives</title>
 </head>
 <body>
+  <div class="loading-overlay" id="loading-overlay" role="status" aria-label="Loading">
+    <div class="loading-spinner" aria-hidden="true"></div>
+  </div>
   <a href="#main-content" id="skip-link">Skip to main content</a>
   <header>
     <a href="/" aria-label="Collections &amp; Archives home">
@@ -25,7 +28,7 @@
         <li>
           <button type="button" popovertarget="coll-menu" aria-controls="coll-menu">
             Collections
-            <object data="images/angle-down-solid.svg" type="image/svg+xml" width="20">
+            <object data="images/angle-down-solid.svg" type="image/svg+xml" width="20" aria-hidden="true">
               <span aria-hidden="true">&#x26DB;</span>
             </object>
           </button>
@@ -43,7 +46,7 @@
         <li>
           <button type="button" popovertarget="cat-menu" aria-controls="cat-menu">
             Categories
-            <object data="images/angle-down-solid.svg" type="image/svg+xml" width="20">
+            <object data="images/angle-down-solid.svg" type="image/svg+xml" width="20" aria-hidden="true">
               <span aria-hidden="true">&#x26DB;</span>
             </object>
           </button>
@@ -61,7 +64,7 @@
         <li>
           <button type="button" popovertarget="mat-menu" aria-controls="mat-menu">
             Materials
-            <object data="images/angle-down-solid.svg" type="image/svg+xml" width="20">
+            <object data="images/angle-down-solid.svg" type="image/svg+xml" width="20" aria-hidden="true">
               <span aria-hidden="true">&#x26DB;</span>
             </object>
           </button>
@@ -79,7 +82,7 @@
         <li>
           <button type="button" popovertarget="org-menu" aria-controls="org-menu">
             Origins
-            <object data="images/angle-down-solid.svg" type="image/svg+xml" width="20">
+            <object data="images/angle-down-solid.svg" type="image/svg+xml" width="20" aria-hidden="true">
               <span aria-hidden="true">&#x26DB;</span>
             </object>
           </button>
@@ -171,9 +174,7 @@
       <ul id="filter-groups" aria-label="Filter by category"></ul>
     </section>
 
-    <section id="objects-grid" class="objects-grid" aria-label="Museum objects">
-      <p>Loading museum artefacts...</p>
-    </section>
+    <section id="objects-grid" class="objects-grid" aria-label="Museum objects"></section>
 
     <div>
       <button type="button" id="load-more">Load More</button>

@@ -5,6 +5,32 @@ const slider = document.getElementById("density-slider");
 
 const tierMap = { 1: 20, 2: 30, 3: 40 };
 
+// Prevent keyboard navigation behind the loading overlay while content loads
+(function() {
+  const children = document.body.children;
+  for (let i = 0; i < children.length; i++) {
+    if (children[i].id !== 'loading-overlay') {
+      children[i].setAttribute('inert', '');
+    }
+  }
+}());
+
+// Move keyboard focus into a nav popover when it opens, and return it to the trigger on close
+function initPopoverFocus() {
+  document.querySelectorAll('nav [popover]').forEach(function(pop) {
+    pop.addEventListener('toggle', function(evt) {
+      if (evt.newState === 'open') {
+        const first = pop.querySelector('a');
+        if (first) { first.focus(); }
+      } else {
+        const trigger = document.querySelector('[popovertarget="' + pop.id + '"]');
+        if (trigger) { trigger.focus(); }
+      }
+    });
+  });
+}
+initPopoverFocus();
+
 const groups = [
   {
     name: 'Photography and media',
@@ -87,6 +113,7 @@ const groups = [
 const cache = {};
 const categoryCache = {};
 let activeSubcategory = null;
+let activeGroupClass = null;
 
 // Pagination state
 const shownIds = new Set();  // system numbers already on the page
@@ -554,6 +581,26 @@ function buildFilterGroups(tier) {
   const filterList = document.getElementById('filter-groups');
   filterList.innerHTML = '';
 
+  const labelLi = document.createElement('li');
+  labelLi.id = 'filter-label-item';
+  const labelBtn = document.createElement('button');
+  labelBtn.id = 'clear-filter-btn';
+  labelBtn.type = 'button';
+  labelBtn.disabled = true;
+  labelBtn.setAttribute('aria-label', 'Clear active filter');
+  labelBtn.addEventListener('click', clearFilter);
+  const labelSpan = document.createElement('span');
+  labelSpan.className = 'filter-label-text';
+  labelSpan.textContent = 'Filter by:';
+  const clearSpan = document.createElement('span');
+  clearSpan.className = 'filter-clear-text';
+  clearSpan.textContent = '× Clear filter';
+  clearSpan.setAttribute('aria-hidden', 'true');
+  labelBtn.appendChild(labelSpan);
+  labelBtn.appendChild(clearSpan);
+  labelLi.appendChild(labelBtn);
+  filterList.appendChild(labelLi);
+
   for (let i = 0; i < groups.length; i++) {
     const group = groups[i];
     const visibleSubs = [];
@@ -665,7 +712,9 @@ function showCards(tier) {
   }
 
   for (let i = 0; i < ordered.length; i++) {
-    grid.appendChild(makeCard(ordered[i].item, ordered[i].cssClass, ordered[i].subcategoryId));
+    const card = makeCard(ordered[i].item, ordered[i].cssClass, ordered[i].subcategoryId);
+    card.dataset.originalIndex = i;
+    grid.appendChild(card);
   }
 }
 
@@ -719,8 +768,42 @@ function setCardGroupClass(card, groupClass) {
   card.classList.add(groupClass);
 }
 
+function reorderGrid() {
+  const cards = Array.from(grid.querySelectorAll('.object-card'));
+  const selected = cards.filter(function(c) { return c.classList.contains('selected'); });
+  const others   = cards.filter(function(c) { return !c.classList.contains('selected'); });
+  selected.concat(others).forEach(function(c) { grid.appendChild(c); });
+}
+
+function restoreGridOrder() {
+  const cards = Array.from(grid.querySelectorAll('.object-card'));
+  cards.sort(function(a, b) {
+    return parseInt(a.dataset.originalIndex) - parseInt(b.dataset.originalIndex);
+  });
+  cards.forEach(function(c) { grid.appendChild(c); });
+}
+
+function showClearButton() {
+  const btn = document.getElementById('clear-filter-btn');
+  if (!btn) { return; }
+  btn.disabled = false;
+  btn.classList.add('active');
+  const filterGroups = document.getElementById('filter-groups');
+  if (filterGroups) { filterGroups.classList.add('filter-active'); }
+}
+
+function hideClearButton() {
+  const btn = document.getElementById('clear-filter-btn');
+  if (!btn) { return; }
+  btn.disabled = true;
+  btn.classList.remove('active');
+  const filterGroups = document.getElementById('filter-groups');
+  if (filterGroups) { filterGroups.classList.remove('filter-active'); }
+}
+
 function clearFilter() {
   activeSubcategory = null;
+  activeGroupClass = null;
   const allCards = document.querySelectorAll('.object-card');
   for (let i = 0; i < allCards.length; i++) {
     const card = allCards[i];
@@ -737,6 +820,8 @@ function clearFilter() {
       btn.setAttribute('aria-pressed', 'false');
     }
   }
+  restoreGridOrder();
+  hideClearButton();
 }
 
 function filterByGroup(groupName) {
@@ -749,6 +834,7 @@ function filterByGroup(groupName) {
     }
   }
   activeSubcategory = null;
+  activeGroupClass = groupName;
   const allCards = document.querySelectorAll('.object-card');
   for (let i = 0; i < allCards.length; i++) {
     const card = allCards[i];
@@ -780,6 +866,8 @@ function filterByGroup(groupName) {
       }
     }
   }
+  reorderGrid();
+  showClearButton();
 }
 
 function filterBySubgroup(groupClass, subcategoryId) {
@@ -788,6 +876,7 @@ function filterBySubgroup(groupClass, subcategoryId) {
     return;
   }
   activeSubcategory = subcategoryId;
+  activeGroupClass = groupClass;
   const allCards = document.querySelectorAll('.object-card');
   for (let i = 0; i < allCards.length; i++) {
     const card = allCards[i];
@@ -833,6 +922,8 @@ function filterBySubgroup(groupClass, subcategoryId) {
       }
     }
   }
+  reorderGrid();
+  showClearButton();
 }
 
 async function startPage() {
@@ -841,6 +932,16 @@ async function startPage() {
     const currentTier = tierMap[Number(slider.value)];
     applyDensity(Number(slider.value));
     showCards(currentTier);
+
+    var overlay = document.getElementById("loading-overlay");
+    if (overlay !== null) {
+      overlay.classList.add("hidden");
+    }
+    const bodyChildren = document.body.children;
+    for (let i = 0; i < bodyChildren.length; i++) {
+      bodyChildren[i].removeAttribute('inert');
+    }
+
     loadAllDetailCategories();
   } catch (error) {
     console.error('Error loading museum data:', error);
@@ -960,8 +1061,37 @@ async function loadMore() {
     newItems[j] = tmp;
   }
 
+  const existingCardCount = grid.querySelectorAll('.object-card').length;
+
   for (let i = 0; i < newItems.length; i++) {
-    grid.appendChild(makeCard(newItems[i].item, newItems[i].cssClass, newItems[i].subcategoryId));
+    const card = makeCard(newItems[i].item, newItems[i].cssClass, newItems[i].subcategoryId);
+    card.dataset.originalIndex = existingCardCount + i;
+    grid.appendChild(card);
+  }
+
+  // If a filter is currently active, apply it to the new cards and reorder the grid
+  if (activeGroupClass !== null || activeSubcategory !== null) {
+    const allCards = grid.querySelectorAll('.object-card');
+    for (let i = existingCardCount; i < allCards.length; i++) {
+      const card = allCards[i];
+      let isSelected = false;
+      if (activeSubcategory !== null) {
+        isSelected = card.dataset.subcategory === activeSubcategory;
+        if (isSelected) {
+          setCardGroupClass(card, activeGroupClass || card.dataset.originalGroup);
+        }
+      } else if (activeGroupClass !== null) {
+        isSelected = card.dataset.group === activeGroupClass;
+      }
+      if (isSelected) {
+        card.classList.remove('disabled');
+        card.classList.add('selected');
+      } else {
+        card.classList.add('disabled');
+        card.classList.remove('selected');
+      }
+    }
+    reorderGrid();
   }
 
   loadAllDetailCategories();

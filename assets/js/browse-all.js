@@ -105,6 +105,39 @@ var paramNames = {
   origins:     "id_place"
 };
 
+// Prevent keyboard navigation behind the loading overlay while content loads
+(function() {
+  var children = document.body.children;
+  for (var i = 0; i < children.length; i++) {
+    if (children[i].id !== 'loading-overlay') {
+      children[i].setAttribute('inert', '');
+    }
+  }
+  var main = document.getElementById('main-content');
+  if (main !== null) {
+    main.setAttribute('aria-busy', 'true');
+  }
+}());
+
+// Move keyboard focus into a nav popover when it opens, and return it to the trigger on close
+function initPopoverFocus() {
+  var popovers = document.querySelectorAll('nav [popover]');
+  for (var i = 0; i < popovers.length; i++) {
+    (function(pop) {
+      pop.addEventListener('toggle', function(evt) {
+        if (evt.newState === 'open') {
+          var first = pop.querySelector('a');
+          if (first !== null) { first.focus(); }
+        } else {
+          var trigger = document.querySelector('[popovertarget="' + pop.id + '"]');
+          if (trigger !== null) { trigger.focus(); }
+        }
+      });
+    }(popovers[i]));
+  }
+}
+initPopoverFocus();
+
 // Determine which section we are from the URL path
 var pageType = null;
 var pathname = window.location.pathname;
@@ -255,6 +288,19 @@ async function loadAllItems() {
 
     var card = buildCard(items[i], result.count, chosenImageId);
     grid.appendChild(card);
+  }
+
+  var overlay = document.getElementById("loading-overlay");
+  if (overlay !== null) {
+    overlay.classList.add("hidden");
+  }
+  var bodyChildren = document.body.children;
+  for (var i = 0; i < bodyChildren.length; i++) {
+    bodyChildren[i].removeAttribute('inert');
+  }
+  var main = document.getElementById('main-content');
+  if (main !== null) {
+    main.removeAttribute('aria-busy');
   }
 }
 
