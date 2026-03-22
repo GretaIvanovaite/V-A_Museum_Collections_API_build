@@ -110,9 +110,9 @@
     <h1 id="page-title">Loading&hellip;</h1>
 
     <div id="density-controls">
-      <label for="density-slider" class="less">Fewer Objects</label>
-      <input type="range" id="density-slider" min="1" max="3" value="2" step="1">
-      <label for="density-slider" class="more">More Objects</label>
+      <span class="less" aria-hidden="true">Fewer Objects</span>
+      <input type="range" id="density-slider" min="1" max="3" value="2" step="1" aria-label="Display density">
+      <span class="more" aria-hidden="true">More Objects</span>
     </div>
 
     <section id="objects-grid" class="objects-grid" aria-label="Objects in this collection"></section>

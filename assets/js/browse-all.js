@@ -135,7 +135,7 @@ function makeImageUrl(imageId, size) {
 function buildPlaceholderCard(item) {
   var card = document.createElement("a");
   card.className = "browse-collection-card";
-  card.href = "property.html?id=" + item.ids.join(",");
+  card.href = "property.html?id=" + item.ids.join(",") + "&name=" + encodeURIComponent(item.name);
   card.dataset.ids = item.ids.join(",");
   card.dataset.name = item.name;
 

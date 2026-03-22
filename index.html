@@ -11,7 +11,7 @@
   <script src="assets/js/back-to-top.js" defer></script>
   <title>Home | Collections & Archives</title>
 </head>
-<body>
+<body class="home">
   <div class="loading-overlay" id="loading-overlay" role="status" aria-label="Loading">
     <div class="loading-spinner" aria-hidden="true"></div>
   </div>
@@ -101,7 +101,7 @@
 
   <noscript>
     <style>
-      /* Hide the main content and any navigation/footers */
+      /* Hide the main content and any navigation/footers if no JS */
       main, header, footer, #skip-link { display: none !important; }
 
       .js-error-container {
@@ -112,13 +112,13 @@
         min-height: 100vh;
         padding: 40px;
         font-family: system-ui, -apple-system, sans-serif;
-        background-color: #fff; /* High contrast background */
+        background-color: #fff;
         color: #000;
       }
 
       .error-card {
         max-width: 600px;
-        border: 4px solid #d93025; /* Bold red border for visual cue */
+        border: 4px solid #d93025;
         padding: 30px;
         border-radius: 8px;
       }
@@ -134,7 +134,6 @@
         border-radius: 4px;
       }
       
-      /* Ensure the link is clearly a link for colorblind users */
       .btn-enable:hover {
         text-decoration: underline;
         background-color: #1557b0;
@@ -168,7 +167,7 @@
       <input type="range" id="density-slider" min="1" max="3" value="2" step="1" aria-label="Display density">
       <span class="more" aria-hidden="true">More Objects</span>
     </div>
-    <button id="filter-toggle" type="button" aria-expanded="false" aria-controls="filter-groups">Filter by <span aria-hidden="true">▾</span></button>
+    <button id="filter-toggle" type="button" aria-expanded="false" aria-controls="filter-groups">Filter by <span aria-hidden="true">&#x25BF;</span></button>
     <ul id="filter-groups" aria-label="Filter by category"></ul>
 
     <section id="objects-grid" class="objects-grid" aria-label="Museum objects"></section>
@@ -179,9 +178,10 @@
   </main>
 
   <footer>
-    <p>&copy; 2026 Collections & Archives</p>
-    <p>Data retrieved via Victoria and Albert Museum Collections API</p>
-    <p>This prototype is part of an Edge Hill University Undergraduate Research and Development project</p>
+    <small>&copy; 2026 Collections & Archives</small>
+    <small>Greta Ivanovaite</small>
+    <small>Data retrieved via Victoria and Albert Museum Collections API</small>
+    <small>This prototype is part of an Edge Hill University Undergraduate Research and Development project</small>
   </footer>
 
 </body>

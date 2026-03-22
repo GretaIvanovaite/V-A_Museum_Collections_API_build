@@ -173,19 +173,6 @@ function getYear(dateText) {
   return m ? m[0] : '';
 }
 
-function splitLabel(text) {
-  if (text.length <= 18) { return text; }
-  const mid    = Math.floor(text.length / 2);
-  const before = text.lastIndexOf(' ', mid);
-  const after  = text.indexOf(' ', mid);
-  let sp;
-  if (before === -1)                          { sp = after; }
-  else if (after === -1)                      { sp = before; }
-  else if (mid - before <= after - mid)       { sp = before; }
-  else                                        { sp = after; }
-  if (sp === -1) { return text; }
-  return text.slice(0, sp) + '<br>' + text.slice(sp + 1);
-}
 
 // ─── Card building ────────────────────────────────────────────────────────────
 
@@ -226,6 +213,7 @@ function makeCard(item) {
       '</picture>' +
     '</div>' +
     '<div class="card-inner">' +
+      '<button type="button" class="card-close" aria-label="Close">&#x00D7;</button>' +
       '<h3><a class="card-link" href="../../details.html?id=' + item.systemNumber + '">' + itemTitle + '</a></h3>' +
       '<figure>' +
         '<picture>' +
@@ -241,6 +229,20 @@ function makeCard(item) {
         '<p class="detail-text"></p>' +
       '</section>' +
     '</div>';
+
+  var closeBtn = card.querySelector('.card-close');
+  closeBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    card.classList.remove('is-hovered');
+    closeBtn.blur();
+  });
+
+  var cardThumb = card.querySelector('.card-thumb');
+  cardThumb.addEventListener('click', function() {
+    if (!card.classList.contains('is-hovered')) {
+      activateCard();
+    }
+  });
 
   let hasLoaded = false;
 
@@ -262,7 +264,7 @@ function makeCard(item) {
       if (collName) {
         const collectionId = collCode ? collCode.id : null;
         const collectionLink = collectionId
-          ? '<a href="../collections/property.html?id=' + collectionId + '" class="meta-link">' + splitLabel(collName) + '</a>'
+          ? '<a href="../collections/property.html?id=' + collectionId + '" class="meta-link">' + collName + '</a>'
           : collName;
         metaHtml += '<dt>Collection</dt><dd>' + collectionLink + '</dd><hr aria-hidden="true">';
       }
@@ -276,7 +278,7 @@ function makeCard(item) {
           const categoryText  = cat.text || cat.name || '';
           const categoryLabel = normalizeCategory(categoryText, cat.id);
           if (cat.id) {
-            metaHtml += '<dd><a href="../categories/property.html?id=' + cat.id + '" class="meta-link">' + splitLabel(categoryLabel) + '</a></dd>';
+            metaHtml += '<dd><a href="../categories/property.html?id=' + cat.id + '" class="meta-link">' + categoryLabel + '</a></dd>';
           } else {
             metaHtml += '<dd>' + categoryLabel + '</dd>';
           }
@@ -293,7 +295,7 @@ function makeCard(item) {
         }
         const originLabel = normalizePlace(itemPlace, originId);
         const originLink = originId
-          ? '<a href="../origins/property.html?id=' + originId + '" class="meta-link">' + splitLabel(originLabel) + '</a>'
+          ? '<a href="../origins/property.html?id=' + originId + '" class="meta-link">' + originLabel + '</a>'
           : originLabel;
         metaHtml += '<dt>Origin</dt><dd>' + originLink + '</dd>';
       }
@@ -353,33 +355,36 @@ function makeCard(item) {
     }
   }
 
+  function activateCard() {
+    if (card.classList.contains('is-hovered')) { return; }
+    const rect = card.getBoundingClientRect();
+    if (rect.right + rect.width * 2 > window.innerWidth) {
+      card.classList.add('expand-left');
+    } else {
+      card.classList.remove('expand-left');
+    }
+    const cardGrid     = card.closest('.objects-grid');
+    const allGridCards = cardGrid.querySelectorAll('.object-card:not(.card-hidden)');
+    const visibleCards = [];
+    for (let i = 0; i < allGridCards.length; i++) {
+      if (allGridCards[i].offsetParent !== null) { visibleCards.push(allGridCards[i]); }
+    }
+    const cardIndex   = visibleCards.indexOf(card);
+    const columnCount = getComputedStyle(cardGrid).gridTemplateColumns.trim().split(/\s+/).length;
+    if (cardIndex >= visibleCards.length - columnCount) {
+      card.classList.add('expand-up');
+      const mainRect = document.querySelector('main').getBoundingClientRect();
+      card.style.setProperty('--expand-bottom', (rect.bottom - mainRect.bottom) + 'px');
+    } else {
+      card.classList.remove('expand-up');
+    }
+    card.classList.add('is-hovered');
+    loadDetail();
+  }
+
   let hoverTimer;
   card.addEventListener('mouseenter', function() {
-    hoverTimer = setTimeout(function() {
-      const rect = card.getBoundingClientRect();
-      if (rect.right + rect.width * 2 > window.innerWidth) {
-        card.classList.add('expand-left');
-      } else {
-        card.classList.remove('expand-left');
-      }
-      const cardGrid    = card.closest('.objects-grid');
-      const allGridCards = cardGrid.querySelectorAll('.object-card:not(.card-hidden)');
-      const visibleCards = [];
-      for (let i = 0; i < allGridCards.length; i++) {
-        if (allGridCards[i].offsetParent !== null) { visibleCards.push(allGridCards[i]); }
-      }
-      const cardIndex   = visibleCards.indexOf(card);
-      const columnCount = getComputedStyle(cardGrid).gridTemplateColumns.trim().split(/\s+/).length;
-      if (cardIndex >= visibleCards.length - columnCount) {
-        card.classList.add('expand-up');
-        const mainRect = document.querySelector('main').getBoundingClientRect();
-        card.style.setProperty('--expand-bottom', (rect.bottom - mainRect.bottom) + 'px');
-      } else {
-        card.classList.remove('expand-up');
-      }
-      card.classList.add('is-hovered');
-      loadDetail();
-    }, 200);
+    hoverTimer = setTimeout(activateCard, 200);
   });
   card.addEventListener('focus', loadDetail);
   card.addEventListener('mouseleave', function() {
@@ -489,14 +494,12 @@ slider.addEventListener('input', function() {
   applyTier(Number(slider.value));
 });
 
-document.querySelector('label.less').addEventListener('click', function(e) {
-  e.preventDefault();
+document.querySelector('span.less').addEventListener('click', function() {
   slider.value = Math.max(Number(slider.min), Number(slider.value) - 1);
   slider.dispatchEvent(new Event('input'));
 });
 
-document.querySelector('label.more').addEventListener('click', function(e) {
-  e.preventDefault();
+document.querySelector('span.more').addEventListener('click', function() {
   slider.value = Math.min(Number(slider.max), Number(slider.value) + 1);
   slider.dispatchEvent(new Event('input'));
 });
@@ -548,7 +551,9 @@ document.getElementById('load-more').addEventListener('click', loadMore);
 async function startPage() {
   const group = (pageType === 'materials' && propertyIds.length > 1 && typeof getMaterialGroup === 'function')
     ? getMaterialGroup(propertyIds[0]) : null;
-  const displayName = propertyNameParam || (group && group.name) || NAME_MAP[propertyId] || propertyId || 'Results';
+  const displayName = propertyNameParam || (group && group.name) || NAME_MAP[propertyId]
+    || propertyIds.map(function(id) { return NAME_MAP[id]; }).filter(Boolean).join(' & ')
+    || propertyId || 'Results';
   const pageTitle         = document.getElementById('page-title');
   const breadcrumbCurrent = document.getElementById('breadcrumb-current');
 

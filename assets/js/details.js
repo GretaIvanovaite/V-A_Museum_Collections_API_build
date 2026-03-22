@@ -114,8 +114,13 @@ function renderDetails(record) {
   if (quickFactsDl) {
     var html = '';
 
+    function hr() {
+      if (html !== '') { html += '<hr aria-hidden="true">'; }
+    }
+
     function addGroup(label, value) {
       if (!value || value === 'Unknown') { return; }
+      hr();
       html += '<dt>' + label + '</dt><dd>' + value + '</dd>';
     }
 
@@ -127,6 +132,7 @@ function renderDetails(record) {
 
     var makers = record.artistMakerPerson || [];
     if (makers.length > 0) {
+      hr();
       html += '<dt>Artist/Maker</dt>';
       for (var i = 0; i < makers.length; i++) {
         var m = makers[i];
@@ -150,6 +156,7 @@ function renderDetails(record) {
     }
 
     if (record.categories && record.categories.length > 0) {
+      hr();
       html += '<dt>Categories</dt>';
       for (var j = 0; j < record.categories.length; j++) {
         var c = record.categories[j];
@@ -167,8 +174,18 @@ function renderDetails(record) {
   var descSection = document.querySelector('section[aria-labelledby="desc-heading"]');
   if (hasDesc) {
     descSection.style.display = 'block';
-    document.querySelector('.brief-desc').innerHTML = record.briefDescription || '';
-    document.querySelector('.summary-desc').innerHTML = record.summaryDescription || '';
+    var briefEl = document.querySelector('.brief-desc');
+    if (record.briefDescription && record.briefDescription.trim()) {
+      briefEl.innerHTML = record.briefDescription;
+    } else {
+      briefEl.style.display = 'none';
+    }
+    var summaryEl = document.querySelector('.summary-desc');
+    if (record.summaryDescription && record.summaryDescription.trim()) {
+      summaryEl.innerHTML = record.summaryDescription;
+    } else {
+      summaryEl.style.display = 'none';
+    }
     renderExpandable('.historical-content', record.historicalContext);
     renderExpandable('.object-history', record.objectHistory);
     if (record.galleryLabels && record.galleryLabels.length > 0) {

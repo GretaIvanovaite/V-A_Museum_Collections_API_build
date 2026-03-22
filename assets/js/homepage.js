@@ -250,28 +250,6 @@ async function loadCategories() {
   }
 }
 
-function splitLabel(text) {
-  if (text.length <= 18) {
-    return text;
-  }
-  const midPoint = Math.floor(text.length / 2);
-  const spaceBefore = text.lastIndexOf(' ', midPoint);
-  const spaceAfter = text.indexOf(' ', midPoint);
-  let splitPoint;
-  if (spaceBefore === -1) {
-    splitPoint = spaceAfter;
-  } else if (spaceAfter === -1) {
-    splitPoint = spaceBefore;
-  } else if (midPoint - spaceBefore <= spaceAfter - midPoint) {
-    splitPoint = spaceBefore;
-  } else {
-    splitPoint = spaceAfter;
-  }
-  if (splitPoint === -1) {
-    return text;
-  }
-  return text.slice(0, splitPoint) + '<br>' + text.slice(splitPoint + 1);
-}
 
 function getYear(dateText) {
   if (dateText == null) {
@@ -327,6 +305,7 @@ function makeCard(item, cssClass, subcategoryId) {
       '</picture>' +
     '</div>' +
     '<div class="card-inner">' +
+      '<button type="button" class="card-close" aria-label="Close">&#x00D7;</button>' +
       '<h3><a class="card-link" href="details.html?id=' + item.systemNumber + '">' + itemTitle + '</a></h3>' +
       '<figure>' +
         '<picture>' +
@@ -342,6 +321,20 @@ function makeCard(item, cssClass, subcategoryId) {
         '<p class="detail-text"></p>' +
       '</section>' +
     '</div>';
+
+  var closeBtn = card.querySelector('.card-close');
+  closeBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    card.classList.remove('is-hovered');
+    closeBtn.blur();
+  });
+
+  var cardThumb = card.querySelector('.card-thumb');
+  cardThumb.addEventListener('click', function() {
+    if (!card.classList.contains('is-hovered')) {
+      activateCard();
+    }
+  });
 
   let hasLoaded = false;
   let extraImageIds = [];
@@ -372,7 +365,7 @@ function makeCard(item, cssClass, subcategoryId) {
         }
         let collectionLink;
         if (collectionId) {
-          collectionLink = '<a href="browse/collections/property.html?id=' + collectionId + '" class="meta-link">' + splitLabel(collName) + '</a>';
+          collectionLink = '<a href="browse/collections/property.html?id=' + collectionId + '" class="meta-link">' + collName + '</a>';
         } else {
           collectionLink = collName;
         }
@@ -390,7 +383,7 @@ function makeCard(item, cssClass, subcategoryId) {
           const categoryText = cat.text || cat.name || '';
           const categoryLabel = normalizeCategory(categoryText, cat.id);
           if (cat.id) {
-            metaHtml += '<dd><a href="browse/categories/property.html?id=' + cat.id + '" class="meta-link">' + splitLabel(categoryLabel) + '</a></dd>';
+            metaHtml += '<dd><a href="browse/categories/property.html?id=' + cat.id + '" class="meta-link">' + categoryLabel + '</a></dd>';
           } else {
             metaHtml += '<dd>' + categoryLabel + '</dd>';
           }
@@ -411,7 +404,7 @@ function makeCard(item, cssClass, subcategoryId) {
         const originLabel = normalizePlace(itemPlace, originId);
         let originLink;
         if (originId) {
-          originLink = '<a href="browse/origins/property.html?id=' + originId + '" class="meta-link">' + splitLabel(originLabel) + '</a>';
+          originLink = '<a href="browse/origins/property.html?id=' + originId + '" class="meta-link">' + originLabel + '</a>';
         } else {
           originLink = originLabel;
         }
@@ -538,34 +531,38 @@ function makeCard(item, cssClass, subcategoryId) {
   }
 
   let hoverTimer;
+
+  function activateCard() {
+    if (card.classList.contains('is-hovered')) { return; }
+    const rect = card.getBoundingClientRect();
+    if (rect.right + rect.width * 2 > window.innerWidth) {
+      card.classList.add('expand-left');
+    } else {
+      card.classList.remove('expand-left');
+    }
+    const cardGrid = card.closest('.objects-grid');
+    const allGridCards = cardGrid.querySelectorAll('.object-card');
+    const visibleCards = [];
+    for (let i = 0; i < allGridCards.length; i++) {
+      if (allGridCards[i].offsetParent !== null) {
+        visibleCards.push(allGridCards[i]);
+      }
+    }
+    const cardIndex = visibleCards.indexOf(card);
+    const columnCount = getComputedStyle(cardGrid).gridTemplateColumns.trim().split(/\s+/).length;
+    if (cardIndex >= visibleCards.length - columnCount) {
+      card.classList.add('expand-up');
+      const mainRect = document.querySelector('main').getBoundingClientRect();
+      card.style.setProperty('--expand-bottom', (rect.bottom - mainRect.bottom) + 'px');
+    } else {
+      card.classList.remove('expand-up');
+    }
+    card.classList.add('is-hovered');
+    loadDetail();
+  }
+
   card.addEventListener('mouseenter', function() {
-    hoverTimer = setTimeout(function() {
-      const rect = card.getBoundingClientRect();
-      if (rect.right + rect.width * 2 > window.innerWidth) {
-        card.classList.add('expand-left');
-      } else {
-        card.classList.remove('expand-left');
-      }
-      const cardGrid = card.closest('.objects-grid');
-      const allGridCards = cardGrid.querySelectorAll('.object-card');
-      const visibleCards = [];
-      for (let i = 0; i < allGridCards.length; i++) {
-        if (allGridCards[i].offsetParent !== null) {
-          visibleCards.push(allGridCards[i]);
-        }
-      }
-      const cardIndex = visibleCards.indexOf(card);
-      const columnCount = getComputedStyle(cardGrid).gridTemplateColumns.trim().split(/\s+/).length;
-      if (cardIndex >= visibleCards.length - columnCount) {
-        card.classList.add('expand-up');
-        const mainRect = document.querySelector('main').getBoundingClientRect();
-        card.style.setProperty('--expand-bottom', (rect.bottom - mainRect.bottom) + 'px');
-      } else {
-        card.classList.remove('expand-up');
-      }
-      card.classList.add('is-hovered');
-      loadDetail();
-    }, 200);
+    hoverTimer = setTimeout(activateCard, 200);
   });
   card.addEventListener('focus', loadDetail);
   card.addEventListener('mouseleave', function() {
@@ -971,8 +968,6 @@ if (filterToggle) {
     var filterList = document.getElementById('filter-groups');
     var isOpen = filterList.classList.toggle('open');
     filterToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-    var arrow = filterToggle.querySelector('span[aria-hidden]');
-    if (arrow) { arrow.textContent = isOpen ? '▴' : '▾'; }
   });
 }
 

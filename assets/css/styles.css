@@ -207,13 +207,40 @@ hr {
 }
 
 #density-controls,
-#filter-groups {
+#filter-groups,
+#filter-toggle {
   font-size: var(--font-size-small);
   font-weight: var(--font-weight-bold);
   color: var(--color-text-primary);
   text-transform: uppercase;
   background-color: var(--color-bg-clickable);
   border-radius: var(--radius-pill);
+}
+
+#filter-toggle:hover,
+#filter-toggle:focus-visible {
+  background-color: var(--color-bg-slider);
+}
+
+#filter-toggle span {
+  display: inline-block;
+  transition: transform 0.2s;
+  font-size: var(--font-size-h3);
+  vertical-align: middle;
+}
+
+#filter-toggle[aria-expanded="true"] span {
+  transform: rotate(180deg);
+}
+
+#filter-groups {
+  border-radius: var(--radius-l);
+}
+
+@media (min-width: 768px) {
+  #filter-groups {
+    border-radius: var(--radius-pill);
+  }
 }
 
 #density-controls input {
@@ -244,6 +271,7 @@ hr {
   cursor: pointer;
   border-radius: var(--radius-l);
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
 /* OBJECT CARDS */
@@ -365,10 +393,11 @@ hr {
   border-radius: var(--radius-m);
 }
 
-.quick-facts dd + dt,
-.quick-facts dd + dt + dd {
+.quick-facts dl hr {
+  grid-column: 1 / -1;
+  border: none;
   border-top: 1px solid var(--color-divider-secondary);
-  padding-top: var(--space-m);
+  margin: 0;
 }
 
 /* Tighten multiple DDs within a group */
@@ -381,8 +410,13 @@ hr {
 /* Base styles for the DL */
 .quick-facts dl {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  border-top: 1px solid var(--color-divider-secondary); /* Initial line */
+  grid-template-columns: 1fr 2fr;
+}
+
+@media (min-width: 768px) {
+  .quick-facts dl {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 .quick-facts dt, .quick-facts dd {
@@ -417,8 +451,13 @@ hr {
   color: var(--color-text-teal);
   border-radius: var(--radius-pill);
   text-decoration: none;
-  text-wrap: balance;
   line-height: var(--line-height-tag);
+}
+
+@media (min-width: 1280px) {
+  .meta-link {
+    text-wrap: balance;
+  }
 }
 
 .meta-link:hover,
@@ -648,7 +687,19 @@ nav[aria-label="Breadcrumb"] [aria-current="page"] {
 
 .card-header {
   background-color: var(--color-accent-brown);
-  padding: var(--space-m) var(--space-l);
+  padding: var(--space-s) var(--space-m);
+}
+
+@media (min-width: 768px) {
+  .card-header {
+    padding: var(--space-m) var(--space-l);
+  }
+}
+
+@media (min-width: 1280px) {
+  .card-header {
+    padding: var(--space-l) var(--space-xl);
+  }
 }
 
 .card-header .card-type {
@@ -700,11 +751,14 @@ nav[aria-label="Breadcrumb"] [aria-current="page"] {
   grid-template-rows: repeat(2, 1fr);
   flex: 1;
   min-height: 0;
+  overflow: hidden;
 }
 
 .view-all-images img {
   width: 100%;
   height: 100%;
+  max-height: none;
+  margin-bottom: 0;
   object-fit: cover;
   display: block;
 }
@@ -790,6 +844,7 @@ nav[aria-label="Breadcrumb"] [aria-current="page"] {
 
 .thumbnail-strip img {
   width: 100%;
+  height: 100%;
   object-fit: contain;
   border-radius: var(--radius-xs);
   display: block;
@@ -816,8 +871,25 @@ details > summary {
   font-weight: var(--font-weight-bold);
   color: var(--color-text-teal);
   list-style: none;
-  border-radius: var(--radius-xs);
-  padding: var(--space-xs) 0;
+  border-radius: var(--radius-s);
+  padding: var(--space-m) var(--space-s);
+  background-color: var(--color-bg-clickable);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-s);
+}
+
+details > summary::after {
+  content: '\25BF';
+  font-size: var(--font-size-h3);
+  display: inline-block;
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+
+details[open] > summary::after {
+  transform: rotate(180deg);
 }
 
 details > summary::-webkit-details-marker {
@@ -826,6 +898,7 @@ details > summary::-webkit-details-marker {
 
 details > summary:hover,
 details > summary:focus-visible {
+  background-color: var(--color-bg-slider);
   color: var(--color-primary-teal-hover);
 }
 
@@ -868,7 +941,6 @@ section[aria-labelledby="museum-heading"] details > summary {
   font-size: var(--font-size-h2);
   font-weight: var(--font-weight-bold);
   color: var(--color-text-primary);
-  padding: 0;
   margin-bottom: var(--space-m);
 }
 
@@ -888,6 +960,7 @@ section[aria-labelledby="museum-heading"] details > summary {
 }
 
 .quick-facts dt {
+  align-self: start;
   font-size: var(--font-size-small);
   font-weight: var(--font-weight-bold);
   color: var(--color-text-secondary);
@@ -958,6 +1031,22 @@ aside[aria-label="Refine search"] input[type="checkbox"] {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-s);
+}
+
+/* CARD CLOSE BUTTON */
+
+.card-close {
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-secondary);
+  background-color: var(--color-bg-clickable);
+  border-radius: var(--radius-pill);
+}
+
+.card-close:hover,
+.card-close:focus-visible {
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-slider);
 }
 
 .filter-tag {

@@ -74,6 +74,7 @@ main {
   flex: 1;
   width: var(--width-content);
   margin: 0 auto;
+  padding-top: var(--space-xl);
 }
 
 footer {
@@ -96,12 +97,17 @@ footer {
 /* HEADER */
 
 header {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: flex-start;
-  padding: var(--space-s) var(--space-l);
+  display: grid;
+  grid-template-columns: auto 1fr 1fr;
   gap: var(--space-xs);
+  padding: var(--space-s) var(--space-l);
+}
+
+header > a {
+  grid-column: 1;
+  grid-row: 1 / 3;
+  display: flex;
+  align-items: center;
 }
 
 header > a img {
@@ -109,21 +115,25 @@ header > a img {
   width: auto;
 }
 
-header nav {
-  flex: 1;
-  min-width: 0;
-}
-
+header nav,
 header nav > ul {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
+  display: contents;
 }
 
-header nav > ul > li {
-  min-width: 5rem;
-  width: fit-content;
-}
+/* HOMEPAGE: Browse(1) spans cols 2-3 row 1; dropdowns fill rows 2-3 cols 2-3 */
+body.home header nav > ul > li:nth-child(1) { grid-column: 2 / 4; grid-row: 1; }
+body.home header nav > ul > li:nth-child(2) { grid-column: 2;     grid-row: 2; }
+body.home header nav > ul > li:nth-child(3) { grid-column: 3;     grid-row: 2; }
+body.home header nav > ul > li:nth-child(4) { grid-column: 2;     grid-row: 3; }
+body.home header nav > ul > li:nth-child(5) { grid-column: 3;     grid-row: 3; }
+
+/* OTHER PAGES: Home(1) col 1 row 3; Browse(2) spans cols 2-3 row 1; dropdowns fill rows 2-3 cols 2-3 */
+body:not(.home) header nav > ul > li:nth-child(1) { grid-column: 1;     grid-row: 3; }
+body:not(.home) header nav > ul > li:nth-child(2) { grid-column: 2 / 4; grid-row: 1; }
+body:not(.home) header nav > ul > li:nth-child(3) { grid-column: 2;     grid-row: 2; }
+body:not(.home) header nav > ul > li:nth-child(4) { grid-column: 3;     grid-row: 2; }
+body:not(.home) header nav > ul > li:nth-child(5) { grid-column: 2;     grid-row: 3; }
+body:not(.home) header nav > ul > li:nth-child(6) { grid-column: 3;     grid-row: 3; }
 
 header nav > ul > li > a,
 header nav > ul > li > button {
@@ -131,7 +141,7 @@ header nav > ul > li > button {
   width: 100%;
   height: 100%;
   text-align: center;
-  padding: var(--space-s) var(--space-xs);
+  padding: var(--space-xs);
 }
 
 header nav > ul > li > button > * {
@@ -215,13 +225,15 @@ main.home-page {
 }
 
 #density-controls {
-  margin-top: var(--space-xl);
+  margin-top: 0;
   line-height: var(--space-xl);
   display: flex;
   justify-content: center;
   align-items: center;
   gap: var(--space-m);
   align-self: center;
+  padding-top: var(--space-s);
+  padding-bottom: var(--space-s);
 }
 
 #density-controls span {
@@ -229,8 +241,6 @@ main.home-page {
   overflow-wrap: break-word;
   display: flex;
   align-items: center;
-  padding-top: var(--space-s);
-  padding-bottom: var(--space-s);
 }
 
 #density-controls input[type="range"] {
@@ -259,14 +269,11 @@ main.home-page {
 
 #filter-groups {
   display: none;
+  flex-direction: column;
+  align-items: flex-start;
   margin-top: var(--space-s);
-  line-height: var(--space-xl);
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
   gap: var(--space-xs);
   padding: var(--space-xs) var(--space-s);
-  align-self: center;
 }
 
 #filter-groups.open {
@@ -315,6 +322,7 @@ main.home-page {
   width: auto;
   min-width: 0;
   height: fit-content;
+  align-self: center;
 }
 
 .objects-grid article h3 a::after {
@@ -342,9 +350,11 @@ main.home-page {
   width: 100%;
 }
 
-.objects-grid article picture img {
+.objects-grid article img {
   width: 100%;
+  max-height: 55vh;
   object-fit: contain;
+  margin-bottom: var(--space-s);
 }
 
 .objects-grid article dl {
@@ -392,24 +402,61 @@ main.home-page {
   left: 0;
   padding: var(--space-l);
   z-index: 10;
+  width: min(calc(200% + var(--space-l)), 100vw);
+}
+
+.objects-grid.dense article.is-hovered .card-inner,
+.objects-grid.dense article:focus-within .card-inner {
+  width: min(calc(300% + 2 * var(--space-s)), 100vw);
+}
+
+/* Mobile compact — consistent space-l padding on thumb and inner card */
+.objects-grid.compact article {
+  padding: var(--space-l);
+}
+
+/* Mobile compact (1 col) — no width expansion, card is already full-width */
+.objects-grid.compact article.is-hovered .card-inner,
+.objects-grid.compact article:focus-within .card-inner {
+  width: 100%;
+  padding: var(--space-l);
+}
+
+/* Mobile default grid — left column (odd) should always expand right */
+.objects-grid:not(.dense) article:nth-child(2n+1).expand-left.is-hovered .card-inner,
+.objects-grid:not(.dense) article:nth-child(2n+1).expand-left:focus-within .card-inner {
+  left: 0;
+  right: auto;
+}
+
+/* Mobile dense only — centre the middle column instead of expanding left */
+.objects-grid.dense article:nth-child(3n+2).is-hovered .card-inner,
+.objects-grid.dense article:nth-child(3n+2):focus-within .card-inner,
+.objects-grid.dense article:nth-child(3n+2).expand-left.is-hovered .card-inner,
+.objects-grid.dense article:nth-child(3n+2).expand-left:focus-within .card-inner {
+  left: calc(-100% - var(--space-s));
+  right: auto;
 }
 
 .objects-grid article.expand-left:hover .card-inner,
+.objects-grid article.expand-left.is-hovered .card-inner,
 .objects-grid article.expand-left:focus-within .card-inner {
   left: auto;
   right: 0;
 }
 
 .objects-grid article.expand-up:hover .card-inner,
+.objects-grid article.expand-up.is-hovered .card-inner,
 .objects-grid article.expand-up:focus-within .card-inner {
   top: auto;
   bottom: var(--expand-bottom, 0);
 }
 
-.objects-grid article.is-hovered picture,
-.objects-grid article:focus-within picture {
-  margin-bottom: var(--space-m);
+.objects-grid article.is-hovered figure,
+.objects-grid article:focus-within figure {
+  margin-bottom: var(--space-l);
 }
+
 
 .objects-grid article.is-hovered h3,
 .objects-grid article:focus-within h3 {
@@ -442,7 +489,7 @@ main.home-page {
 .details-view main {
 display: flex;
 flex-direction: column; /* Stack everything vertically on mobile */
-gap: var(--space-xl);
+gap: var(--space-m);
 }
 
 
@@ -461,6 +508,7 @@ gap: var(--space-xl);
   }
 
   header {
+    display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
     justify-content: space-between;
@@ -469,18 +517,32 @@ gap: var(--space-xl);
     gap: 0;
   }
 
+  header > a {
+    display: block;
+    grid-column: auto;
+    grid-row: auto;
+    align-items: initial;
+  }
+
   header > a img {
     height: auto;
     width: 167px;
   }
 
   header nav {
+    display: block;
     flex: 0 0 auto;
   }
 
   header nav > ul {
+    display: flex;
     flex-wrap: nowrap;
     justify-content: flex-end;
+  }
+
+  header nav > ul > li {
+    grid-column: auto;
+    grid-row: auto;
   }
 
   header nav > ul > li > a,
@@ -494,11 +556,16 @@ gap: var(--space-xl);
 
   #filter-groups {
     display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-evenly;
     margin-top: var(--space-xl);
+    padding: var(--space-xs) var(--space-l);
   }
 
   main.property-objects-page #density-controls {
-    width: clamp(18rem, 30%, 32rem);
+    max-width: 40%;
   }
 
   nav ul[popover] {
@@ -554,6 +621,32 @@ gap: var(--space-xl);
     width: min(calc(300% + 2 * var(--space-s)), 100vw);
   }
 
+  /* Reset mobile compact no-expansion — restore normal 2-column expansion at tablet */
+  .objects-grid.compact article.is-hovered .card-inner,
+  .objects-grid.compact article:focus-within .card-inner {
+    width: min(calc(200% + var(--space-xl)), 100vw);
+  }
+
+  /* Reset mobile default-grid odd-column override — let expand-left handle tablet */
+  .objects-grid:not(.dense) article:nth-child(2n+1).expand-left.is-hovered .card-inner,
+  .objects-grid:not(.dense) article:nth-child(2n+1).expand-left:focus-within .card-inner {
+    left: auto;
+    right: 0;
+  }
+
+  /* Reset mobile dense middle-column centering — let expand-left handle tablet */
+  .objects-grid.dense article:nth-child(3n+2).is-hovered .card-inner,
+  .objects-grid.dense article:nth-child(3n+2):focus-within .card-inner {
+    left: 0;
+    right: auto;
+  }
+
+  .objects-grid.dense article:nth-child(3n+2).expand-left.is-hovered .card-inner,
+  .objects-grid.dense article:nth-child(3n+2).expand-left:focus-within .card-inner {
+    left: auto;
+    right: 0;
+  }
+
   .objects-grid.dense article.is-hovered picture img,
   .objects-grid.dense article:focus-within picture img {
     max-height: none;
@@ -562,6 +655,7 @@ gap: var(--space-xl);
   .objects-grid article.is-hovered picture img,
   .objects-grid article:focus-within picture img {
     width: 100%;
+    max-height: 100cqi;
   }
 
   .objects-grid article.is-hovered figure,
@@ -572,6 +666,11 @@ gap: var(--space-xl);
     display: flex;
     flex-direction: column;
     gap: var(--space-s);
+  }
+
+  .objects-grid article.is-hovered figure,
+  .objects-grid article:focus-within figure {
+    margin-bottom: 0;
   }
 
   .objects-grid article.is-hovered picture,
@@ -631,7 +730,7 @@ gap: var(--space-xl);
     display: grid;
     grid-template-columns: 1fr minmax(33.33%, 50%);
     column-gap: var(--space-2xl);
-    row-gap: var(--space-xl);
+    row-gap: var(--space-l);
     align-items: start;
   }
 
@@ -667,6 +766,14 @@ gap: var(--space-xl);
     --grid-columns-browse: 4;
   }
 
+  main.property-objects-page #density-controls {
+    max-width: 30%;
+  }
+
+  .details-view main {
+    row-gap: var(--space-xl);
+  }
+
   main.home-page {
     display: grid;
     grid-template-columns: 3fr 7fr;
@@ -676,6 +783,23 @@ gap: var(--space-xl);
   main.home-page > #objects-grid,
   main.home-page > div:last-child {
     grid-column: 1 / -1;
+  }
+}
+
+/* CARD CLOSE BUTTON — mobile only */
+
+.card-close {
+  position: absolute;
+  top: var(--space-s);
+  right: var(--space-s);
+  z-index: 11;
+  padding: var(--space-xs) var(--space-s);
+  line-height: 1;
+}
+
+@media (min-width: 768px) {
+  .card-close {
+    display: none;
   }
 }
 
@@ -731,12 +855,38 @@ nav[aria-label="Breadcrumb"] {
 }
 
 .thumbnail-strip button {
-  flex: 0 0 7rem;
-  height: 7rem;
+  flex: 0 0 4rem;
+  height: 4rem;
+}
+
+@media (min-width: 768px) {
+  .thumbnail-strip button {
+    flex: 0 0 5.5rem;
+    height: 5.5rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .thumbnail-strip button {
+    flex: 0 0 7rem;
+    height: 7rem;
+  }
 }
 
 .quick-facts {
-  padding: var(--space-l);
+  padding: var(--space-s);
+}
+
+@media (min-width: 768px) {
+  .quick-facts {
+    padding: var(--space-m);
+  }
+}
+
+@media (min-width: 1280px) {
+  .quick-facts {
+    padding: var(--space-l);
+  }
 }
 
 .quick-facts h2 {
@@ -775,7 +925,7 @@ main.property-objects-page h1 {
 }
 
 main.property-objects-page #density-controls {
-  width: min(80vw, 32rem);
+  max-width: 90vw;
 }
 
 .objects-grid .object-card.card-hidden {
@@ -888,7 +1038,19 @@ main.property-page .active-filters {
   align-items: center;
   justify-content: center;
   min-height: 8rem;
-  padding: var(--space-l);
+  padding: var(--space-s) var(--space-m);
+}
+
+@media (min-width: 768px) {
+  .browse-view-all {
+    padding: var(--space-m) var(--space-l);
+  }
+}
+
+@media (min-width: 1280px) {
+  .browse-view-all {
+    padding: var(--space-l) var(--space-xl);
+  }
 }
 
 @media (min-width: 768px) {
@@ -1016,8 +1178,22 @@ dialog#ai-chat form {
 
 main > section,
 main > div > section {
-  padding: var(--space-l) 0;
+  padding: var(--space-s) 0;
   border-bottom: var(--border-width-thin) solid var(--color-divider-main);
+}
+
+@media (min-width: 768px) {
+  main > section,
+  main > div > section {
+    padding: var(--space-m) 0;
+  }
+}
+
+@media (min-width: 1280px) {
+  main > section,
+  main > div > section {
+    padding: var(--space-l) 0;
+  }
 }
 
 main > section:last-child,
@@ -1029,6 +1205,8 @@ main > div > section:last-child {
 
 body.details-view main > section {
   border-bottom: none;
+  padding-left: var(--space-s);
+  padding-right: var(--space-s);
 }
 
 body.details-view section[aria-labelledby="phys-heading"],
