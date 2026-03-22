@@ -1,7 +1,22 @@
 {
   "permissions": {
     "allow": [
-      "Bash(ls \"c:/Users/Greta_Uni/OneDrive - Edge Hill University/CIS3425 - Research and development project/5-Design & Development/V-A_Museum_Collections_API_build/api_analysis/\")"
+      "Bash(ls \"c:/Users/Greta_Uni/OneDrive - Edge Hill University/CIS3425 - Research and development project/5-Design & Development/V-A_Museum_Collections_API_build/api_analysis/\")",
+      "Bash(cat \"/c/Users/Greta_Uni/OneDrive - Edge Hill University/CIS3425 - Research and development project/5-Design & Development/V-A_Museum_Collections_API_build/assets/css/styles.css\")",
+      "Bash(wc -l \"/c/Users/Greta_Uni/OneDrive - Edge Hill University/CIS3425 - Research and development project/5-Design & Development/V-A_Museum_Collections_API_build/assets/css/layout.css\" \"/c/Users/Greta_Uni/OneDrive - Edge Hill University/CIS3425 - Research and development project/5-Design & Development/V-A_Museum_Collections_API_build/assets/css/styles.css\")",
+      "Bash(wc -l \"c:/Users/Greta_Uni/OneDrive - Edge Hill University/CIS3425 - Research and development project/5-Design & Development/V-A_Museum_Collections_API_build/assets/css/layout.css\" \"c:/Users/Greta_Uni/OneDrive - Edge Hill University/CIS3425 - Research and development project/5-Design & Development/V-A_Museum_Collections_API_build/assets/css/styles.css\")",
+      "Bash(wc -l \"/c/Users/Greta_Uni/OneDrive - Edge Hill University/CIS3425 - Research and development project/5-Design & Development/V-A_Museum_Collections_API_build/assets/css/layout.css\")",
+      "Bash(wc -l \"/c/Users/Greta_Uni/OneDrive - Edge Hill University/CIS3425 - Research and development project/5-Design & Development/V-A_Museum_Collections_API_build/assets/css/styles.css\")",
+      "Read(//c/Users/Greta_Uni/.claude/projects/**)",
+      "Bash(for sysNum in O754365 O754363 O754362 O754361 O754360)",
+      "Bash(do echo:*)",
+      "Bash(for sysNum in O754359 O754358 O754357 O945750 O945749 O945738 O945674 O945672 O945671 O945670)",
+      "Bash(for sysNum in O777293 O777266 O777255 O777254 O777251 O777250 O777241 O777222 O777211 O777209 O777197 O777172 O777171 O777170 O777150)",
+      "Bash(curl -s \"https://api.vam.ac.uk/v2/objects/search?page=1&page_size=15&images_exist=1&fields=systemNumber\")",
+      "Bash(curl -s \"https://api.vam.ac.uk/v2/objects/search?page=2&page_size=15&images_exist=1&fields=systemNumber\")",
+      "Bash(curl -s \"https://api.vam.ac.uk/v2/objects/search?page=3&page_size=15&images_exist=1&fields=systemNumber\")",
+      "Bash(python3:*)",
+      "Bash(curl -s \"https://api.vam.ac.uk/v2/museumobject/O768446\")"
     ]
   }
 }

@@ -540,25 +540,18 @@ function makeCard(item, cssClass, subcategoryId) {
     } else {
       card.classList.remove('expand-left');
     }
-    const cardGrid = card.closest('.objects-grid');
-    const allGridCards = cardGrid.querySelectorAll('.object-card');
-    const visibleCards = [];
-    for (let i = 0; i < allGridCards.length; i++) {
-      if (allGridCards[i].offsetParent !== null) {
-        visibleCards.push(allGridCards[i]);
-      }
-    }
-    const cardIndex = visibleCards.indexOf(card);
-    const columnCount = getComputedStyle(cardGrid).gridTemplateColumns.trim().split(/\s+/).length;
-    if (cardIndex >= visibleCards.length - columnCount) {
-      card.classList.add('expand-up');
-      const mainRect = document.querySelector('main').getBoundingClientRect();
-      card.style.setProperty('--expand-bottom', (rect.bottom - mainRect.bottom) + 'px');
-    } else {
-      card.classList.remove('expand-up');
-    }
+    card.classList.remove('expand-up');
     card.classList.add('is-hovered');
     loadDetail();
+    requestAnimationFrame(function() {
+      var footer = document.querySelector('footer');
+      var inner = card.querySelector('.card-inner');
+      if (inner && footer && inner.getBoundingClientRect().bottom > footer.getBoundingClientRect().top) {
+        var mainRect = document.querySelector('main').getBoundingClientRect();
+        card.classList.add('expand-up');
+        card.style.setProperty('--expand-bottom', (rect.bottom - mainRect.bottom) + 'px');
+      }
+    });
   }
 
   card.addEventListener('mouseenter', function() {

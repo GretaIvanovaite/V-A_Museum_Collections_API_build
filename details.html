@@ -112,8 +112,8 @@
 
     <section aria-label="Object images">
       <figure class="main-display"></figure>
-      <div class="thumbnail-strip" role="group" aria-label="Gallery thumbnails"></div>
     </section>
+    <div class="thumbnail-strip" role="group" aria-label="Gallery thumbnails"></div>
 
     <aside aria-label="Object quick facts" class="quick-facts">
       <dl></dl>
@@ -122,29 +122,39 @@
     <section aria-labelledby="desc-heading">
       <h2 id="desc-heading" class="visually-hidden">Description</h2>
       <p class="brief-desc"></p>
-      <p class="summary-desc"></p>
       <details>
         <summary>Historical Context</summary>
         <div class="historical-content"></div>
       </details>
     </section>
 
-    <section aria-labelledby="phys-heading">
-      <h2 id="phys-heading">Physical Characteristics</h2>
-      <ul class="data-list"></ul>
+    <section aria-label="Object summary" style="display:none">
+      <p class="summary-desc"></p>
     </section>
 
-    <section aria-labelledby="museum-heading">
-      <details>
-        <summary id="museum-heading">Museum Information</summary>
+    <div class="lower-sections">
+      <section aria-labelledby="phys-heading">
+        <h2 id="phys-heading">Physical Characteristics</h2>
         <ul class="data-list"></ul>
-      </details>
-    </section>
+      </section>
 
-    <section aria-labelledby="related-heading">
-      <h2 id="related-heading">Related Objects</h2>
-      <div class="objects-grid"></div>
-    </section>
+      <section aria-labelledby="museum-heading">
+        <details>
+          <summary id="museum-heading">Museum Information</summary>
+          <ul class="data-list"></ul>
+        </details>
+      </section>
+
+      <section aria-labelledby="related-heading">
+        <h2 id="related-heading">Related Objects</h2>
+        <div class="objects-grid"></div>
+      </section>
+
+      <section aria-labelledby="explore-heading">
+        <h2 id="explore-heading">Explore More</h2>
+        <div class="explore-tiles"></div>
+      </section>
+    </div>
   </main>
 
   <footer>

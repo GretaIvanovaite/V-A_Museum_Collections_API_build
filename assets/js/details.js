@@ -1,6 +1,34 @@
 var API_BASE = "https://api.vam.ac.uk/v2";
 var IMAGE_CDN = "https://framemark.vam.ac.uk/collections";
 
+var usedImageIds = {};
+
+function pickUnused(candidates) {
+  for (var i = 0; i < candidates.length; i++) {
+    if (!usedImageIds[candidates[i]]) {
+      usedImageIds[candidates[i]] = true;
+      return candidates[i];
+    }
+  }
+  return null;
+}
+
+async function fetchCandidateImages(filterParam) {
+  try {
+    var url = API_BASE + '/objects/search?' + filterParam + '&page_size=5&images_exist=1&fields=_primaryImageId';
+    var res = await fetch(url);
+    var data = await res.json();
+    var records = data.records || [];
+    var ids = [];
+    for (var i = 0; i < records.length; i++) {
+      if (records[i]._primaryImageId) { ids.push(records[i]._primaryImageId); }
+    }
+    return ids;
+  } catch (e) {
+    return [];
+  }
+}
+
 var params = new URLSearchParams(window.location.search);
 var objectId = params.get('id');
 
@@ -61,17 +89,16 @@ function renderGallery(record, title) {
     if (strip && allImages.length > 1) {
       strip.style.display = '';
       var thumbHtml = '';
-      var limit = allImages.length < 6 ? allImages.length : 6;
-      for (var i = 0; i < limit; i++) {
+      for (var i = 0; i < allImages.length; i++) {
         thumbHtml +=
           '<button type="button" data-image-id="' + allImages[i] + '">' +
-            '<img src="' + IMAGE_CDN + '/' + allImages[i] + '/full/!100,100/0/default.jpg" alt="Gallery image">' +
+            '<img src="' + IMAGE_CDN + '/' + allImages[i] + '/full/!100,100/0/default.jpg" alt="Gallery image ' + (i + 1) + '">' +
           '</button>';
       }
       strip.innerHTML = thumbHtml;
 
       strip.addEventListener('click', function(e) {
-        var btn = e.target.closest('button');
+        var btn = e.target.closest('button[data-image-id]');
         if (!btn) { return; }
         var newBase = IMAGE_CDN + '/' + btn.dataset.imageId + '/full';
         mainFigure.innerHTML =
@@ -79,6 +106,35 @@ function renderGallery(record, title) {
             '<img src="' + newBase + '/!1200,1200/0/default.jpg" alt="' + title + '">' +
           '</picture>';
       });
+
+      if (allImages.length > 6) {
+        var wrapper = document.createElement('div');
+        wrapper.className = 'thumb-nav';
+        strip.parentNode.insertBefore(wrapper, strip);
+        wrapper.appendChild(strip);
+
+        var prevBtn = document.createElement('button');
+        prevBtn.type = 'button';
+        prevBtn.className = 'thumb-nav-btn';
+        prevBtn.setAttribute('aria-label', 'Scroll thumbnails left');
+        prevBtn.innerHTML = '&#8249;';
+
+        var nextBtn = document.createElement('button');
+        nextBtn.type = 'button';
+        nextBtn.className = 'thumb-nav-btn';
+        nextBtn.setAttribute('aria-label', 'Scroll thumbnails right');
+        nextBtn.innerHTML = '&#8250;';
+
+        wrapper.insertBefore(prevBtn, strip);
+        wrapper.appendChild(nextBtn);
+
+        prevBtn.addEventListener('click', function() {
+          strip.scrollBy({ left: -(strip.clientWidth - 50), behavior: 'smooth' });
+        });
+        nextBtn.addEventListener('click', function() {
+          strip.scrollBy({ left: strip.clientWidth - 50, behavior: 'smooth' });
+        });
+      }
     }
   }
 }
@@ -133,7 +189,8 @@ function renderDetails(record) {
     addGroup('Object Type', toSentenceCase(record.objectType));
 
     var makers = record.artistMakerPerson || [];
-    if (makers.length > 0) {
+    var makerOrgs = record.artistMakerOrganisations || [];
+    if (makers.length > 0 || makerOrgs.length > 0) {
       hr();
       html += '<dt>Artist/Maker</dt>';
       for (var i = 0; i < makers.length; i++) {
@@ -141,6 +198,12 @@ function renderDetails(record) {
         var nameLink = createLink(m.name.text, m.name.id, 'creators');
         var assoc = (m.association && m.association.text) ? ' (' + m.association.text + ')' : '';
         html += '<dd>' + nameLink + assoc + '</dd>';
+      }
+      for (var k = 0; k < makerOrgs.length; k++) {
+        var org = makerOrgs[k];
+        var orgLink = createLink(org.name.text, org.name.id, 'creators');
+        var orgAssoc = (org.association && org.association.text) ? ' (' + org.association.text + ')' : '';
+        html += '<dd>' + orgLink + orgAssoc + '</dd>';
       }
     }
 
@@ -169,24 +232,18 @@ function renderDetails(record) {
     quickFactsDl.innerHTML = html;
   }
 
-  var hasDesc = record.briefDescription || record.summaryDescription || record.historicalContext || record.objectHistory;
-  if (!hasDesc && record.galleryLabels && record.galleryLabels.length > 0) {
-    hasDesc = true;
+  var hasBriefDesc = record.briefDescription || record.historicalContext || record.objectHistory;
+  if (!hasBriefDesc && record.galleryLabels && record.galleryLabels.length > 0) {
+    hasBriefDesc = true;
   }
   var descSection = document.querySelector('section[aria-labelledby="desc-heading"]');
-  if (hasDesc) {
+  if (hasBriefDesc) {
     descSection.style.display = 'block';
     var briefEl = document.querySelector('.brief-desc');
     if (record.briefDescription && record.briefDescription.trim()) {
       briefEl.innerHTML = record.briefDescription;
     } else {
       briefEl.style.display = 'none';
-    }
-    var summaryEl = document.querySelector('.summary-desc');
-    if (record.summaryDescription && record.summaryDescription.trim()) {
-      summaryEl.innerHTML = record.summaryDescription;
-    } else {
-      summaryEl.style.display = 'none';
     }
     renderExpandable('.historical-content', record.historicalContext);
     renderExpandable('.object-history', record.objectHistory);
@@ -195,6 +252,17 @@ function renderDetails(record) {
     }
   } else {
     descSection.style.display = 'none';
+  }
+
+  var summarySection = document.querySelector('section[aria-label="Object summary"]');
+  if (summarySection) {
+    var summaryEl = document.querySelector('.summary-desc');
+    if (record.summaryDescription && record.summaryDescription.trim()) {
+      summaryEl.innerHTML = record.summaryDescription;
+      summarySection.style.display = 'block';
+    } else {
+      summarySection.style.display = 'none';
+    }
   }
 
   var physHtml = '';
@@ -249,18 +317,197 @@ function renderDetails(record) {
   museumHtml += '<li><span class="data-label">Copyright</span><span>\u00a9 Victoria and Albert Museum, London</span></li>';
   toggleSection('section[aria-labelledby="museum-heading"] ul', museumHtml);
 
-  var relatedData = record.associatedObjects || [];
+  var exploreSection = document.querySelector('section[aria-labelledby="explore-heading"]');
+  if (exploreSection) { exploreSection.style.display = 'none'; }
+  loadExploreMore(record);
+
+  var relatedSection = document.querySelector('section[aria-labelledby="related-heading"]');
+  relatedSection.style.display = 'none';
+  loadRelated(record);
+}
+
+async function loadExploreMore(record) {
+  var tiles = [];
+
+  var collCode = record.collectionCode;
+  if (collCode && collCode.id) {
+    var collName = normalizeCollection(collCode.text);
+    tiles.push({
+      type: 'Collection',
+      name: collName,
+      href: 'browse/collections/property.html?id=' + collCode.id + '&name=' + encodeURIComponent(collName),
+      filterParam: 'id_collection=' + encodeURIComponent(collCode.id)
+    });
+  }
+
+  var makers = record.artistMakerPerson || [];
+  if (makers.length > 0 && makers[0].name && makers[0].name.id) {
+    var makerName = makers[0].name.text;
+    var makerId = makers[0].name.id;
+    tiles.push({
+      type: 'Artist',
+      name: makerName,
+      href: 'browse/creators/property.html?id=' + makerId + '&name=' + encodeURIComponent(makerName),
+      filterParam: 'id_person=' + encodeURIComponent(makerId)
+    });
+  }
+
+  var cats = record.categories || [];
+  var catCount = Math.min(cats.length, 3);
+  for (var i = 0; i < catCount; i++) {
+    var cat = cats[i];
+    var catName = normalizeCategory(cat.text, cat.id);
+    tiles.push({
+      type: 'Category',
+      name: catName,
+      href: 'browse/categories/property.html?id=' + cat.id + '&name=' + encodeURIComponent(catName),
+      filterParam: 'id_category=' + encodeURIComponent(cat.id)
+    });
+  }
+
+  if (tiles.length === 0) { return; }
+
+  var candidatePromises = [];
+  for (var j = 0; j < tiles.length; j++) {
+    candidatePromises.push(fetchCandidateImages(tiles[j].filterParam));
+  }
+  var candidateSets = await Promise.all(candidatePromises);
+  var imageIds = [];
+  for (var j = 0; j < candidateSets.length; j++) {
+    imageIds.push(pickUnused(candidateSets[j]));
+  }
+
+  var container = document.querySelector('.explore-tiles');
+  var exploreSection = document.querySelector('section[aria-labelledby="explore-heading"]');
+  if (!container || !exploreSection) { return; }
+
+  var html = '';
+  for (var k = 0; k < tiles.length; k++) {
+    var imgId = imageIds[k];
+    var imgHtml = imgId
+      ? '<img src="' + IMAGE_CDN + '/' + imgId + '/full/!800,600/0/default.jpg" alt="' + tiles[k].name + ' preview" loading="lazy">'
+      : '';
+    html += '<a href="' + tiles[k].href + '" class="browse-collection-card">' +
+      '<div class="card-header">' +
+        '<span class="card-type">' + tiles[k].type + '</span>' +
+        '<h3 class="card-name">' + tiles[k].name + '</h3>' +
+      '</div>' +
+      '<div class="card-image">' + imgHtml + '</div>' +
+      '</a>';
+  }
+
+  container.innerHTML = html;
+  exploreSection.style.display = 'block';
+  var lowerSections = document.querySelector('.lower-sections');
+  if (lowerSections) { lowerSections.classList.add('has-explore'); }
+}
+
+async function fetchRelatedSearch(params) {
+  var url = API_BASE + '/objects/search?' + params + '&page_size=15&images_exist=1&fields=systemNumber,objectType,_primaryTitle,_primaryMaker,_primaryDate,_primaryImageId';
+  try {
+    var res = await fetch(url);
+    var data = await res.json();
+    return data.records || [];
+  } catch (e) {
+    return [];
+  }
+}
+
+async function loadRelated(record) {
+  var currentId = record.systemNumber;
+  var seenIds = new Set([currentId]);
+  var collected = [];
+
+  function addUnique(results, max, reason) {
+    var added = 0;
+    for (var i = 0; i < results.length && added < max; i++) {
+      var r = results[i];
+      if (!seenIds.has(r.systemNumber) && r._primaryImageId && !usedImageIds[r._primaryImageId]) {
+        seenIds.add(r.systemNumber);
+        usedImageIds[r._primaryImageId] = true;
+        r._relatedReason = reason;
+        collected.push(r);
+        added++;
+      }
+    }
+  }
+
+  var assocObjects = record.associatedObjects || [];
+  if (assocObjects.length > 0) {
+    var assocPromises = [];
+    var assocReasons = [];
+    for (var i = 0; i < assocObjects.length; i++) {
+      var assocId = assocObjects[i].object && assocObjects[i].object.id;
+      if (assocId) {
+        assocPromises.push(fetchRelatedSearch('kw_system_number=' + encodeURIComponent(assocId) + '&page_size=1'));
+        assocReasons.push(assocObjects[i].association ? 'Association: ' + assocObjects[i].association : 'Associated object');
+      }
+    }
+    var assocResults = await Promise.all(assocPromises);
+    for (var j = 0; j < assocResults.length; j++) {
+      if (assocResults[j].length > 0) { addUnique(assocResults[j], 1, assocReasons[j]); }
+    }
+  }
+
+  var makers = record.artistMakerPerson || [];
+  var makerOrgs = record.artistMakerOrganisations || [];
+  var allMakers = makers.concat(makerOrgs);
+  if (allMakers.length > 0) {
+    var makerId = allMakers[0].name && allMakers[0].name.id;
+    if (makerId) {
+      var makerName = allMakers[0].name.text || 'Same creator';
+      addUnique(await fetchRelatedSearch('id_person=' + encodeURIComponent(makerId)), 2, 'Creator: ' + makerName);
+    }
+  }
+
+  if (record.collectionCode && record.collectionCode.id) {
+    var collName = record.collectionCode.text ? normalizeCollection(record.collectionCode.text) : 'Same collection';
+    addUnique(await fetchRelatedSearch('id_collection=' + encodeURIComponent(record.collectionCode.id)), 2, 'Collection: ' + collName);
+  }
+
+  if (record.categories && record.categories.length > 0) {
+    var catName = record.categories[0].text ? normalizeCategory(record.categories[0].text, record.categories[0].id) : 'Same category';
+    addUnique(await fetchRelatedSearch('id_category=' + encodeURIComponent(record.categories[0].id)), 2, 'Category: ' + catName);
+  }
+
+  if (collected.length === 0) { return; }
+
   var relatedGrid = document.querySelector('.objects-grid');
   var relatedSection = document.querySelector('section[aria-labelledby="related-heading"]');
-  if (relatedData.length > 0 && relatedGrid) {
-    relatedSection.style.display = 'block';
-    var relHtml = '';
-    for (var r = 0; r < relatedData.length; r++) {
-      var obj = relatedData[r];
-      relHtml += '<div class="related-card"><p>' + (obj.title || toSentenceCase(obj.objectType)) + '</p></div>';
-    }
-    relatedGrid.innerHTML = relHtml;
-  } else if (relatedSection) {
-    relatedSection.style.display = 'none';
+  if (!relatedGrid) { return; }
+
+  relatedGrid.innerHTML = '';
+  for (var i = 0; i < collected.length; i++) {
+    relatedGrid.appendChild(makeRelatedCard(collected[i]));
   }
+  relatedSection.style.display = 'block';
+}
+
+function makeRelatedCard(item) {
+  var title = item._primaryTitle || toSentenceCase(item.objectType) || 'Untitled';
+  var imgBase = IMAGE_CDN + '/' + item._primaryImageId + '/full';
+  var smallImg = imgBase + '/!400,400/0/default.jpg';
+  var largeImg = imgBase + '/!1200,1200/0/default.jpg';
+  var date = item._primaryDate || '';
+  var maker = (item._primaryMaker && typeof item._primaryMaker === 'object') ? (item._primaryMaker.text || '') : (item._primaryMaker || '');
+
+  var card = document.createElement('a');
+  card.href = 'details.html?id=' + item.systemNumber;
+  card.className = 'related-card';
+
+  card.innerHTML =
+    '<figure>' +
+      '<picture>' +
+        '<source media="(min-width: 1000px)" srcset="' + largeImg + '">' +
+        '<img src="' + smallImg + '" alt="' + title + '" loading="lazy">' +
+      '</picture>' +
+    '</figure>' +
+    '<div class="related-info">' +
+      (item._relatedReason ? '<p class="related-reason">' + item._relatedReason + '</p>' : '') +
+      '<p class="related-title">' + title + '</p>' +
+      (maker ? '<p class="related-maker">' + maker + '</p>' : '') +
+      (date ? '<p class="related-date">' + date + '</p>' : '') +
+    '</div>';
+
+  return card;
 }
