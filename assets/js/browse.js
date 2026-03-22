@@ -179,7 +179,7 @@ function makeImageUrl(imageId, size) {
 function buildCard(item, sectionType, label, imageId) {
   var card = document.createElement("a");
   card.className = "browse-collection-card";
-  card.href = "browse/" + sectionType + "/property.html?id=" + item.id;
+  card.href = "browse/" + sectionType + "/property.html?id=" + item.id + "&name=" + encodeURIComponent(item.name);
 
   var header = document.createElement("div");
   header.className = "card-header";

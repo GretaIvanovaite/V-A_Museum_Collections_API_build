@@ -652,6 +652,11 @@ var NAV_POPOVER_CONFIG = [
 ];
 
 // Returns the path prefix to reach browse/{type}/property.html from the current page.
+function toSentenceCase(str) {
+  if (!str) { return str; }
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
+
 // Root pages (index.html etc.) need "browse/", pages inside browse/type/ need "../".
 function getBrowsePrefix() {
   var parts = window.location.pathname.split('/');
@@ -685,7 +690,7 @@ function fillNavPopover(ul, items, type) {
   for (var j = 0; j < limit; j++) {
     var li = document.createElement('li');
     var a = document.createElement('a');
-    a.href = prefix + type + '/property.html?id=' + items[j].ids.join(',');
+    a.href = prefix + type + '/property.html?id=' + items[j].ids.join(',') + '&name=' + encodeURIComponent(items[j].name);
     a.textContent = items[j].name;
     li.appendChild(a);
     ul.insertBefore(li, hrLi);

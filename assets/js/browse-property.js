@@ -23,7 +23,7 @@ const API_PARAMS = {
   categories:  'id_category',
   materials:   'id_material',
   origins:     'id_place',
-  creators:    'id_person'
+  creators:    'id_maker'
 };
 const apiParam = API_PARAMS[pageType];
 
@@ -183,9 +183,9 @@ function makeCard(item) {
 
   let itemTitle;
   if (item._primaryTitle && item.objectType) {
-    itemTitle = item._primaryTitle + ' (' + item.objectType + ')';
+    itemTitle = item._primaryTitle + ' (' + toSentenceCase(item.objectType) + ')';
   } else if (item.objectType) {
-    itemTitle = item.objectType;
+    itemTitle = toSentenceCase(item.objectType);
   } else {
     itemTitle = 'Untitled';
   }
@@ -264,7 +264,7 @@ function makeCard(item) {
       if (collName) {
         const collectionId = collCode ? collCode.id : null;
         const collectionLink = collectionId
-          ? '<a href="../collections/property.html?id=' + collectionId + '" class="meta-link">' + collName + '</a>'
+          ? '<a href="../collections/property.html?id=' + collectionId + '&name=' + encodeURIComponent(collName) + '" class="meta-link">' + collName + '</a>'
           : collName;
         metaHtml += '<dt>Collection</dt><dd>' + collectionLink + '</dd><hr aria-hidden="true">';
       }
@@ -278,7 +278,7 @@ function makeCard(item) {
           const categoryText  = cat.text || cat.name || '';
           const categoryLabel = normalizeCategory(categoryText, cat.id);
           if (cat.id) {
-            metaHtml += '<dd><a href="../categories/property.html?id=' + cat.id + '" class="meta-link">' + categoryLabel + '</a></dd>';
+            metaHtml += '<dd><a href="../categories/property.html?id=' + cat.id + '&name=' + encodeURIComponent(categoryLabel) + '" class="meta-link">' + categoryLabel + '</a></dd>';
           } else {
             metaHtml += '<dd>' + categoryLabel + '</dd>';
           }
@@ -295,7 +295,7 @@ function makeCard(item) {
         }
         const originLabel = normalizePlace(itemPlace, originId);
         const originLink = originId
-          ? '<a href="../origins/property.html?id=' + originId + '" class="meta-link">' + originLabel + '</a>'
+          ? '<a href="../origins/property.html?id=' + originId + '&name=' + encodeURIComponent(originLabel) + '" class="meta-link">' + originLabel + '</a>'
           : originLabel;
         metaHtml += '<dt>Origin</dt><dd>' + originLink + '</dd>';
       }
@@ -334,7 +334,7 @@ function makeCard(item) {
 
         if (creatorName) {
           const creatorUrl = creatorId
-            ? '../creators/property.html?id=' + creatorId
+            ? '../creators/property.html?id=' + creatorId + '&name=' + encodeURIComponent(creatorName)
             : '../creators/property.html?name=' + encodeURIComponent(creatorName);
           if (creatorName.toLowerCase() === 'unknown') {
             creatorPara.innerHTML = 'Creator unknown';
@@ -413,7 +413,7 @@ function buildApiUrl(page) {
       url += '&' + apiParam + '=' + propertyIds[i];
     }
   } else if (pageType === 'creators' && propertyNameParam) {
-    url += '&q=' + encodeURIComponent(propertyNameParam);
+    url += '&q_actor=' + encodeURIComponent(propertyNameParam);
   }
   return url;
 }
@@ -572,6 +572,10 @@ async function startPage() {
     const totalPages  = Math.max(1, Math.ceil(recordCount / fetchPageSize));
     pageQueue         = buildPageQueue(totalPages); // shuffled pages 2…totalPages
     if (pageQueue.length === 0) { hasMore = false; }
+    if (recordCount < 20) {
+      var densityControls = document.getElementById('density-controls');
+      if (densityControls) { densityControls.hidden = true; }
+    }
     poolRecords(records);
     batchCount++;
     renderPool();

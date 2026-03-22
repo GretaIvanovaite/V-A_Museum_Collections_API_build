@@ -85,7 +85,7 @@ function renderGallery(record, title) {
 
 function createLink(text, id, type) {
   if (!text || text.toLowerCase() === 'unknown') { return text || 'Unknown'; }
-  return '<a href="browse/' + type + '/property.html?id=' + id + '" class="meta-link">' + text + '</a>';
+  return '<a href="browse/' + type + '/property.html?id=' + id + '&name=' + encodeURIComponent(text) + '" class="meta-link">' + text + '</a>';
 }
 
 function renderExpandable(selector, content) {
@@ -101,12 +101,14 @@ function renderExpandable(selector, content) {
 }
 
 function renderDetails(record) {
-  var title = record._primaryTitle || record.objectType || 'Untitled';
+  var title = record._primaryTitle || toSentenceCase(record.objectType) || 'Untitled';
   if (!title && record.titles && record.titles.length > 0) {
     title = record.titles[0].title;
   }
   document.querySelector('h1').textContent = title;
   document.title = title + ' | Collections & Archives';
+  var breadcrumbCurrent = document.querySelector('nav ol li[aria-current="page"]');
+  if (breadcrumbCurrent) { breadcrumbCurrent.textContent = title; }
 
   renderGallery(record, title);
 
@@ -128,7 +130,7 @@ function renderDetails(record) {
     var collText = collCode ? collCode.text : null;
     var collId = collCode ? collCode.id : null;
     addGroup('Collection', createLink(normalizeCollection(collText), collId, 'collections'));
-    addGroup('Object Type', record.objectType);
+    addGroup('Object Type', toSentenceCase(record.objectType));
 
     var makers = record.artistMakerPerson || [];
     if (makers.length > 0) {
@@ -136,7 +138,7 @@ function renderDetails(record) {
       html += '<dt>Artist/Maker</dt>';
       for (var i = 0; i < makers.length; i++) {
         var m = makers[i];
-        var nameLink = createLink(m.name.text, m.name.id, 'artists');
+        var nameLink = createLink(m.name.text, m.name.id, 'creators');
         var assoc = (m.association && m.association.text) ? ' (' + m.association.text + ')' : '';
         html += '<dd>' + nameLink + assoc + '</dd>';
       }
@@ -202,12 +204,12 @@ function renderDetails(record) {
       var mat = record.materials[k];
       var group = (typeof getMaterialGroup === 'function') ? getMaterialGroup(mat.id) : null;
       var href = null;
-      if (group) {
-        href = '../browse/materials/property.html?id=' + group.ids.join(',');
-      } else if (mat.id) {
-        href = '../browse/materials/property.html?id=' + mat.id;
-      }
       var label = (group && group.name) ? group.name : mat.text;
+      if (group) {
+        href = '../browse/materials/property.html?id=' + group.ids.join(',') + '&name=' + encodeURIComponent(label);
+      } else if (mat.id) {
+        href = '../browse/materials/property.html?id=' + mat.id + '&name=' + encodeURIComponent(label);
+      }
       if (href) {
         physHtml += '<a href="' + href + '" class="meta-link">' + label + '</a>';
       } else {
@@ -255,7 +257,7 @@ function renderDetails(record) {
     var relHtml = '';
     for (var r = 0; r < relatedData.length; r++) {
       var obj = relatedData[r];
-      relHtml += '<div class="related-card"><p>' + (obj.title || obj.objectType) + '</p></div>';
+      relHtml += '<div class="related-card"><p>' + (obj.title || toSentenceCase(obj.objectType)) + '</p></div>';
     }
     relatedGrid.innerHTML = relHtml;
   } else if (relatedSection) {

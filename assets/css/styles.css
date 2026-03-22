@@ -414,9 +414,6 @@ hr {
 }
 
 @media (min-width: 768px) {
-  .quick-facts dl {
-    grid-template-columns: 1fr 1fr;
-  }
 }
 
 .quick-facts dt, .quick-facts dd {
@@ -427,9 +424,6 @@ hr {
 /* TABLET */
 
 @media (min-width: 768px) {
-  #density-controls {
-    font-size: var(--font-size-body);
-  }
 }
 
 /* UTILITIES */
@@ -545,9 +539,15 @@ hr {
   cursor: pointer;
 }
 
-#load-more:hover,
-#load-more:focus-visible {
+#load-more:not(:disabled):hover,
+#load-more:not(:disabled):focus-visible {
   background-color: var(--color-accent-brown-hover);
+}
+
+#load-more:disabled {
+  background-color: var(--color-divider-main);
+  color: var(--color-text-secondary);
+  cursor: not-allowed;
 }
 
 #load-more:focus-visible {

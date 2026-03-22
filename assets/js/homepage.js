@@ -272,9 +272,9 @@ function makeCard(item, cssClass, subcategoryId) {
 
   let itemTitle;
   if (item._primaryTitle && item.objectType)  {
-    itemTitle = item._primaryTitle + ' (' + item.objectType + ')';
+    itemTitle = item._primaryTitle + ' (' + toSentenceCase(item.objectType) + ')';
   } else if (item.objectType) {
-    itemTitle = item.objectType;
+    itemTitle = toSentenceCase(item.objectType);
   } else {
     itemTitle = 'Untitled';
   }
@@ -365,7 +365,7 @@ function makeCard(item, cssClass, subcategoryId) {
         }
         let collectionLink;
         if (collectionId) {
-          collectionLink = '<a href="browse/collections/property.html?id=' + collectionId + '" class="meta-link">' + collName + '</a>';
+          collectionLink = '<a href="browse/collections/property.html?id=' + collectionId + '&name=' + encodeURIComponent(collName) + '" class="meta-link">' + collName + '</a>';
         } else {
           collectionLink = collName;
         }
@@ -383,7 +383,7 @@ function makeCard(item, cssClass, subcategoryId) {
           const categoryText = cat.text || cat.name || '';
           const categoryLabel = normalizeCategory(categoryText, cat.id);
           if (cat.id) {
-            metaHtml += '<dd><a href="browse/categories/property.html?id=' + cat.id + '" class="meta-link">' + categoryLabel + '</a></dd>';
+            metaHtml += '<dd><a href="browse/categories/property.html?id=' + cat.id + '&name=' + encodeURIComponent(categoryLabel) + '" class="meta-link">' + categoryLabel + '</a></dd>';
           } else {
             metaHtml += '<dd>' + categoryLabel + '</dd>';
           }
@@ -404,7 +404,7 @@ function makeCard(item, cssClass, subcategoryId) {
         const originLabel = normalizePlace(itemPlace, originId);
         let originLink;
         if (originId) {
-          originLink = '<a href="browse/origins/property.html?id=' + originId + '" class="meta-link">' + originLabel + '</a>';
+          originLink = '<a href="browse/origins/property.html?id=' + originId + '&name=' + encodeURIComponent(originLabel) + '" class="meta-link">' + originLabel + '</a>';
         } else {
           originLink = originLabel;
         }
@@ -448,7 +448,7 @@ function makeCard(item, cssClass, subcategoryId) {
         if (creatorName) {
           let creatorUrl;
           if (creatorId) {
-            creatorUrl = 'browse/creators/property.html?id=' + creatorId;
+            creatorUrl = 'browse/creators/property.html?id=' + creatorId + '&name=' + encodeURIComponent(creatorName);
           } else {
             creatorUrl = 'browse/creators/property.html?name=' + encodeURIComponent(creatorName);
           }
