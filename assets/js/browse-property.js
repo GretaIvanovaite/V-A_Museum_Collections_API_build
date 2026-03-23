@@ -558,6 +558,8 @@ async function startPage() {
   }
   if (breadcrumbCurrent) { breadcrumbCurrent.textContent = pageType === 'creators' ? 'Creator: ' + displayName : displayName; }
 
+  window.chatContext = { page: 'browse', type: pageType, name: displayName };
+
   try {
     // Fetch page 1 first — also tells us the total record count so we can
     // build a shuffled queue of all remaining pages for random discovery

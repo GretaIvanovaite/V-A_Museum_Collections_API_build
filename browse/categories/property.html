@@ -1,8 +1,12 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Greta Ivanovaite">
+  <meta name="description" content="Explore objects from a category in the Victoria and Albert Museum collection.">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#236263">
   <link rel="stylesheet" href="../../assets/css/layout.css">
   <link rel="stylesheet" href="../../assets/css/styles.css">
   <link rel="icon" type="image/x-icon" href="../../images/Favicon.ico">
@@ -123,27 +127,31 @@
   </main>
 
   <footer>
-    <p>&copy; 2026 Collections &amp; Archives</p>
-    <p>Data retrieved via Victoria and Albert Museum Collections API</p>
-    <p>This prototype is part of an Edge Hill University Undergraduate Research and Development project</p>
+    <p><small>&copy; 2026 Collections &amp; Archives</small></p>
+    <p><small>Greta Ivanovaite</small></p>
+    <p><small>Data retrieved via Victoria and Albert Museum Collections API</small></p>
+    <p><small>This prototype is part of an Edge Hill University Undergraduate Research and Development project</small></p>
   </footer>
 
-  <button type="button" class="chat-trigger" popovertarget="ai-chat" aria-label="Open support chat">Chat</button>
+  <button type="button" class="chat-trigger" popovertarget="ai-chat" aria-label="Open Museum helper chat">
+    <span class="chat-icon-open" aria-hidden="true"><img src="../../images/Chatbot.svg" alt="" width="24" height="24"></span><span class="chat-icon-close" aria-hidden="true">&#x2715;</span>
+  </button>
 
   <dialog id="ai-chat" popover="manual" aria-labelledby="chat-title" aria-modal="true">
     <div>
       <header>
-        <h2 id="chat-title">Ask about this category</h2>
-        <button type="button" popovertarget="ai-chat" popovertargetaction="hide" aria-label="Close chat">&times;</button>
+        <h2 id="chat-title">Museum helper</h2>
+        <span class="chat-header-icon" aria-hidden="true"><img src="../../images/Chatbot.svg" alt="" width="24" height="24"></span>
       </header>
       <section role="log" aria-live="polite" aria-label="Chat messages">
-        <p>Welcome! I can help you explore the archive.</p>
+        <p class="chat-message chat-message-assistant"><span class="chat-avatar" aria-hidden="true"></span><span class="chat-bubble">Hello, I am an AI chatbot museum helper. I can help you learn more about specific items or find related objects.</span></p>
       </section>
       <footer>
-        <form method="dialog">
+        <p>This is an AI chatbot. Please note that AI can get things wrong. This is only a prototype designed to test AI implementation in museum collection websites.</p>
+        <form method="post" action="javascript:void(0)">
           <label for="chat-input" class="visually-hidden">Your question</label>
-          <input type="text" id="chat-input" placeholder="Ask a question..." required>
-          <button type="submit">Send</button>
+          <textarea id="chat-input" placeholder="Please type your message here" autocomplete="off" rows="1"></textarea>
+          <button type="submit" aria-label="Send message">&#8250;</button>
         </form>
       </footer>
     </div>
@@ -152,5 +160,7 @@
   <script src="../../assets/js/names.js" defer></script>
   <script src="../../assets/js/browse-property.js" defer></script>
   <script src="../../assets/js/back-to-top.js" defer></script>
+  <script src="../../assets/js/config.js" defer></script>
+  <script src="../../assets/js/chat.js" defer></script>
 </body>
 </html>

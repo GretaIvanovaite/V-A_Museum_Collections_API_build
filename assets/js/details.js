@@ -168,6 +168,21 @@ function renderDetails(record) {
 
   renderGallery(record, title);
 
+  var ctxMakers = record.artistMakerPerson || [];
+  var ctxMakerName = (ctxMakers.length > 0 && ctxMakers[0].name) ? ctxMakers[0].name.text : '';
+  var ctxCollCode = record.collectionCode;
+  var ctxCollName = ctxCollCode ? normalizeCollection(ctxCollCode.text) : '';
+  var ctxDate = (record.productionDates && record.productionDates.length > 0) ? record.productionDates[0].date.text : (record._primaryDate || '');
+  window.chatContext = {
+    page: 'details',
+    title: title,
+    objectType: toSentenceCase(record.objectType) || '',
+    date: ctxDate,
+    maker: ctxMakerName,
+    collection: ctxCollName,
+    summary: record.summaryDescription || record.briefDescription || ''
+  };
+
   var quickFactsDl = document.querySelector('.quick-facts dl');
   if (quickFactsDl) {
     var html = '';
