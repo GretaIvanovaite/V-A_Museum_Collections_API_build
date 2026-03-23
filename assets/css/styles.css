@@ -1039,7 +1039,7 @@ dialog#ai-chat [role="log"] p {
 }
 
 dialog#ai-chat > div > footer {
-  background-color: var(--color-bg-card);
+  background-color: var(--color-bg-clickable);
   border-top: var(--border-width-thin) solid var(--color-divider-main);
 }
 
@@ -1065,9 +1065,10 @@ dialog#ai-chat textarea#chat-input:focus-visible {
 }
 
 dialog#ai-chat form button[type="submit"] {
+  font-size: var(--font-size-h1);
   background-color: var(--color-primary-teal);
   color: var(--color-text-white);
-  border-radius: 50%;
+  border-radius: var(--radius-full);
   font-weight: var(--font-weight-bold);
 }
 

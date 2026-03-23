@@ -1085,13 +1085,12 @@ dialog#ai-chat textarea#chat-input {
 dialog#ai-chat form button[type="submit"] {
   width: 2.5rem;
   height: 2.5rem;
-  padding: 0;
+  padding: 0 0 var(--space-s) 0;
   flex-shrink: 0;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.4rem;
-  line-height: 1;
+  line-height: 0;
 }
 
 /* CHAT MESSAGES */
