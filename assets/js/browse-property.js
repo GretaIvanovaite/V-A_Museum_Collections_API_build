@@ -569,7 +569,7 @@ async function startPage() {
 
   let displayName;
   if (propertyNameParam) {
-    displayName = propertyNameParam;
+    displayName = (pageType === 'materials') ? toSentenceCase(propertyNameParam) : propertyNameParam;
   } else if (group && group.name) {
     displayName = group.name;
   } else if (NAME_MAP[propertyId]) {

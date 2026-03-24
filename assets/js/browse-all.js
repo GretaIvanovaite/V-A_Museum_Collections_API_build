@@ -20,7 +20,7 @@ var paramNames = {
 /* Fetch clusters */
 async function fetchClusters() {
   var clusterField = clusterFieldMap[pageType];
-  var url = apiBase + "/objects/clusters/" + clusterField + "/search?cluster_size=50";
+  var url = apiBase + "/objects/clusters/" + clusterField + "/search?cluster_size=100";
   try {
     var response = await fetch(url);
     var data = await response.json();
@@ -99,7 +99,7 @@ async function fetchItemData(paramName, ids) {
     queryParts.push(paramName + "=" + idArray[i]);
   }
   var query = queryParts.join("&");
-  var url = apiBase + "/objects/search?" + query + "&images_exist=1&page_size=3";
+  var url = apiBase + "/objects/search?" + query + "&images_exist=1&page_size=6";
   try {
     var response = await fetch(url);
     var data = await response.json();
@@ -222,7 +222,12 @@ async function loadAllItems() {
 
   var items = await fetchClusters();
   if (pageType === "collections") { items = mergeGroups(items, getCollectionGroup); }
-  if (pageType === "materials") { items = mergeGroups(items, getMaterialGroup); }
+  if (pageType === "materials") {
+    items = mergeGroups(items, getMaterialGroup);
+    for (var m = 0; m < items.length; m++) {
+      items[m].name = toSentenceCase(items[m].name);
+    }
+  }
   if (pageType === "categories") { items = mergeGroups(items, getCategoryGroup); }
   if (pageType === "origins") { items = mergeGroups(items, getOriginGroup); }
   var paramName = paramNames[pageType];
@@ -236,15 +241,34 @@ async function loadAllItems() {
   /* Used images */
   var usedImageIds = {};
 
+  /* Fetch queue */
+  var fetchQueue = [];
+  var fetchTimerId = null;
+
+  function processQueue() {
+    if (fetchQueue.length === 0) {
+      fetchTimerId = null;
+      return;
+    }
+    var item = fetchQueue.shift();
+    populateCard(item.card, item.paramName, item.usedImageIds);
+    fetchTimerId = setTimeout(processQueue, 150);
+  }
+
+  function enqueue(card) {
+    fetchQueue.push({ card: card, paramName: paramName, usedImageIds: usedImageIds });
+    if (fetchTimerId === null) { processQueue(); }
+  }
+
   /* Observer */
   var observer = new IntersectionObserver(function(entries) {
     for (var i = 0; i < entries.length; i++) {
       if (!entries[i].isIntersecting) { continue; }
       var card = entries[i].target;
       observer.unobserve(card);
-      populateCard(card, paramName, usedImageIds);
+      enqueue(card);
     }
-  }, { rootMargin: "400px" });
+  }, { rootMargin: "200px" });
 
   for (var i = 0; i < items.length; i++) {
     var card = buildPlaceholderCard(items[i]);
