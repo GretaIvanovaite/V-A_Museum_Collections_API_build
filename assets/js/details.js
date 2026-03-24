@@ -107,7 +107,7 @@ function renderGallery(record, title) {
           '</picture>';
       });
 
-      if (allImages.length > 6) {
+      if (allImages.length > 1) {
         var wrapper = document.createElement('div');
         wrapper.className = 'thumb-nav';
         strip.parentNode.insertBefore(wrapper, strip);
@@ -134,6 +134,14 @@ function renderGallery(record, title) {
         nextBtn.addEventListener('click', function() {
           strip.scrollBy({ left: strip.clientWidth - 50, behavior: 'smooth' });
         });
+
+        function updateThumbNav() {
+          var overflows = strip.scrollWidth > strip.clientWidth;
+          prevBtn.style.display = overflows ? '' : 'none';
+          nextBtn.style.display = overflows ? '' : 'none';
+        }
+        updateThumbNav();
+        window.addEventListener('resize', updateThumbNav);
       }
     }
   }
@@ -304,7 +312,7 @@ function renderDetails(record) {
       if (typeof getMaterialGroup === 'function') { group = getMaterialGroup(mat.id); }
       var href = null;
       var label;
-      if (group && group.name) { label = group.name; } else { label = mat.text; }
+      if (group && group.name) { label = group.name; } else { label = toSentenceCase(mat.text); }
       if (group) {
         href = 'browse/materials/property.html?id=' + group.ids.join(',') + '&name=' + encodeURIComponent(label);
       } else if (mat.id) {
@@ -373,15 +381,21 @@ async function loadExploreMore(record) {
   }
 
   var makers = record.artistMakerPerson || [];
-  if (makers.length > 0 && makers[0].name && makers[0].name.id) {
+  if (makers.length > 0 && makers[0].name && makers[0].name.id && makers[0].name.text && makers[0].name.text.toLowerCase() !== 'unknown') {
     var makerName = makers[0].name.text;
     var makerId = makers[0].name.id;
-    tiles.push({
-      type: 'Artist',
-      name: makerName,
-      href: 'browse/creators/property.html?id=' + makerId + '&name=' + encodeURIComponent(makerName),
-      filterParam: 'id_person=' + encodeURIComponent(makerId)
-    });
+    try {
+      var countRes = await fetch(API_BASE + '/objects/search?id_person=' + encodeURIComponent(makerId) + '&page_size=1');
+      var countData = await countRes.json();
+      if (countData.info && countData.info.record_count > 1) {
+        tiles.push({
+          type: 'Artist',
+          name: makerName,
+          href: 'browse/creators/property.html?id=' + makerId + '&name=' + encodeURIComponent(makerName),
+          filterParam: 'id_person=' + encodeURIComponent(makerId)
+        });
+      }
+    } catch (e) { /* skip artist tile on error */ }
   }
 
   var cats = record.categories || [];
@@ -491,9 +505,9 @@ async function loadRelated(record) {
   var allMakers = makers.concat(makerOrgs);
   if (allMakers.length > 0) {
     var makerId = allMakers[0].name && allMakers[0].name.id;
-    if (makerId) {
-      var makerName = allMakers[0].name.text || 'Same creator';
-      addUnique(await fetchRelatedSearch('id_person=' + encodeURIComponent(makerId)), 2, 'Creator: ' + makerName);
+    var makerNameText = allMakers[0].name && allMakers[0].name.text;
+    if (makerId && makerNameText && makerNameText.toLowerCase() !== 'unknown') {
+      addUnique(await fetchRelatedSearch('id_person=' + encodeURIComponent(makerId)), 2, 'Creator: ' + makerNameText);
     }
   }
 
@@ -542,7 +556,7 @@ function makeRelatedCard(item) {
   var relatedInfoHtml = '';
   if (item._relatedReason) { relatedInfoHtml += '<p class="related-reason">' + item._relatedReason + '</p>'; }
   relatedInfoHtml += '<p class="related-title">' + title + '</p>';
-  if (maker) { relatedInfoHtml += '<p class="related-maker">' + maker + '</p>'; }
+  if (maker && maker.toLowerCase() !== 'unknown') { relatedInfoHtml += '<p class="related-maker">' + maker + '</p>'; }
   if (date) { relatedInfoHtml += '<p class="related-date">' + date + '</p>'; }
 
   card.innerHTML =

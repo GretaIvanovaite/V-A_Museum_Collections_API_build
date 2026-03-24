@@ -711,4 +711,18 @@ async function populateNavPopovers() {
 
 document.addEventListener('DOMContentLoaded', function() {
   populateNavPopovers();
+  /* Inert closed popovers */
+  var navPopovers = document.querySelectorAll('nav [popover]');
+  for (var i = 0; i < navPopovers.length; i++) {
+    navPopovers[i].setAttribute('inert', '');
+    (function(pop) {
+      pop.addEventListener('toggle', function(evt) {
+        if (evt.newState === 'open') {
+          pop.removeAttribute('inert');
+        } else {
+          pop.setAttribute('inert', '');
+        }
+      });
+    }(navPopovers[i]));
+  }
 });
