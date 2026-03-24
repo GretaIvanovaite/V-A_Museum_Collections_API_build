@@ -3,7 +3,7 @@ const imageUrl  = 'https://framemark.vam.ac.uk/collections';
 const grid      = document.getElementById('objects-grid');
 const slider    = document.getElementById('density-slider');
 
-// Detect which property type this page represents from the URL path
+/* Page type */
 let pageType = null;
 const pathname = window.location.pathname;
 if      (pathname.indexOf('/collections/') !== -1) { pageType = 'collections'; }
@@ -14,10 +14,11 @@ else if (pathname.indexOf('/creators/')    !== -1) { pageType = 'creators';    }
 
 const urlParams         = new URLSearchParams(window.location.search);
 const propertyId        = urlParams.get('id');
-const propertyIds       = propertyId ? propertyId.split(',') : [];
+let propertyIds = [];
+if (propertyId) { propertyIds = propertyId.split(','); }
 const propertyNameParam = urlParams.get('name');
 
-// API filter parameter name per type
+/* API params */
 const API_PARAMS = {
   collections: 'id_collection',
   categories:  'id_category',
@@ -27,12 +28,12 @@ const API_PARAMS = {
 };
 const apiParam = API_PARAMS[pageType];
 
-// Tier map: slider value → how many cards to show (same as homepage)
+/* Tier map */
 const tierMap = { 1: 20, 2: 30, 3: 40 };
 
-// Display name lookup for all known IDs (sourced from browse-all.js allItems)
+/* Name map */
 const NAME_MAP = {
-  // Collections
+  /* Collections */
   'THES48595':  'Prints, Drawings & Paintings',
   'THES48602':  'Theatre and Performance',
   'THES48596':  'East Asia',
@@ -52,7 +53,7 @@ const NAME_MAP = {
   'THES359557': 'V&A East',
   'THES48604':  'Archive of Art and Design',
   'THES48606':  'Circulation Dept (1909\u20131977)',
-  // Categories
+  /* Categories */
   'THES48903':  'Prints',
   'THES48968':  'Designs',
   'THES48966':  'Drawings',
@@ -94,7 +95,7 @@ const NAME_MAP = {
   'THES48933':  'Interiors',
   'THES48884':  'Tiles',
   'THES270451': 'Plaster Casts',
-  // Materials
+  /* Materials */
   'x30308':    'Paper',
   'AAT15012':  'Ink',
   'AAT187371': 'Printing ink',
@@ -112,7 +113,7 @@ const NAME_MAP = {
   'AAT14067':  'Cotton (textile)',
   'AAT11029':  'Silver',
   'AAT11051':  'Wash',
-  // Origins
+  /* Origins */
   'x32019':    'Great Britain',
   'x28980':    'London',
   'x28826':    'England',
@@ -134,7 +135,7 @@ const NAME_MAP = {
   'x33200':    'Etruria'
 };
 
-// Prevent keyboard navigation behind the loading overlay while content loads
+/* Init overlay */
 (function() {
   const children = document.body.children;
   for (let i = 0; i < children.length; i++) {
@@ -146,7 +147,7 @@ const NAME_MAP = {
   if (mainEl) { mainEl.setAttribute('aria-busy', 'true'); }
 }());
 
-// Move focus into nav popovers on open, return to trigger on close
+/* Popover focus */
 function initPopoverFocus() {
   var popovers = document.querySelectorAll('nav [popover]');
   for (var i = 0; i < popovers.length; i++) {
@@ -165,16 +166,17 @@ function initPopoverFocus() {
 }
 initPopoverFocus();
 
-// ─── Utilities ────────────────────────────────────────────────────────────────
+/* Utilities */
 
 function getYear(dateText) {
   if (dateText == null) { return ''; }
   const m = dateText.match(/\d{4}/);
-  return m ? m[0] : '';
+  if (m) { return m[0]; }
+  return '';
 }
 
 
-// ─── Card building ────────────────────────────────────────────────────────────
+/* Card building */
 
 function makeCard(item) {
   const card = document.createElement('article');
@@ -191,18 +193,23 @@ function makeCard(item) {
   }
 
   const imgId    = item._primaryImageId;
-  const itemDate = item._primaryDate || '';
+  let itemDate = '';
+  if (item._primaryDate) { itemDate = item._primaryDate; }
   const itemYear = getYear(itemDate);
-  const itemPlace = item._primaryPlace || '';
+  let itemPlace = '';
+  if (item._primaryPlace) { itemPlace = item._primaryPlace; }
 
   const imgBase  = imageUrl + '/' + imgId + '/full';
   const smallImg = imgBase + '/!400,400/0/default.jpg';
   const medImg   = imgBase + '/!800,800/0/default.jpg';
   const largeImg = imgBase + '/!1200,1200/0/default.jpg';
 
-  const dateMarkup = itemDate
-    ? '<time datetime="' + itemYear + '">' + itemDate + '</time>'
-    : 'Date unknown';
+  let dateMarkup;
+  if (itemDate) {
+    dateMarkup = '<time datetime="' + itemYear + '">' + itemDate + '</time>';
+  } else {
+    dateMarkup = 'Date unknown';
+  }
 
   card.innerHTML =
     '<div class="card-thumb" aria-hidden="true">' +
@@ -257,25 +264,32 @@ function makeCard(item) {
       const metaList = card.querySelector('dl.metadata');
       let metaHtml = '';
 
-      // Collection
+      /* Collection */
       const collCode = itemInfo.collectionCode;
-      const collText = collCode ? collCode.text : null;
-      const collName = collText ? normalizeCollection(collText) : null;
+      let collText = null;
+      if (collCode) { collText = collCode.text; }
+      let collName = null;
+      if (collText) { collName = normalizeCollection(collText); }
       if (collName) {
-        const collectionId = collCode ? collCode.id : null;
-        const collectionLink = collectionId
-          ? '<a href="../collections/property.html?id=' + collectionId + '&name=' + encodeURIComponent(collName) + '" class="meta-link">' + collName + '</a>'
-          : collName;
+        let collectionId = null;
+        if (collCode) { collectionId = collCode.id; }
+        let collectionLink;
+        if (collectionId) {
+          collectionLink = '<a href="../collections/property.html?id=' + collectionId + '&name=' + encodeURIComponent(collName) + '" class="meta-link">' + collName + '</a>';
+        } else {
+          collectionLink = collName;
+        }
         metaHtml += '<dt>Collection</dt><dd>' + collectionLink + '</dd><hr aria-hidden="true">';
       }
 
-      // Categories
+      /* Categories */
       const categoryList = itemInfo.categories || [];
       if (categoryList.length > 0) {
         metaHtml += '<dt>Categories</dt>';
         for (let i = 0; i < categoryList.length; i++) {
           const cat           = categoryList[i];
-          const categoryText  = cat.text || cat.name || '';
+          let categoryText = '';
+          if (cat.text) { categoryText = cat.text; } else if (cat.name) { categoryText = cat.name; }
           const categoryLabel = normalizeCategory(categoryText, cat.id);
           if (cat.id) {
             metaHtml += '<dd><a href="../categories/property.html?id=' + cat.id + '&name=' + encodeURIComponent(categoryLabel) + '" class="meta-link">' + categoryLabel + '</a></dd>';
@@ -286,7 +300,7 @@ function makeCard(item) {
         if (itemPlace) { metaHtml += '<hr aria-hidden="true">'; }
       }
 
-      // Origin
+      /* Origin */
       if (itemPlace) {
         let originId = null;
         if (itemInfo.placesOfOrigin && itemInfo.placesOfOrigin.length > 0) {
@@ -294,15 +308,18 @@ function makeCard(item) {
           if (originEntry.place) { originId = originEntry.place.id; }
         }
         const originLabel = normalizePlace(itemPlace, originId);
-        const originLink = originId
-          ? '<a href="../origins/property.html?id=' + originId + '&name=' + encodeURIComponent(originLabel) + '" class="meta-link">' + originLabel + '</a>'
-          : originLabel;
+        let originLink;
+        if (originId) {
+          originLink = '<a href="../origins/property.html?id=' + originId + '&name=' + encodeURIComponent(originLabel) + '" class="meta-link">' + originLabel + '</a>';
+        } else {
+          originLink = originLabel;
+        }
         metaHtml += '<dt>Origin</dt><dd>' + originLink + '</dd>';
       }
 
       metaList.innerHTML = metaHtml;
 
-      // Creator
+      /* Creator */
       const creatorPara = card.querySelector('p.creator');
       if (creatorPara) {
         let creatorName = '';
@@ -323,7 +340,8 @@ function makeCard(item) {
           creatorRole = item._primaryMaker.association;
         }
 
-        const roleLabel = creatorRole ? normalizeAssociation(creatorRole) : '';
+        let roleLabel = '';
+        if (creatorRole) { roleLabel = normalizeAssociation(creatorRole); }
 
         let creatorId = null;
         if (itemInfo.artistMakerPerson && itemInfo.artistMakerPerson.length > 0 && itemInfo.artistMakerPerson[0].name) {
@@ -333,22 +351,32 @@ function makeCard(item) {
         }
 
         if (creatorName) {
-          const creatorUrl = creatorId
-            ? '../creators/property.html?id=' + creatorId + '&name=' + encodeURIComponent(creatorName)
-            : '../creators/property.html?name=' + encodeURIComponent(creatorName);
+          let creatorUrl;
+          if (creatorId) {
+            creatorUrl = '../creators/property.html?id=' + creatorId + '&name=' + encodeURIComponent(creatorName);
+          } else {
+            creatorUrl = '../creators/property.html?name=' + encodeURIComponent(creatorName);
+          }
           if (creatorName.toLowerCase() === 'unknown') {
             creatorPara.innerHTML = 'Creator unknown';
           } else {
-            const rolePrefix = roleLabel || 'Created by';
+            let rolePrefix;
+            if (roleLabel) { rolePrefix = roleLabel; } else { rolePrefix = 'Created by'; }
             const nameLink   = '<a href="' + creatorUrl + '" class="meta-link">' + creatorName + '</a>';
             creatorPara.innerHTML = rolePrefix + ': ' + nameLink;
           }
         }
       }
 
-      // Brief description
+      /* Description */
       const descPara = card.querySelector('p.detail-text');
-      if (descPara) { descPara.innerHTML = itemInfo.briefDescription || ''; }
+      if (descPara) {
+        if (itemInfo.briefDescription) {
+          descPara.innerHTML = itemInfo.briefDescription;
+        } else {
+          descPara.innerHTML = '';
+        }
+      }
 
     } catch (error) {
       console.error('Detail fetch failed for ' + item.systemNumber + ':', error);
@@ -392,14 +420,14 @@ function makeCard(item) {
   return card;
 }
 
-// ─── Pool & pagination ────────────────────────────────────────────────────────
+/* Pool & pagination */
 
-const pool     = [];    // all fetched items with images, in order
+const pool     = [];
 const shownIds = new Set();
-let hasMore         = true;
-let batchCount      = 0;   // number of 40-item fetches completed
+let hasMore    = true;
+let batchCount = 0;
 const fetchPageSize = 40;
-let pageQueue       = [];  // shuffled list of page numbers not yet fetched
+let pageQueue  = [];
 
 function buildApiUrl(page) {
   let url = apiBase + '/objects/search?images_exist=1&page_size=' + fetchPageSize + '&page=' + page;
@@ -418,9 +446,7 @@ async function fetchPage(page) {
   return response.json();
 }
 
-// Build a Fisher-Yates shuffled list of all page numbers (excluding page 1
-// which is always fetched first on init), so each Load More picks a random
-// page from across the full result set rather than crawling sequentially.
+/* Page queue */
 function buildPageQueue(totalPages) {
   const pages = [];
   for (let i = 2; i <= totalPages; i++) { pages.push(i); }
@@ -441,7 +467,7 @@ function poolRecords(records) {
   }
 }
 
-// Render any pool items not yet in the DOM
+/* Render pool */
 function renderPool() {
   const currentRendered = grid.querySelectorAll('.object-card').length;
   for (let i = currentRendered; i < pool.length; i++) {
@@ -449,12 +475,8 @@ function renderPool() {
   }
 }
 
-// ─── Tier & density ───────────────────────────────────────────────────────────
+/* Tier & density */
 
-// Show/hide cards based on tier and batch count.
-// showCount = batchCount × tierMap[value], capped at pool size.
-// This means each Load More reveals tierMap[value] more cards,
-// and adjusting the slider recalculates across all batches from the cache.
 function hasCachedItems() {
   return pool.length > batchCount * tierMap[Number(slider.value)];
 }
@@ -499,15 +521,12 @@ document.querySelector('span.more').addEventListener('click', function() {
   slider.dispatchEvent(new Event('input'));
 });
 
-// ─── Load more ────────────────────────────────────────────────────────────────
+/* Load more */
 
 async function loadMore() {
   const btn = document.getElementById('load-more');
 
   if (hasMore) {
-    // Fetch from API first — pick random pages from the queue, skipping any
-    // that return no usable records (record_count may overcount relative to
-    // images_exist=1, so high page numbers sometimes return nothing)
     btn.disabled    = true;
     btn.textContent = 'Loading\u2026';
     try {
@@ -519,7 +538,7 @@ async function loadMore() {
           const records = data.records || [];
           poolRecords(records);
         } catch (e) {
-          // Page returned a server error (e.g. page number out of API range); skip it
+          /* Skip page */
         }
       }
       if (pageQueue.length === 0) { hasMore = false; }
@@ -533,7 +552,6 @@ async function loadMore() {
       updateLoadMoreBtn();
     }
   } else if (hasCachedItems()) {
-    // API exhausted but cached items still available for this tier
     batchCount++;
     applyTier(Number(slider.value));
   }
@@ -541,14 +559,37 @@ async function loadMore() {
 
 document.getElementById('load-more').addEventListener('click', loadMore);
 
-// ─── Page initialisation ──────────────────────────────────────────────────────
+/* Init */
 
 async function startPage() {
-  const group = (pageType === 'materials' && propertyIds.length > 1 && typeof getMaterialGroup === 'function')
-    ? getMaterialGroup(propertyIds[0]) : null;
-  const displayName = propertyNameParam || (group && group.name) || NAME_MAP[propertyId]
-    || propertyIds.map(function(id) { return NAME_MAP[id]; }).filter(Boolean).join(' & ')
-    || propertyId || 'Results';
+  let group = null;
+  if (pageType === 'materials' && propertyIds.length > 1 && typeof getMaterialGroup === 'function') {
+    group = getMaterialGroup(propertyIds[0]);
+  }
+
+  let displayName;
+  if (propertyNameParam) {
+    displayName = propertyNameParam;
+  } else if (group && group.name) {
+    displayName = group.name;
+  } else if (NAME_MAP[propertyId]) {
+    displayName = NAME_MAP[propertyId];
+  } else {
+    let mappedNames = [];
+    for (let di = 0; di < propertyIds.length; di++) {
+      if (NAME_MAP[propertyIds[di]]) {
+        mappedNames.push(NAME_MAP[propertyIds[di]]);
+      }
+    }
+    if (mappedNames.length > 0) {
+      displayName = mappedNames.join(' & ');
+    } else if (propertyId) {
+      displayName = propertyId;
+    } else {
+      displayName = 'Results';
+    }
+  }
+
   const pageTitle         = document.getElementById('page-title');
   const breadcrumbCurrent = document.getElementById('breadcrumb-current');
 
@@ -556,18 +597,27 @@ async function startPage() {
     pageTitle.textContent = displayName;
     document.title        = displayName + ' | Collections \u0026 Archives';
   }
-  if (breadcrumbCurrent) { breadcrumbCurrent.textContent = pageType === 'creators' ? 'Creator: ' + displayName : displayName; }
+  if (breadcrumbCurrent) {
+    if (pageType === 'creators') {
+      breadcrumbCurrent.textContent = 'Creator: ' + displayName;
+    } else {
+      breadcrumbCurrent.textContent = displayName;
+    }
+  }
 
   window.chatContext = { page: 'browse', type: pageType, name: displayName };
 
   try {
-    // Fetch page 1 first — also tells us the total record count so we can
-    // build a shuffled queue of all remaining pages for random discovery
     const data       = await fetchPage(1);
     const records    = data.records || [];
-    const recordCount = (data.info && data.info.record_count) ? data.info.record_count : records.length;
+    let recordCount;
+    if (data.info && data.info.record_count) {
+      recordCount = data.info.record_count;
+    } else {
+      recordCount = records.length;
+    }
     const totalPages  = Math.max(1, Math.ceil(recordCount / fetchPageSize));
-    pageQueue         = buildPageQueue(totalPages); // shuffled pages 2…totalPages
+    pageQueue         = buildPageQueue(totalPages);
     if (pageQueue.length === 0) { hasMore = false; }
     if (recordCount < 20) {
       var densityControls = document.getElementById('density-controls');
@@ -576,13 +626,12 @@ async function startPage() {
     poolRecords(records);
     batchCount++;
     renderPool();
-    applyTier(Number(slider.value)); // default slider=2 → show 30, cache 10
+    applyTier(Number(slider.value));
   } catch (error) {
     console.error('Error loading data:', error);
     grid.innerHTML = '<p class="error" role="alert">Sorry, we couldn\u2019t load the data right now.</p>';
   }
 
-  // Remove loading overlay and inert
   const overlay = document.getElementById('loading-overlay');
   if (overlay) { overlay.classList.add('hidden'); }
   const bodyChildren = document.body.children;

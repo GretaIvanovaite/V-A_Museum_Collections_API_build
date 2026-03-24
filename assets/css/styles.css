@@ -87,6 +87,10 @@
   --shadow-hover-lg: 0px 12px 28px 0px rgba(31, 38, 50, 0.24);
   --shadow-offset: 0.2rem 0.2rem var(--color-shadow);
   --shadow-offset-hover: 0.4rem 0.4rem var(--color-shadow);
+
+  --space-2xs: 0.125rem;
+
+  --transition-fast: 0.15s ease;
 }
 
 /* RESET */
@@ -169,10 +173,6 @@ header nav > ul > li > button > * {
   color: var(--color-text-white);
   font-weight: var(--font-weight-bold);
   background-color: var(--color-primary-teal-hover);
-}
-
-#arrow-down {
-  font-size: var(--font-size-small);
 }
 
 /* POPOVERS */
@@ -489,12 +489,12 @@ object * {
   cursor: default;
 }
 
-/* Always in normal flow — its width sets the button width at all times */
+/* Normal flow */
 #filter-groups #clear-filter-btn .filter-clear-text {
   color: var(--color-accent-brown);
 }
 
-/* Absolutely centred over the button — the idle label */
+/* Idle label */
 #filter-groups #clear-filter-btn .filter-label-text {
   color: var(--color-text-secondary);
 }
@@ -580,7 +580,6 @@ nav[aria-label="Breadcrumb"] ol {
   color: var(--color-text-secondary);
 }
 
-/* BREADCRUMBS */
 nav[aria-label="Breadcrumb"] li + li::before {
   content: '\25B9';
   color: var(--color-text-teal);
@@ -608,7 +607,7 @@ nav[aria-label="Breadcrumb"] [aria-current="page"] {
   color: var(--color-text-primary);
 }
 
-/* BROWSE ALL PAGES — CARD GRID */
+/* BROWSE ALL GRID */
 
 .browse-cards a {
   border-radius: var(--radius-m);
@@ -899,7 +898,7 @@ section[aria-labelledby="museum-heading"] details > summary {
   border-radius: var(--radius-xs);
 }
 
-/* REFINE SEARCH (PROPERTY PAGE ASIDE) */
+/* REFINE SEARCH */
 
 aside[aria-label="Refine search"] {
   background-color: var(--color-bg-card);
@@ -1168,7 +1167,7 @@ dialog#ai-chat form button[type="submit"]:focus-visible {
   outline: none;
 }
 
-/* DETAILS + BROWSE SHARED — SECTION SPACING */
+/* SECTION SPACING */
 
 main > section,
 main > div > section {
@@ -1184,7 +1183,7 @@ main > div > section:last-child {
   border-bottom: none;
 }
 
-/* DETAILS PAGE — section dividers only between lower content sections */
+/* SECTION DIVIDERS */
 
 body.details-view main > section {
   border-bottom: none;

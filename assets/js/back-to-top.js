@@ -1,5 +1,5 @@
 (function() {
-  const btn = document.createElement('button');
+  var btn = document.createElement('button');
   btn.type = 'button';
   btn.className = 'back-to-top';
   btn.setAttribute('aria-label', 'Back to top');

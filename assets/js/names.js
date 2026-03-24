@@ -290,7 +290,7 @@ const MATERIAL_GROUPS = [
   {name: "Plastic", ids: ["AAT14570"]},
 ];
 
-// Returns the MATERIAL_GROUPS entry for a given material ID, or null if ungrouped.
+/* Material group */
 function getMaterialGroup(id) {
   for (var i = 0; i < MATERIAL_GROUPS.length; i++) {
     if (MATERIAL_GROUPS[i].ids.indexOf(id) !== -1) {
@@ -616,14 +616,14 @@ function normalizePlace(place, id) {
   return PLACES[lower] || place;
 }
 
-// Merge cluster items that share a group entry into one, using getGroupFn(id).
-// Non-grouped items pass through unchanged. Used by browse-all.js and homepage.js.
+/* Merge groups */
 function mergeGroups(items, getGroupFn) {
   var seenGroupNames = {};
   var result = [];
   for (var i = 0; i < items.length; i++) {
     var item = items[i];
-    var group = (typeof getGroupFn === 'function') ? getGroupFn(item.id) : null;
+    var group = null;
+    if (typeof getGroupFn === 'function') { group = getGroupFn(item.id); }
     if (group) {
       if (seenGroupNames[group.name]) { continue; }
       seenGroupNames[group.name] = true;
@@ -642,7 +642,7 @@ function normalizeAssociation(association) {
   return lower.charAt(0).toUpperCase() + lower.slice(1);
 }
 
-// ── Nav popover population ────────────────────────────────────────────────────
+/* Nav popovers */
 
 var NAV_POPOVER_CONFIG = [
   {id: 'coll-menu', field: 'collection', type: 'collections', getGroupFn: getCollectionGroup},
@@ -651,13 +651,13 @@ var NAV_POPOVER_CONFIG = [
   {id: 'org-menu',  field: 'place',      type: 'origins',     getGroupFn: getOriginGroup}
 ];
 
-// Returns the path prefix to reach browse/{type}/property.html from the current page.
+/* Sentence case */
 function toSentenceCase(str) {
   if (!str) { return str; }
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }
 
-// Root pages (index.html etc.) need "browse/", pages inside browse/type/ need "../".
+/* Browse prefix */
 function getBrowsePrefix() {
   var parts = window.location.pathname.split('/');
   if (parts.length <= 2) { return 'browse/'; }
@@ -668,7 +668,8 @@ async function fetchNavItems(field, getGroupFn) {
   try {
     var response = await fetch('https://api.vam.ac.uk/v2/objects/clusters/' + field + '/search?cluster_size=50');
     var data = await response.json();
-    var records = Array.isArray(data) ? data : [];
+    var records = [];
+    if (Array.isArray(data)) { records = data; }
     var items = [];
     for (var i = 0; i < records.length; i++) {
       items.push({id: records[i].id, ids: [records[i].id], name: records[i].value});
@@ -686,7 +687,8 @@ function fillNavPopover(ul, items, type) {
     lis[i].remove();
   }
   var prefix = getBrowsePrefix();
-  var limit = items.length < 5 ? items.length : 5;
+  var limit;
+  if (items.length < 5) { limit = items.length; } else { limit = 5; }
   for (var j = 0; j < limit; j++) {
     var li = document.createElement('li');
     var a = document.createElement('a');

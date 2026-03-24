@@ -48,7 +48,6 @@ async function loadObject(id) {
   try {
     var res = await fetch(API_BASE + '/museumobject/' + id);
     var data = await res.json();
-    console.log(data.record);
     renderDetails(data.record);
   } catch (err) {
     console.error('Failed to load object:', err);
@@ -73,7 +72,8 @@ function toggleSection(selector, content) {
 
 function renderGallery(record, title) {
   var allImages = record.images || [];
-  var imageId = allImages.length > 0 ? allImages[0] : null;
+  var imageId = null;
+  if (allImages.length > 0) { imageId = allImages[0]; }
   var mainFigure = document.querySelector('.main-display');
 
   if (imageId && mainFigure) {
@@ -169,10 +169,17 @@ function renderDetails(record) {
   renderGallery(record, title);
 
   var ctxMakers = record.artistMakerPerson || [];
-  var ctxMakerName = (ctxMakers.length > 0 && ctxMakers[0].name) ? ctxMakers[0].name.text : '';
+  var ctxMakerName = '';
+  if (ctxMakers.length > 0 && ctxMakers[0].name) { ctxMakerName = ctxMakers[0].name.text; }
   var ctxCollCode = record.collectionCode;
-  var ctxCollName = ctxCollCode ? normalizeCollection(ctxCollCode.text) : '';
-  var ctxDate = (record.productionDates && record.productionDates.length > 0) ? record.productionDates[0].date.text : (record._primaryDate || '');
+  var ctxCollName = '';
+  if (ctxCollCode) { ctxCollName = normalizeCollection(ctxCollCode.text); }
+  var ctxDate = '';
+  if (record.productionDates && record.productionDates.length > 0) {
+    ctxDate = record.productionDates[0].date.text;
+  } else if (record._primaryDate) {
+    ctxDate = record._primaryDate;
+  }
   window.chatContext = {
     page: 'details',
     title: title,
@@ -198,8 +205,10 @@ function renderDetails(record) {
     }
 
     var collCode = record.collectionCode;
-    var collText = collCode ? collCode.text : null;
-    var collId = collCode ? collCode.id : null;
+    var collText = null;
+    if (collCode) { collText = collCode.text; }
+    var collId = null;
+    if (collCode) { collId = collCode.id; }
     addGroup('Collection', createLink(normalizeCollection(collText), collId, 'collections'));
     addGroup('Object Type', toSentenceCase(record.objectType));
 
@@ -211,27 +220,33 @@ function renderDetails(record) {
       for (var i = 0; i < makers.length; i++) {
         var m = makers[i];
         var nameLink = createLink(m.name.text, m.name.id, 'creators');
-        var assoc = (m.association && m.association.text) ? ' (' + m.association.text + ')' : '';
+        var assoc = '';
+        if (m.association && m.association.text) { assoc = ' (' + m.association.text + ')'; }
         html += '<dd>' + nameLink + assoc + '</dd>';
       }
       for (var k = 0; k < makerOrgs.length; k++) {
         var org = makerOrgs[k];
         var orgLink = createLink(org.name.text, org.name.id, 'creators');
-        var orgAssoc = (org.association && org.association.text) ? ' (' + org.association.text + ')' : '';
+        var orgAssoc = '';
+        if (org.association && org.association.text) { orgAssoc = ' (' + org.association.text + ')'; }
         html += '<dd>' + orgLink + orgAssoc + '</dd>';
       }
     }
 
-    var dateObj = (record.productionDates && record.productionDates.length > 0) ? record.productionDates[0] : null;
+    var dateObj = null;
+    if (record.productionDates && record.productionDates.length > 0) { dateObj = record.productionDates[0]; }
     if (dateObj) {
-      var dateAssoc = (dateObj.association && dateObj.association.text) ? ' (' + dateObj.association.text + ')' : '';
+      var dateAssoc = '';
+      if (dateObj.association && dateObj.association.text) { dateAssoc = ' (' + dateObj.association.text + ')'; }
       addGroup('Date', dateObj.date.text + dateAssoc);
     }
 
-    var placeObj = (record.placesOfOrigin && record.placesOfOrigin.length > 0) ? record.placesOfOrigin[0] : null;
+    var placeObj = null;
+    if (record.placesOfOrigin && record.placesOfOrigin.length > 0) { placeObj = record.placesOfOrigin[0]; }
     if (placeObj) {
       var placeId = placeObj.place.id;
-      var placeAssoc = (placeObj.association && placeObj.association.text) ? ' (' + placeObj.association.text + ')' : '';
+      var placeAssoc = '';
+      if (placeObj.association && placeObj.association.text) { placeAssoc = ' (' + placeObj.association.text + ')'; }
       addGroup('Place of Origin', createLink(normalizePlace(placeObj.place.text, placeId), placeId, 'origins') + placeAssoc);
     }
 
@@ -285,13 +300,15 @@ function renderDetails(record) {
     physHtml += '<li><span class="data-label">Materials</span>';
     for (var k = 0; k < record.materials.length; k++) {
       var mat = record.materials[k];
-      var group = (typeof getMaterialGroup === 'function') ? getMaterialGroup(mat.id) : null;
+      var group = null;
+      if (typeof getMaterialGroup === 'function') { group = getMaterialGroup(mat.id); }
       var href = null;
-      var label = (group && group.name) ? group.name : mat.text;
+      var label;
+      if (group && group.name) { label = group.name; } else { label = mat.text; }
       if (group) {
-        href = '../browse/materials/property.html?id=' + group.ids.join(',') + '&name=' + encodeURIComponent(label);
+        href = 'browse/materials/property.html?id=' + group.ids.join(',') + '&name=' + encodeURIComponent(label);
       } else if (mat.id) {
-        href = '../browse/materials/property.html?id=' + mat.id + '&name=' + encodeURIComponent(label);
+        href = 'browse/materials/property.html?id=' + mat.id + '&name=' + encodeURIComponent(label);
       }
       if (href) {
         physHtml += '<a href="' + href + '" class="meta-link">' + label + '</a>';
@@ -399,9 +416,10 @@ async function loadExploreMore(record) {
   var html = '';
   for (var k = 0; k < tiles.length; k++) {
     var imgId = imageIds[k];
-    var imgHtml = imgId
-      ? '<img src="' + IMAGE_CDN + '/' + imgId + '/full/!800,600/0/default.jpg" alt="' + tiles[k].name + ' preview" loading="lazy">'
-      : '';
+    var imgHtml = '';
+    if (imgId) {
+      imgHtml = '<img src="' + IMAGE_CDN + '/' + imgId + '/full/!800,600/0/default.jpg" alt="' + tiles[k].name + ' preview" loading="lazy">';
+    }
     html += '<a href="' + tiles[k].href + '" class="browse-collection-card">' +
       '<div class="card-header">' +
         '<span class="card-type">' + tiles[k].type + '</span>' +
@@ -455,7 +473,11 @@ async function loadRelated(record) {
       var assocId = assocObjects[i].object && assocObjects[i].object.id;
       if (assocId) {
         assocPromises.push(fetchRelatedSearch('kw_system_number=' + encodeURIComponent(assocId) + '&page_size=1'));
-        assocReasons.push(assocObjects[i].association ? 'Association: ' + assocObjects[i].association : 'Associated object');
+        if (assocObjects[i].association) {
+          assocReasons.push('Association: ' + assocObjects[i].association);
+        } else {
+          assocReasons.push('Associated object');
+        }
       }
     }
     var assocResults = await Promise.all(assocPromises);
@@ -476,12 +498,14 @@ async function loadRelated(record) {
   }
 
   if (record.collectionCode && record.collectionCode.id) {
-    var collName = record.collectionCode.text ? normalizeCollection(record.collectionCode.text) : 'Same collection';
+    var collName;
+    if (record.collectionCode.text) { collName = normalizeCollection(record.collectionCode.text); } else { collName = 'Same collection'; }
     addUnique(await fetchRelatedSearch('id_collection=' + encodeURIComponent(record.collectionCode.id)), 2, 'Collection: ' + collName);
   }
 
   if (record.categories && record.categories.length > 0) {
-    var catName = record.categories[0].text ? normalizeCategory(record.categories[0].text, record.categories[0].id) : 'Same category';
+    var catName;
+    if (record.categories[0].text) { catName = normalizeCategory(record.categories[0].text, record.categories[0].id); } else { catName = 'Same category'; }
     addUnique(await fetchRelatedSearch('id_category=' + encodeURIComponent(record.categories[0].id)), 2, 'Category: ' + catName);
   }
 
@@ -504,11 +528,22 @@ function makeRelatedCard(item) {
   var smallImg = imgBase + '/!400,400/0/default.jpg';
   var largeImg = imgBase + '/!1200,1200/0/default.jpg';
   var date = item._primaryDate || '';
-  var maker = (item._primaryMaker && typeof item._primaryMaker === 'object') ? (item._primaryMaker.text || '') : (item._primaryMaker || '');
+  var maker = '';
+  if (item._primaryMaker && typeof item._primaryMaker === 'object') {
+    maker = item._primaryMaker.text || '';
+  } else if (item._primaryMaker) {
+    maker = item._primaryMaker;
+  }
 
   var card = document.createElement('a');
   card.href = 'details.html?id=' + item.systemNumber;
   card.className = 'related-card';
+
+  var relatedInfoHtml = '';
+  if (item._relatedReason) { relatedInfoHtml += '<p class="related-reason">' + item._relatedReason + '</p>'; }
+  relatedInfoHtml += '<p class="related-title">' + title + '</p>';
+  if (maker) { relatedInfoHtml += '<p class="related-maker">' + maker + '</p>'; }
+  if (date) { relatedInfoHtml += '<p class="related-date">' + date + '</p>'; }
 
   card.innerHTML =
     '<figure>' +
@@ -517,12 +552,7 @@ function makeRelatedCard(item) {
         '<img src="' + smallImg + '" alt="' + title + '" loading="lazy">' +
       '</picture>' +
     '</figure>' +
-    '<div class="related-info">' +
-      (item._relatedReason ? '<p class="related-reason">' + item._relatedReason + '</p>' : '') +
-      '<p class="related-title">' + title + '</p>' +
-      (maker ? '<p class="related-maker">' + maker + '</p>' : '') +
-      (date ? '<p class="related-date">' + date + '</p>' : '') +
-    '</div>';
+    '<div class="related-info">' + relatedInfoHtml + '</div>';
 
   return card;
 }

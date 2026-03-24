@@ -5,7 +5,7 @@ const slider = document.getElementById("density-slider");
 
 const tierMap = { 1: 20, 2: 30, 3: 40 };
 
-// Prevent keyboard navigation behind the loading overlay while content loads
+/* Init overlay */
 (function() {
   const children = document.body.children;
   for (let i = 0; i < children.length; i++) {
@@ -15,7 +15,7 @@ const tierMap = { 1: 20, 2: 30, 3: 40 };
   }
 }());
 
-// Move keyboard focus into a nav popover when it opens, and return it to the trigger on close
+/* Popover focus */
 function initPopoverFocus() {
   var popovers = document.querySelectorAll('nav [popover]');
   for (var i = 0; i < popovers.length; i++) {
@@ -118,12 +118,12 @@ const categoryCache = {};
 let activeSubcategory = null;
 let activeGroupClass = null;
 
-// Pagination state
-const shownIds = new Set();  // system numbers already on the page
-const categoryPool = {};     // id -> array of unshown items from already-fetched pages
-const categoryNextPage = {}; // id -> next page number to fetch from the API
+/* Pagination */
+const shownIds = new Set();
+const categoryPool = {};
+const categoryNextPage = {};
 
-// Using batches because of API rate limits
+/* Batch settings */
 const batchSize = 8;
 const batchDelay = 150;
 
@@ -147,7 +147,6 @@ async function fetchCategory(category) {
   const results = await fetchCategoryPageData(category, 1);
   categoryNextPage[category.id] = 2;
 
-  // Build a list of items not already shown
   const fresh = [];
   for (let i = 0; i < results.length; i++) {
     if (!shownIds.has(results[i].systemNumber)) {
@@ -160,7 +159,6 @@ async function fetchCategory(category) {
     const chosen = fresh[randomIdx];
     cache[category.id] = chosen;
     shownIds.add(chosen.systemNumber);
-    // Store the remaining items in the pool for use by load more
     categoryPool[category.id] = [];
     for (let i = 0; i < fresh.length; i++) {
       if (i !== randomIdx) {
@@ -174,7 +172,6 @@ async function fetchCategory(category) {
 }
 
 async function getNextItemForCategory(category) {
-  // Draw from the pool first (leftover items from previously fetched pages)
   if (categoryPool[category.id] && categoryPool[category.id].length > 0) {
     const pool = categoryPool[category.id];
     const randomIdx = Math.floor(Math.random() * pool.length);
@@ -190,14 +187,12 @@ async function getNextItemForCategory(category) {
     return chosen;
   }
 
-  // Pool empty — keep fetching pages until we find a fresh item or run out of pages
   while (true) {
     const page = categoryNextPage[category.id] || 2;
     const results = await fetchCategoryPageData(category, page);
     categoryNextPage[category.id] = page + 1;
 
     if (results.length === 0) {
-      // No more pages left for this category
       return null;
     }
 
@@ -209,7 +204,6 @@ async function getNextItemForCategory(category) {
     }
 
     if (fresh.length === 0) {
-      // Every result on this page was already shown — try the next page
       continue;
     }
 
@@ -498,8 +492,6 @@ function makeCard(item, cssClass, subcategoryId) {
     const metaList = card.querySelector('dl.metadata');
     const gap = metaList.offsetHeight - pictureEl.offsetHeight;
 
-    console.log('[extra images] metaList height:', metaList.offsetHeight, '| picture height:', pictureEl.offsetHeight, '| gap:', gap);
-
     let imagesToAdd = 0;
     if (gap > 150) {
       imagesToAdd = 1;
@@ -510,8 +502,6 @@ function makeCard(item, cssClass, subcategoryId) {
     if (imagesToAdd > extraImageIds.length) {
       imagesToAdd = extraImageIds.length;
     }
-
-    console.log('[extra images] adding', imagesToAdd, 'image(s)');
 
     if (imagesToAdd === 0) {
       return;
@@ -645,7 +635,6 @@ function showCards(tier) {
   grid.innerHTML = '';
   buildFilterGroups(tier);
 
-  // Group lists
   const groupItems = [];
   for (let i = 0; i < groups.length; i++) {
     const group = groups[i];
@@ -664,14 +653,13 @@ function showCards(tier) {
     }
   }
 
-  // Shuffle the groups
   for (let i = groupItems.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     const tmp = groupItems[i];
     groupItems[i] = groupItems[j];
     groupItems[j] = tmp;
   }
-  // Shuffle within each group
+
   for (let g = 0; g < groupItems.length; g++) {
     const items = groupItems[g];
     for (let i = items.length - 1; i > 0; i--) {
@@ -682,7 +670,6 @@ function showCards(tier) {
     }
   }
 
-  // Interleave groups so categories alternate, then do a final shuffle
   const ordered = [];
   let round = 0;
   while (true) {
@@ -960,7 +947,11 @@ if (filterToggle) {
   filterToggle.addEventListener('click', function() {
     var filterList = document.getElementById('filter-groups');
     var isOpen = filterList.classList.toggle('open');
-    filterToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    if (isOpen) {
+      filterToggle.setAttribute('aria-expanded', 'true');
+    } else {
+      filterToggle.setAttribute('aria-expanded', 'false');
+    }
   });
 }
 
@@ -969,16 +960,9 @@ async function loadMore() {
   loadMoreBtn.disabled = true;
   loadMoreBtn.textContent = 'Loading...';
 
-  // Log all system numbers already on the page so we can confirm no repeats
-  var alreadyShown = Array.from(shownIds);
-  console.log('[load-more] System numbers already shown:', alreadyShown);
-
   const sliderValue = Number(slider.value);
   const tier = tierMap[sliderValue];
 
-  // Collect only the categories that are active at the current tier.
-  // This means tier 1 (value 20) loads fewer items than tier 3 (value 40),
-  // matching the number of cards shown by the initial load at that tier.
   const activeCategories = [];
   for (let i = 0; i < groups.length; i++) {
     const group = groups[i];
@@ -990,19 +974,16 @@ async function loadMore() {
     }
   }
 
-  // Fetch one new item per active category, in batches to respect rate limits
   const newItems = [];
   for (let i = 0; i < activeCategories.length; i += batchSize) {
     const batch = activeCategories.slice(i, i + batchSize);
 
-    // Kick off all fetches in this batch at once
     const fetchPromises = [];
     for (let k = 0; k < batch.length; k++) {
       fetchPromises.push(getNextItemForCategory(batch[k].category));
     }
     const results = await Promise.all(fetchPromises);
 
-    // Pair each result back with its category info
     for (let k = 0; k < results.length; k++) {
       if (results[k] != null) {
         newItems.push({
@@ -1018,21 +999,12 @@ async function loadMore() {
     }
   }
 
-  // Log the newly added system numbers
-  const newIds = [];
-  for (let i = 0; i < newItems.length; i++) {
-    newIds.push(newItems[i].item.systemNumber);
-  }
-  console.log('[load-more] New system numbers added:', newIds);
-
-  // If every category came back empty there is nothing left to show
   if (newItems.length === 0) {
     loadMoreBtn.disabled = true;
     loadMoreBtn.textContent = 'No more items to load';
     return;
   }
 
-  // Shuffle the new items before appending
   for (let i = newItems.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     const tmp = newItems[i];
@@ -1047,7 +1019,6 @@ async function loadMore() {
     grid.appendChild(card);
   }
 
-  // If a filter is currently active, apply it to the new cards and reorder the grid
   if (activeGroupClass !== null || activeSubcategory !== null) {
     const allCards = grid.querySelectorAll('.object-card');
     for (let i = existingCardCount; i < allCards.length; i++) {

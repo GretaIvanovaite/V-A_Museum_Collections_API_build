@@ -5,9 +5,12 @@
 
   var dialog     = document.getElementById('ai-chat');
   var trigger    = document.querySelector('.chat-trigger');
-  var log        = dialog ? dialog.querySelector('[role="log"]') : null;
-  var form       = dialog ? dialog.querySelector('form') : null;
-  var input      = dialog ? dialog.getElementById ? dialog.querySelector('#chat-input') : null : null;
+  var log        = null;
+  if (dialog) { log = dialog.querySelector('[role="log"]'); }
+  var form       = null;
+  if (dialog) { form = dialog.querySelector('form'); }
+  var input      = null;
+  if (dialog) { input = dialog.querySelector('#chat-input'); }
   var typingEl   = null;
   var chatLog    = [];
   var STORAGE_KEY = 'va-chat-log';
@@ -16,7 +19,7 @@
 
   input = dialog.querySelector('#chat-input');
 
-  // ─── Focus management ────────────────────────────────────────────────────
+  /* Focus management */
 
   dialog.addEventListener('toggle', function(evt) {
     if (evt.newState === 'open') {
@@ -28,11 +31,9 @@
     }
   });
 
-  // ─── Restore session history ─────────────────────────────────────────────
-
   restoreHistory();
 
-  // ─── Auto-expand textarea ─────────────────────────────────────────────────
+  /* Auto-expand */
 
   function expandInput() {
     if (!input) { return; }
@@ -51,7 +52,7 @@
     });
   }
 
-  // ─── Session history ─────────────────────────────────────────────────────
+  /* Session history */
 
   function saveHistory() {
     try { sessionStorage.setItem(STORAGE_KEY, JSON.stringify(chatLog)); } catch(e) {}
@@ -73,7 +74,7 @@
     } catch(e) {}
   }
 
-  // ─── Message helpers ─────────────────────────────────────────────────────
+  /* Message helpers */
 
   function addMessage(role, text, noSave) {
     var p = document.createElement('p');
@@ -99,7 +100,14 @@
     wrapper.className = 'chat-results';
     for (var i = 0; i < records.length; i++) {
       var r = records[i];
-      var title = r._primaryTitle || (r.objectType ? r.objectType : 'Untitled');
+      var title;
+      if (r._primaryTitle) {
+        title = r._primaryTitle;
+      } else if (r.objectType) {
+        title = r.objectType;
+      } else {
+        title = 'Untitled';
+      }
       var href = resolveDetailsPath() + 'details.html?id=' + r.systemNumber;
       var card = document.createElement('a');
       card.href = href;
@@ -157,7 +165,7 @@
     return div.innerHTML;
   }
 
-  // ─── Card context collection (MutationObserver) ──────────────────────────
+  /* Card context */
 
   var chatCards = {};
 
@@ -184,7 +192,8 @@
       if (creatorEl) { data.maker = creatorEl.textContent.replace(/^[^:]+:\s*/, '').trim(); }
       var descEl = inner.querySelector('.detail-text');
       if (descEl) { data.description = descEl.textContent.trim(); }
-      return data.title ? data : null;
+      if (data.title) { return data; }
+      return null;
     } catch(e) { return null; }
   }
 
@@ -211,7 +220,7 @@
 
   observeCards();
 
-  // ─── Context & system prompt ─────────────────────────────────────────────
+  /* System prompt */
 
   var VA_CATALOGUE =
     'This site has four distinct browsing pathways — understand each clearly: ' +
@@ -250,9 +259,16 @@
       return base + ' The user is currently browsing the ' + ctx.type + ' page for "' + ctx.name + '" in the V&A collection.';
     }
 
-    var knownIdxs = Object.keys(chatCards).map(Number).sort(function(a, b) { return a - b; });
+    var rawKeys = Object.keys(chatCards);
+    var knownIdxs = [];
+    for (var ki = 0; ki < rawKeys.length; ki++) {
+      knownIdxs.push(Number(rawKeys[ki]));
+    }
+    knownIdxs.sort(function(a, b) { return a - b; });
     if (knownIdxs.length > 0) {
-      var cardList = knownIdxs.map(function(idx) {
+      var cardParts = [];
+      for (var ci = 0; ci < knownIdxs.length; ci++) {
+        var idx = knownIdxs[ci];
         var c = chatCards[idx];
         var desc = 'Tile ' + (idx + 1) + ': "' + c.title + '"';
         if (c.maker) { desc += ' by ' + c.maker; }
@@ -261,15 +277,16 @@
         if (c.categories) { desc += ', categories: ' + c.categories; }
         if (c.origin) { desc += ', origin: ' + c.origin; }
         if (c.description) { desc += ', "' + c.description + '"'; }
-        return desc;
-      }).join(' | ');
+        cardParts.push(desc);
+      }
+      var cardList = cardParts.join(' | ');
       return base + ' The user is exploring the V&A Museum collection. Known tiles on screen: ' + cardList + '.';
     }
 
     return base + ' The user is exploring the V&A Museum collection.';
   }
 
-  // Work out how many directories deep this page is so details.html links are correct
+  /* Resolve path */
   function resolveDetailsPath() {
     var depth = (window.location.pathname.match(/\//g) || []).length - 1;
     var prefix = '';
@@ -277,7 +294,7 @@
     return prefix;
   }
 
-  // ─── V&A search bridge ───────────────────────────────────────────────────
+  /* VA search */
 
   function searchVA(query) {
     var url = VA_API_BASE + '/objects/search?q=' + encodeURIComponent(query) +
@@ -288,10 +305,11 @@
       .catch(function() { return []; });
   }
 
-  // ─── AI engine ───────────────────────────────────────────────────────────
+  /* AI engine */
 
   function hfFetch(messages, maxTokens, temperature) {
-    var token = (typeof HUGGING_FACE_TOKEN !== 'undefined') ? HUGGING_FACE_TOKEN : '';
+    var token = '';
+    if (typeof HUGGING_FACE_TOKEN !== 'undefined') { token = HUGGING_FACE_TOKEN; }
     return fetch(HF_MODEL, {
       method: 'POST',
       headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
@@ -318,30 +336,37 @@
     var intentInstruction = systemPrompt +
       ' If the user asks you to find, show, or search for objects, respond with ONLY two lines — line 1: "SEARCH: [search term]", line 2: "REASON: [brief phrase]" — and nothing else. For all other questions respond normally.';
 
-    // Pass 1 — intent detection (short, fast)
     return hfFetch(
       [{ role: 'system', content: intentInstruction }, { role: 'user', content: userMessage }],
       80, 0.3
     ).then(function(intent) {
       var searchMatch = intent.match(/SEARCH:\s*(.+)/i);
       if (!searchMatch) {
-        // No search needed — direct response
         return { text: intent, records: [], reason: '' };
       }
 
       var query = searchMatch[1].split('\n')[0].trim();
       var reasonMatch = intent.match(/REASON:\s*(.+)/i);
-      var reason = reasonMatch ? reasonMatch[1].split('\n')[0].trim() : '';
+      var reason = '';
+      if (reasonMatch) { reason = reasonMatch[1].split('\n')[0].trim(); }
 
-      // Run search first, then Pass 2 with actual results
       return searchVA(query).then(function(records) {
-        var resultsSummary = records && records.length > 0
-          ? 'The search returned ' + records.length + ' result(s): ' +
-            records.map(function(r) { return '"' + (r._primaryTitle || r.objectType || 'Untitled') + '"'; }).join(', ') +
-            '. Write your response to the user based only on what was actually found.'
-          : 'The search returned no results for "' + query + '". Let the user know and suggest alternative search terms or topics.';
+        var resultsSummary;
+        if (records && records.length > 0) {
+          var titles = [];
+          for (var ri = 0; ri < records.length; ri++) {
+            var rItem = records[ri];
+            var rTitle;
+            if (rItem._primaryTitle) { rTitle = rItem._primaryTitle; }
+            else if (rItem.objectType) { rTitle = rItem.objectType; }
+            else { rTitle = 'Untitled'; }
+            titles.push('"' + rTitle + '"');
+          }
+          resultsSummary = 'The search returned ' + records.length + ' result(s): ' + titles.join(', ') + '. Write your response to the user based only on what was actually found.';
+        } else {
+          resultsSummary = 'The search returned no results for "' + query + '". Let the user know and suggest alternative search terms or topics.';
+        }
 
-        // Pass 2 — final response with knowledge of results
         return hfFetch([
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userMessage },
@@ -354,7 +379,7 @@
     });
   }
 
-  // ─── Response handler ────────────────────────────────────────────────────
+  /* Response handler */
 
   function processResponse(result) {
     if (result.text) { addMessage('assistant', result.text); }
@@ -363,7 +388,7 @@
     }
   }
 
-  // ─── Form submit ─────────────────────────────────────────────────────────
+  /* Form submit */
 
   form.addEventListener('submit', function(e) {
     e.preventDefault();

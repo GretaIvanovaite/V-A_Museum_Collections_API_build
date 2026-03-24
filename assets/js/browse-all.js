@@ -1,7 +1,7 @@
 var apiBase = "https://api.vam.ac.uk/v2";
 var imageBase = "https://framemark.vam.ac.uk/collections";
 
-// Maps pageType to the cluster field name used by the V&A clusters API
+/* Cluster fields */
 var clusterFieldMap = {
   collections: "collection",
   categories:  "category",
@@ -9,7 +9,7 @@ var clusterFieldMap = {
   origins:     "place"
 };
 
-// Maps pageType to the search filter param used when fetching object counts/images
+/* Param names */
 var paramNames = {
   collections: "id_collection",
   categories:  "id_category",
@@ -17,15 +17,17 @@ var paramNames = {
   origins:     "id_place"
 };
 
-// Fetch the full list of items for the current page type from the clusters API.
-// The dedicated clusters endpoint returns up to cluster_size results ordered by count.
+/* Fetch clusters */
 async function fetchClusters() {
   var clusterField = clusterFieldMap[pageType];
   var url = apiBase + "/objects/clusters/" + clusterField + "/search?cluster_size=50";
   try {
     var response = await fetch(url);
     var data = await response.json();
-    var records = Array.isArray(data) ? data : [];
+    var records = [];
+    if (Array.isArray(data)) {
+      records = data;
+    }
     var items = [];
     for (var i = 0; i < records.length; i++) {
       items.push({ id: records[i].id, ids: [records[i].id], name: records[i].value });
@@ -37,7 +39,7 @@ async function fetchClusters() {
   }
 }
 
-// Prevent keyboard navigation behind the loading overlay while content loads
+/* Init overlay */
 (function() {
   var children = document.body.children;
   for (var i = 0; i < children.length; i++) {
@@ -51,7 +53,7 @@ async function fetchClusters() {
   }
 }());
 
-// Move keyboard focus into a nav popover when it opens, and return it to the trigger on close
+/* Popover focus */
 function initPopoverFocus() {
   var popovers = document.querySelectorAll('nav [popover]');
   for (var i = 0; i < popovers.length; i++) {
@@ -70,7 +72,7 @@ function initPopoverFocus() {
 }
 initPopoverFocus();
 
-// Determine which section we are from the URL path
+/* Page type */
 var pageType = null;
 var pathname = window.location.pathname;
 
@@ -84,11 +86,14 @@ if (pathname.indexOf("/collections/") !== -1) {
   pageType = "origins";
 }
 
-// Fetch image candidates AND the live item count in one request.
-// ids may be a single string or an array (array = OR query, used for grouped materials).
-// page_size=3 gives fallback image candidates; record_count is the total matching.
+/* Fetch item data */
 async function fetchItemData(paramName, ids) {
-  var idArray = Array.isArray(ids) ? ids : [ids];
+  var idArray = [];
+  if (Array.isArray(ids)) {
+    idArray = ids;
+  } else {
+    idArray = [ids];
+  }
   var queryParts = [];
   for (var i = 0; i < idArray.length; i++) {
     queryParts.push(paramName + "=" + idArray[i]);
@@ -120,18 +125,17 @@ async function fetchItemData(paramName, ids) {
   }
 }
 
-// Format a number with locale-appropriate thousand separators
+/* Format count */
 function formatCount(count) {
   return count.toLocaleString();
 }
 
-// Build an image URL from a framemark image ID
+/* Image URL */
 function makeImageUrl(imageId, size) {
   return imageBase + "/" + imageId + "/full/!" + size + "/0/default.jpg";
 }
 
-
-// Build a placeholder card with just the name — image and count populated lazily
+/* Placeholder card */
 function buildPlaceholderCard(item) {
   var card = document.createElement("a");
   card.className = "browse-collection-card";
@@ -160,7 +164,7 @@ function buildPlaceholderCard(item) {
   return card;
 }
 
-// Fetch and populate a single card's count and image when it enters the viewport
+/* Populate card */
 function populateCard(card, paramName, usedImageIds) {
   var ids  = card.dataset.ids.split(",");
   var name = card.dataset.name;
@@ -209,7 +213,7 @@ function removeOverlay() {
   if (main !== null) { main.removeAttribute("aria-busy"); }
 }
 
-// Render placeholder cards immediately, then populate each lazily via IntersectionObserver
+/* Load items */
 async function loadAllItems() {
   if (pageType === null) { return; }
 
@@ -229,10 +233,10 @@ async function loadAllItems() {
     return;
   }
 
-  // Shared set so no two cards end up with the same image
+  /* Used images */
   var usedImageIds = {};
 
-  // rootMargin: start fetching card data 400px before it scrolls into view
+  /* Observer */
   var observer = new IntersectionObserver(function(entries) {
     for (var i = 0; i < entries.length; i++) {
       if (!entries[i].isIntersecting) { continue; }
@@ -248,7 +252,6 @@ async function loadAllItems() {
     observer.observe(card);
   }
 
-  // Show the page as soon as placeholders are in the DOM
   removeOverlay();
 }
 

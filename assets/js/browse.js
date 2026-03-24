@@ -1,14 +1,14 @@
 var apiBase = "https://api.vam.ac.uk/v2";
 var imageBase = "https://framemark.vam.ac.uk/collections";
 
-// Same batching constants as homepage.js to avoid API rate limits
+/* Batch settings */
 var batchSize = 8;
 var batchDelay = 150;
 
-// Global tracker — once an image ID is used anywhere on the page it will not appear again
+/* Used images */
 var usedImageIds = {};
 
-// Prevent keyboard navigation behind the loading overlay while content loads
+/* Init overlay */
 (function() {
   var children = document.body.children;
   for (var i = 0; i < children.length; i++) {
@@ -22,7 +22,7 @@ var usedImageIds = {};
   }
 }());
 
-// Move keyboard focus into a nav popover when it opens, and return it to the trigger on close
+/* Popover focus */
 function initPopoverFocus() {
   var popovers = document.querySelectorAll('nav [popover]');
   for (var i = 0; i < popovers.length; i++) {
@@ -41,11 +41,7 @@ function initPopoverFocus() {
 }
 initPopoverFocus();
 
-// Data sourced from va-api-clusters-2026-03-04.json, ordered by count descending.
-// Duplicates (same ID or effectively the same grouping) are removed using names.js as a guide.
-// The first 3 items in each section become preview cards.
-// Items 4–9 are used only for the "Browse All" collage background.
-
+/* Sections data */
 var sections = [
   {
     gridId:      "collections-grid",
@@ -97,7 +93,6 @@ var sections = [
     viewAllHref: "browse/materials/all.html",
     viewAllText: "Browse All Materials",
     cards: [
-      // AAT14109 "paper (fiber product)" is skipped — same substance as x30308 "paper"
       { name: "Paper",        id: "x30308"    },
       { name: "Ink",          id: "AAT15012"  },
       { name: "Printing ink", id: "AAT187371" }
@@ -124,7 +119,6 @@ var sections = [
       { name: "England",       id: "x28826" }
     ],
     collage: [
-      // x32019 "Britain" is skipped — same ID as "Great Britain"
       { id: "x28849" },
       { id: "x29068" },
       { id: "x29399" },
@@ -135,8 +129,7 @@ var sections = [
   }
 ];
 
-// Fetch up to 5 candidate image IDs for one grouping.
-// Returning multiple candidates allows the picker to skip any already used globally.
+/* Fetch candidates */
 async function fetchCandidateImages(paramName, id) {
   var url = apiBase + "/objects/search?" + paramName + "=" + id + "&images_exist=1&page_size=5";
   try {
@@ -157,8 +150,7 @@ async function fetchCandidateImages(paramName, id) {
   }
 }
 
-// Pick the first candidate not yet used anywhere on the page, then mark it used.
-// Returns null if all candidates are already taken.
+/* Pick unused */
 function pickUnused(candidates) {
   for (var i = 0; i < candidates.length; i++) {
     var candidate = candidates[i];
@@ -170,12 +162,12 @@ function pickUnused(candidates) {
   return null;
 }
 
-// Build an image URL from a framemark image ID
+/* Image URL */
 function makeImageUrl(imageId, size) {
   return imageBase + "/" + imageId + "/full/!" + size + "/0/default.jpg";
 }
 
-// Build a single preview card — the whole card is a clickable <a>
+/* Build card */
 function buildCard(item, sectionType, label, imageId) {
   var card = document.createElement("a");
   card.className = "browse-collection-card";
@@ -212,7 +204,7 @@ function buildCard(item, sectionType, label, imageId) {
   return card;
 }
 
-// Build the "Browse All" card with a 3x2 collage using the pre-chosen image IDs
+/* View all card */
 function buildViewAllCard(section, chosenCollageIds) {
   var link = document.createElement("a");
   link.href = section.viewAllHref;
@@ -241,10 +233,7 @@ function buildViewAllCard(section, chosenCollageIds) {
   return link;
 }
 
-// Inject a completed section into the DOM.
-// candidateSets is a flat array: first section.cards.length entries are for cards,
-// then section.collage.length entries are for the collage.
-// pickUnused() draws from the global usedImageIds so no image repeats across sections.
+/* Build section DOM */
 function buildSectionDOM(section, candidateSets) {
   var grid = document.getElementById(section.gridId);
   if (grid === null) {
@@ -254,14 +243,12 @@ function buildSectionDOM(section, candidateSets) {
   var cardCount   = section.cards.length;
   var collageCount = section.collage.length;
 
-  // Pick one unique image per card
   for (var i = 0; i < cardCount; i++) {
     var imageId = pickUnused(candidateSets[i]);
     var card = buildCard(section.cards[i], section.type, section.label, imageId);
     grid.appendChild(card);
   }
 
-  // Pick one unique image per collage slot
   var chosenCollageIds = [];
   for (var i = 0; i < collageCount; i++) {
     var imageId = pickUnused(candidateSets[cardCount + i]);
@@ -276,9 +263,7 @@ function buildSectionDOM(section, candidateSets) {
   }
 }
 
-// Build a flat list of all fetch tasks across all sections, then run them
-// in batches of 8 with a 150ms pause between batches (same as homepage.js).
-// Sections are processed in order so the global duplicate check is deterministic.
+/* Load all sections */
 async function loadAllSections() {
   var allTasks = [];
 
@@ -294,7 +279,6 @@ async function loadAllSections() {
     }
   }
 
-  // Run all tasks in batches, collecting candidate arrays
   var allCandidateSets = [];
 
   for (var i = 0; i < allTasks.length; i += batchSize) {
@@ -318,9 +302,6 @@ async function loadAllSections() {
     }
   }
 
-  // Distribute results back to each section and build the DOM in order.
-  // Because sections are built in order and pickUnused() marks each chosen ID globally,
-  // the same image cannot appear in two different sections.
   var resultIndex = 0;
 
   for (var s = 0; s < sections.length; s++) {
