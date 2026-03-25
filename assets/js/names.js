@@ -331,6 +331,10 @@ const CATEGORY_GROUPS = [
   {name: "Tiles", ids: ["THES48884"]},
   {name: "Ephemera", ids: ["THES252985"]},
   {name: "Glass", ids: ["THES48946"]},
+  {name: "Designs", ids: ["THES48968"]},
+  {name: "Clothing", ids: ["THES48975"]},
+  {name: "Womenswear", ids: ["THES49044"]},
+  {name: "The Royal Photographic Society", ids: ["THES281081"]},
 ];
 
 function getCategoryGroup(id) {
@@ -346,7 +350,7 @@ const COLLECTION_GROUPS = [
   {name: "Prints, Drawings & Paintings", ids: ["THES48595", "PDP"]},
   {name: "Theatre and Performance", ids: ["THES48602", "T&P", "TH"]},
   {name: "East Asia", ids: ["THES48596", "EA", "EAS", "FEA"]},
-  {name: "Textiles and Fashion", ids: ["THES48601", "T", "T&F", "TEX"]},
+  {name: "Textiles and Fashion", ids: ["THES48601", "TEX"]},
   {name: "Ceramics", ids: ["THES48594", "CER", "GLASS"]},
   {name: "South & South East Asia", ids: ["THES48598", "SAS", "SSEA"]},
   {name: "Department of Photography", ids: ["THES291628", "PH", "PHOTO", "DOP"]},
@@ -362,12 +366,6 @@ const COLLECTION_GROUPS = [
   {name: "V&A East", ids: ["THES359557"]},
   {name: "Archive of Art and Design", ids: ["THES48604", "AAD"]},
   {name: "Circulation Department", ids: ["THES48606", "CIRC"]},
-  {name: "Asian", ids: ["AS"]},
-  {name: "Word and Image", ids: ["W"]},
-  {name: "Indian Section", ids: ["INDIA"]},
-  {name: "London Day School of Art Library", ids: ["LDSAL"]},
-  {name: "Museum of Childhood", ids: ["MoC"]},
-  {name: "Jewellery", ids: ["JEWEL"]},
 ];
 
 function getCollectionGroup(code) {
@@ -381,6 +379,20 @@ function getCollectionGroup(code) {
 
 const ORIGIN_GROUPS = [
   {name: "Great Britain", ids: ["x32019"]},
+  {name: "London", ids: ["x28980"]},
+  {name: "England", ids: ["x28826"]},
+  {name: "Paris", ids: ["x29068"]},
+  {name: "France", ids: ["x28849"]},
+  {name: "Japan", ids: ["x29399"]},
+  {name: "Italy", ids: ["x28927"]},
+  {name: "Germany", ids: ["x28873"]},
+  {name: "Europe", ids: ["x28842"]},
+  {name: "China", ids: ["x29398"]},
+  {name: "United Kingdom", ids: ["x29336"]},
+  {name: "Egypt", ids: ["x29512"]},
+  {name: "India", ids: ["x29790"]},
+  {name: "Netherlands", ids: ["x29020"]},
+  {name: "Spain", ids: ["x29170"]},
   {name: "Rome", ids: ["x29106"]},
   {name: "Tokyo", ids: ["x32430"]},
   {name: "Venice", ids: ["x29237"]},
@@ -692,7 +704,9 @@ function fillNavPopover(ul, items, type) {
   for (var j = 0; j < limit; j++) {
     var li = document.createElement('li');
     var a = document.createElement('a');
-    a.href = prefix + type + '/property.html?id=' + items[j].ids.join(',') + '&name=' + encodeURIComponent(items[j].name);
+    var nIds = [];
+    for (var ni = 0; ni < items[j].ids.length; ni++) { nIds.push(encodeURIComponent(items[j].ids[ni])); }
+    a.href = prefix + type + '/property.html?id=' + nIds.join(',') + '&name=' + encodeURIComponent(items[j].name);
     a.textContent = items[j].name;
     li.appendChild(a);
     ul.insertBefore(li, hrLi);

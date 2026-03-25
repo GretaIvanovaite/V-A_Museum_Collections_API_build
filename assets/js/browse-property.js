@@ -433,7 +433,7 @@ function buildApiUrl(page) {
   let url = apiBase + '/objects/search?images_exist=1&page_size=' + fetchPageSize + '&page=' + page;
   if (propertyIds.length > 0 && apiParam) {
     for (let i = 0; i < propertyIds.length; i++) {
-      url += '&' + apiParam + '=' + propertyIds[i];
+      url += '&' + apiParam + '=' + encodeURIComponent(propertyIds[i]);
     }
   } else if (pageType === 'creators' && propertyNameParam) {
     url += '&q_actor=' + encodeURIComponent(propertyNameParam);

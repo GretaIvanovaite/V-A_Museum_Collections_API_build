@@ -96,7 +96,7 @@ async function fetchItemData(paramName, ids) {
   }
   var queryParts = [];
   for (var i = 0; i < idArray.length; i++) {
-    queryParts.push(paramName + "=" + idArray[i]);
+    queryParts.push(paramName + "=" + encodeURIComponent(idArray[i]));
   }
   var query = queryParts.join("&");
   var url = apiBase + "/objects/search?" + query + "&images_exist=1&page_size=6";
@@ -139,7 +139,9 @@ function makeImageUrl(imageId, size) {
 function buildPlaceholderCard(item) {
   var card = document.createElement("a");
   card.className = "browse-collection-card";
-  card.href = "property.html?id=" + item.ids.join(",") + "&name=" + encodeURIComponent(item.name);
+  var encodedIds = [];
+  for (var ei = 0; ei < item.ids.length; ei++) { encodedIds.push(encodeURIComponent(item.ids[ei])); }
+  card.href = "property.html?id=" + encodedIds.join(",") + "&name=" + encodeURIComponent(item.name);
   card.dataset.ids = item.ids.join(",");
   card.dataset.name = item.name;
 
