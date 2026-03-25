@@ -1,22 +1,22 @@
-var apiBase = "https://api.vam.ac.uk/v2";
-var imageBase = "https://framemark.vam.ac.uk/collections";
+const apiBase = "https://api.vam.ac.uk/v2";
+const imageBase = "https://framemark.vam.ac.uk/collections";
 
 /* Batch settings */
-var batchSize = 8;
-var batchDelay = 150;
+const batchSize = 8;
+const batchDelay = 150;
 
 /* Used images */
-var usedImageIds = {};
+const usedImageIds = {};
 
 /* Init overlay */
 (function() {
-  var children = document.body.children;
-  for (var i = 0; i < children.length; i++) {
+  const children = document.body.children;
+  for (let i = 0; i < children.length; i++) {
     if (children[i].id !== 'loading-overlay') {
       children[i].setAttribute('inert', '');
     }
   }
-  var main = document.getElementById('main-content');
+  const main = document.getElementById('main-content');
   if (main !== null) {
     main.setAttribute('aria-busy', 'true');
   }
@@ -24,15 +24,15 @@ var usedImageIds = {};
 
 /* Popover focus */
 function initPopoverFocus() {
-  var popovers = document.querySelectorAll('nav [popover]');
-  for (var i = 0; i < popovers.length; i++) {
+  const popovers = document.querySelectorAll('nav [popover]');
+  for (let i = 0; i < popovers.length; i++) {
     (function(pop) {
       pop.addEventListener('toggle', function(evt) {
         if (evt.newState === 'open') {
-          var first = pop.querySelector('a');
+          const first = pop.querySelector('a');
           if (first !== null) { first.focus(); }
         } else {
-          var trigger = document.querySelector('[popovertarget="' + pop.id + '"]');
+          const trigger = document.querySelector('[popovertarget="' + pop.id + '"]');
           if (trigger !== null) { trigger.focus(); }
         }
       });
@@ -42,7 +42,7 @@ function initPopoverFocus() {
 initPopoverFocus();
 
 /* Sections data */
-var sections = [
+const sections = [
   {
     gridId:      "collections-grid",
     paramName:   "id_collection",
@@ -131,14 +131,14 @@ var sections = [
 
 /* Fetch candidates */
 async function fetchCandidateImages(paramName, id) {
-  var url = apiBase + "/objects/search?" + paramName + "=" + id + "&images_exist=1&page_size=5";
+  const url = apiBase + "/objects/search?" + paramName + "=" + id + "&images_exist=1&page_size=5";
   try {
-    var response = await fetch(url);
-    var data = await response.json();
-    var ids = [];
+    const response = await fetch(url);
+    const data = await response.json();
+    const ids = [];
     if (data.records) {
-      for (var i = 0; i < data.records.length; i++) {
-        var imgId = data.records[i]._primaryImageId;
+      for (let i = 0; i < data.records.length; i++) {
+        const imgId = data.records[i]._primaryImageId;
         if (imgId) {
           ids.push(imgId);
         }
@@ -152,8 +152,8 @@ async function fetchCandidateImages(paramName, id) {
 
 /* Pick unused */
 function pickUnused(candidates) {
-  for (var i = 0; i < candidates.length; i++) {
-    var candidate = candidates[i];
+  for (let i = 0; i < candidates.length; i++) {
+    const candidate = candidates[i];
     if (!usedImageIds[candidate]) {
       usedImageIds[candidate] = true;
       return candidate;
@@ -169,18 +169,18 @@ function makeImageUrl(imageId, size) {
 
 /* Build card */
 function buildCard(item, sectionType, label, imageId) {
-  var card = document.createElement("a");
+  const card = document.createElement("a");
   card.className = "browse-collection-card";
   card.href = "browse/" + sectionType + "/property.html?id=" + item.id + "&name=" + encodeURIComponent(item.name);
 
-  var header = document.createElement("div");
+  const header = document.createElement("div");
   header.className = "card-header";
 
-  var typeSpan = document.createElement("span");
+  const typeSpan = document.createElement("span");
   typeSpan.className = "card-type";
   typeSpan.textContent = label;
 
-  var nameHeading = document.createElement("h3");
+  const nameHeading = document.createElement("h3");
   nameHeading.className = "card-name";
   nameHeading.textContent = item.name;
 
@@ -188,11 +188,11 @@ function buildCard(item, sectionType, label, imageId) {
   header.appendChild(nameHeading);
   card.appendChild(header);
 
-  var imageDiv = document.createElement("div");
+  const imageDiv = document.createElement("div");
   imageDiv.className = "card-image";
 
   if (imageId) {
-    var img = document.createElement("img");
+    const img = document.createElement("img");
     img.src = makeImageUrl(imageId, "800,600");
     img.alt = item.name + " preview";
     img.loading = "lazy";
@@ -206,16 +206,16 @@ function buildCard(item, sectionType, label, imageId) {
 
 /* View all card */
 function buildViewAllCard(section, chosenCollageIds) {
-  var link = document.createElement("a");
+  const link = document.createElement("a");
   link.href = section.viewAllHref;
   link.className = "browse-view-all";
 
-  var imagesDiv = document.createElement("div");
+  const imagesDiv = document.createElement("div");
   imagesDiv.className = "view-all-images";
 
-  for (var i = 0; i < 6; i++) {
-    var imgId = chosenCollageIds[i % chosenCollageIds.length];
-    var img = document.createElement("img");
+  for (let i = 0; i < 6; i++) {
+    const imgId = chosenCollageIds[i % chosenCollageIds.length];
+    const img = document.createElement("img");
     img.src = makeImageUrl(imgId, "300,300");
     img.alt = "";
     img.setAttribute("aria-hidden", "true");
@@ -223,7 +223,7 @@ function buildViewAllCard(section, chosenCollageIds) {
     imagesDiv.appendChild(img);
   }
 
-  var labelSpan = document.createElement("span");
+  const labelSpan = document.createElement("span");
   labelSpan.className = "view-all-label";
   labelSpan.textContent = section.viewAllText;
 
@@ -235,63 +235,63 @@ function buildViewAllCard(section, chosenCollageIds) {
 
 /* Build section DOM */
 function buildSectionDOM(section, candidateSets) {
-  var grid = document.getElementById(section.gridId);
+  const grid = document.getElementById(section.gridId);
   if (grid === null) {
     return;
   }
 
-  var cardCount   = section.cards.length;
-  var collageCount = section.collage.length;
+  const cardCount   = section.cards.length;
+  const collageCount = section.collage.length;
 
-  for (var i = 0; i < cardCount; i++) {
-    var imageId = pickUnused(candidateSets[i]);
-    var card = buildCard(section.cards[i], section.type, section.label, imageId);
+  for (let i = 0; i < cardCount; i++) {
+    const imageId = pickUnused(candidateSets[i]);
+    const card = buildCard(section.cards[i], section.type, section.label, imageId);
     grid.appendChild(card);
   }
 
-  var chosenCollageIds = [];
-  for (var i = 0; i < collageCount; i++) {
-    var imageId = pickUnused(candidateSets[cardCount + i]);
+  const chosenCollageIds = [];
+  for (let i = 0; i < collageCount; i++) {
+    const imageId = pickUnused(candidateSets[cardCount + i]);
     if (imageId !== null) {
       chosenCollageIds.push(imageId);
     }
   }
 
   if (chosenCollageIds.length > 0) {
-    var viewAllCard = buildViewAllCard(section, chosenCollageIds);
+    const viewAllCard = buildViewAllCard(section, chosenCollageIds);
     grid.appendChild(viewAllCard);
   }
 }
 
 /* Load all sections */
 async function loadAllSections() {
-  var allTasks = [];
+  const allTasks = [];
 
-  for (var s = 0; s < sections.length; s++) {
-    var section = sections[s];
+  for (let s = 0; s < sections.length; s++) {
+    const section = sections[s];
 
-    for (var c = 0; c < section.cards.length; c++) {
+    for (let c = 0; c < section.cards.length; c++) {
       allTasks.push({ paramName: section.paramName, id: section.cards[c].id, sectionIndex: s });
     }
 
-    for (var col = 0; col < section.collage.length; col++) {
+    for (let col = 0; col < section.collage.length; col++) {
       allTasks.push({ paramName: section.paramName, id: section.collage[col].id, sectionIndex: s });
     }
   }
 
-  var allCandidateSets = [];
+  const allCandidateSets = [];
 
-  for (var i = 0; i < allTasks.length; i += batchSize) {
-    var batchEnd = Math.min(i + batchSize, allTasks.length);
-    var batch = allTasks.slice(i, batchEnd);
+  for (let i = 0; i < allTasks.length; i += batchSize) {
+    const batchEnd = Math.min(i + batchSize, allTasks.length);
+    const batch = allTasks.slice(i, batchEnd);
 
-    var batchPromises = [];
-    for (var j = 0; j < batch.length; j++) {
+    const batchPromises = [];
+    for (let j = 0; j < batch.length; j++) {
       batchPromises.push(fetchCandidateImages(batch[j].paramName, batch[j].id));
     }
 
-    var batchResults = await Promise.all(batchPromises);
-    for (var j = 0; j < batchResults.length; j++) {
+    const batchResults = await Promise.all(batchPromises);
+    for (let j = 0; j < batchResults.length; j++) {
       allCandidateSets.push(batchResults[j]);
     }
 
@@ -302,26 +302,26 @@ async function loadAllSections() {
     }
   }
 
-  var resultIndex = 0;
+  let resultIndex = 0;
 
-  for (var s = 0; s < sections.length; s++) {
-    var section = sections[s];
-    var count = section.cards.length + section.collage.length;
-    var candidateSets = allCandidateSets.slice(resultIndex, resultIndex + count);
+  for (let s = 0; s < sections.length; s++) {
+    const section = sections[s];
+    const count = section.cards.length + section.collage.length;
+    const candidateSets = allCandidateSets.slice(resultIndex, resultIndex + count);
     resultIndex += count;
 
     buildSectionDOM(section, candidateSets);
   }
 
-  var overlay = document.getElementById("loading-overlay");
+  const overlay = document.getElementById("loading-overlay");
   if (overlay !== null) {
     overlay.classList.add("hidden");
   }
-  var bodyChildren = document.body.children;
-  for (var i = 0; i < bodyChildren.length; i++) {
+  const bodyChildren = document.body.children;
+  for (let i = 0; i < bodyChildren.length; i++) {
     bodyChildren[i].removeAttribute('inert');
   }
-  var main = document.getElementById('main-content');
+  const main = document.getElementById('main-content');
   if (main !== null) {
     main.removeAttribute('aria-busy');
   }

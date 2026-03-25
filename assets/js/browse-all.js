@@ -1,8 +1,8 @@
-var apiBase = "https://api.vam.ac.uk/v2";
-var imageBase = "https://framemark.vam.ac.uk/collections";
+const apiBase = "https://api.vam.ac.uk/v2";
+const imageBase = "https://framemark.vam.ac.uk/collections";
 
 /* Cluster fields */
-var clusterFieldMap = {
+const clusterFieldMap = {
   collections: "collection",
   categories:  "category",
   materials:   "material",
@@ -10,7 +10,7 @@ var clusterFieldMap = {
 };
 
 /* Param names */
-var paramNames = {
+const paramNames = {
   collections: "id_collection",
   categories:  "id_category",
   materials:   "id_material",
@@ -19,17 +19,17 @@ var paramNames = {
 
 /* Fetch clusters */
 async function fetchClusters() {
-  var clusterField = clusterFieldMap[pageType];
-  var url = apiBase + "/objects/clusters/" + clusterField + "/search?cluster_size=100";
+  const clusterField = clusterFieldMap[pageType];
+  const url = apiBase + "/objects/clusters/" + clusterField + "/search?cluster_size=100";
   try {
-    var response = await fetch(url);
-    var data = await response.json();
-    var records = [];
+    const response = await fetch(url);
+    const data = await response.json();
+    let records = [];
     if (Array.isArray(data)) {
       records = data;
     }
-    var items = [];
-    for (var i = 0; i < records.length; i++) {
+    const items = [];
+    for (let i = 0; i < records.length; i++) {
       items.push({ id: records[i].id, ids: [records[i].id], name: records[i].value });
     }
     return items;
@@ -41,13 +41,13 @@ async function fetchClusters() {
 
 /* Init overlay */
 (function() {
-  var children = document.body.children;
-  for (var i = 0; i < children.length; i++) {
+  const children = document.body.children;
+  for (let i = 0; i < children.length; i++) {
     if (children[i].id !== 'loading-overlay') {
       children[i].setAttribute('inert', '');
     }
   }
-  var main = document.getElementById('main-content');
+  const main = document.getElementById('main-content');
   if (main !== null) {
     main.setAttribute('aria-busy', 'true');
   }
@@ -55,15 +55,15 @@ async function fetchClusters() {
 
 /* Popover focus */
 function initPopoverFocus() {
-  var popovers = document.querySelectorAll('nav [popover]');
-  for (var i = 0; i < popovers.length; i++) {
+  const popovers = document.querySelectorAll('nav [popover]');
+  for (let i = 0; i < popovers.length; i++) {
     (function(pop) {
       pop.addEventListener('toggle', function(evt) {
         if (evt.newState === 'open') {
-          var first = pop.querySelector('a');
+          const first = pop.querySelector('a');
           if (first !== null) { first.focus(); }
         } else {
-          var trigger = document.querySelector('[popovertarget="' + pop.id + '"]');
+          const trigger = document.querySelector('[popovertarget="' + pop.id + '"]');
           if (trigger !== null) { trigger.focus(); }
         }
       });
@@ -73,8 +73,8 @@ function initPopoverFocus() {
 initPopoverFocus();
 
 /* Page type */
-var pageType = null;
-var pathname = window.location.pathname;
+let pageType = null;
+const pathname = window.location.pathname;
 
 if (pathname.indexOf("/collections/") !== -1) {
   pageType = "collections";
@@ -88,31 +88,31 @@ if (pathname.indexOf("/collections/") !== -1) {
 
 /* Fetch item data */
 async function fetchItemData(paramName, ids) {
-  var idArray = [];
+  let idArray = [];
   if (Array.isArray(ids)) {
     idArray = ids;
   } else {
     idArray = [ids];
   }
-  var queryParts = [];
-  for (var i = 0; i < idArray.length; i++) {
+  const queryParts = [];
+  for (let i = 0; i < idArray.length; i++) {
     queryParts.push(paramName + "=" + encodeURIComponent(idArray[i]));
   }
-  var query = queryParts.join("&");
-  var url = apiBase + "/objects/search?" + query + "&images_exist=1&page_size=6";
+  const query = queryParts.join("&");
+  const url = apiBase + "/objects/search?" + query + "&images_exist=1&page_size=6";
   try {
-    var response = await fetch(url);
-    var data = await response.json();
+    const response = await fetch(url);
+    const data = await response.json();
 
-    var count = 0;
+    let count = 0;
     if (data.info && data.info.record_count) {
       count = data.info.record_count;
     }
 
-    var imageIds = [];
+    const imageIds = [];
     if (data.records) {
-      for (var i = 0; i < data.records.length; i++) {
-        var imgId = data.records[i]._primaryImageId;
+      for (let i = 0; i < data.records.length; i++) {
+        const imgId = data.records[i]._primaryImageId;
         if (imgId) {
           imageIds.push(imgId);
         }
@@ -137,21 +137,21 @@ function makeImageUrl(imageId, size) {
 
 /* Placeholder card */
 function buildPlaceholderCard(item) {
-  var card = document.createElement("a");
+  const card = document.createElement("a");
   card.className = "browse-collection-card";
-  var encodedIds = [];
-  for (var ei = 0; ei < item.ids.length; ei++) { encodedIds.push(encodeURIComponent(item.ids[ei])); }
+  const encodedIds = [];
+  for (let ei = 0; ei < item.ids.length; ei++) { encodedIds.push(encodeURIComponent(item.ids[ei])); }
   card.href = "property.html?id=" + encodedIds.join(",") + "&name=" + encodeURIComponent(item.name);
   card.dataset.ids = item.ids.join(",");
   card.dataset.name = item.name;
 
-  var header = document.createElement("div");
+  const header = document.createElement("div");
   header.className = "card-header";
 
-  var countSpan = document.createElement("span");
+  const countSpan = document.createElement("span");
   countSpan.className = "card-type";
 
-  var nameHeading = document.createElement("h3");
+  const nameHeading = document.createElement("h3");
   nameHeading.className = "card-name";
   nameHeading.textContent = item.name;
 
@@ -159,7 +159,7 @@ function buildPlaceholderCard(item) {
   header.appendChild(nameHeading);
   card.appendChild(header);
 
-  var imageDiv = document.createElement("div");
+  const imageDiv = document.createElement("div");
   imageDiv.className = "card-image";
   card.appendChild(imageDiv);
 
@@ -168,8 +168,8 @@ function buildPlaceholderCard(item) {
 
 /* Populate card */
 function populateCard(card, paramName, usedImageIds) {
-  var ids  = card.dataset.ids.split(",");
-  var name = card.dataset.name;
+  const ids  = card.dataset.ids.split(",");
+  const name = card.dataset.name;
 
   fetchItemData(paramName, ids).then(function(result) {
     if (result.count === 0) {
@@ -177,13 +177,13 @@ function populateCard(card, paramName, usedImageIds) {
       return;
     }
 
-    var countEl = card.querySelector(".card-type");
+    const countEl = card.querySelector(".card-type");
     if (countEl) {
       countEl.textContent = "Number of Items: " + formatCount(result.count);
     }
 
-    var chosenImageId = null;
-    for (var j = 0; j < result.imageIds.length; j++) {
+    let chosenImageId = null;
+    for (let j = 0; j < result.imageIds.length; j++) {
       if (!usedImageIds[result.imageIds[j]]) {
         usedImageIds[result.imageIds[j]] = true;
         chosenImageId = result.imageIds[j];
@@ -192,9 +192,9 @@ function populateCard(card, paramName, usedImageIds) {
     }
 
     if (chosenImageId) {
-      var imageDiv = card.querySelector(".card-image");
+      const imageDiv = card.querySelector(".card-image");
       if (imageDiv) {
-        var img = document.createElement("img");
+        const img = document.createElement("img");
         img.src = makeImageUrl(chosenImageId, "800,600");
         img.alt = name + " preview";
         img.loading = "lazy";
@@ -205,13 +205,13 @@ function populateCard(card, paramName, usedImageIds) {
 }
 
 function removeOverlay() {
-  var overlay = document.getElementById("loading-overlay");
+  const overlay = document.getElementById("loading-overlay");
   if (overlay !== null) { overlay.classList.add("hidden"); }
-  var bodyChildren = document.body.children;
-  for (var i = 0; i < bodyChildren.length; i++) {
+  const bodyChildren = document.body.children;
+  for (let i = 0; i < bodyChildren.length; i++) {
     bodyChildren[i].removeAttribute("inert");
   }
-  var main = document.getElementById("main-content");
+  const main = document.getElementById("main-content");
   if (main !== null) { main.removeAttribute("aria-busy"); }
 }
 
@@ -219,20 +219,20 @@ function removeOverlay() {
 async function loadAllItems() {
   if (pageType === null) { return; }
 
-  var grid = document.getElementById("all-grid");
+  const grid = document.getElementById("all-grid");
   if (grid === null) { return; }
 
-  var items = await fetchClusters();
+  let items = await fetchClusters();
   if (pageType === "collections") { items = mergeGroups(items, getCollectionGroup); }
   if (pageType === "materials") {
     items = mergeGroups(items, getMaterialGroup);
-    for (var m = 0; m < items.length; m++) {
+    for (let m = 0; m < items.length; m++) {
       items[m].name = toSentenceCase(items[m].name);
     }
   }
   if (pageType === "categories") { items = mergeGroups(items, getCategoryGroup); }
   if (pageType === "origins") { items = mergeGroups(items, getOriginGroup); }
-  var paramName = paramNames[pageType];
+  const paramName = paramNames[pageType];
 
   if (items.length === 0) {
     grid.innerHTML = "<p class=\"error\" role=\"alert\">Sorry, we couldn\u2019t load the data right now.</p>";
@@ -241,18 +241,18 @@ async function loadAllItems() {
   }
 
   /* Used images */
-  var usedImageIds = {};
+  const usedImageIds = {};
 
   /* Fetch queue */
-  var fetchQueue = [];
-  var fetchTimerId = null;
+  const fetchQueue = [];
+  let fetchTimerId = null;
 
   function processQueue() {
     if (fetchQueue.length === 0) {
       fetchTimerId = null;
       return;
     }
-    var item = fetchQueue.shift();
+    const item = fetchQueue.shift();
     populateCard(item.card, item.paramName, item.usedImageIds);
     fetchTimerId = setTimeout(processQueue, 150);
   }
@@ -263,17 +263,17 @@ async function loadAllItems() {
   }
 
   /* Observer */
-  var observer = new IntersectionObserver(function(entries) {
-    for (var i = 0; i < entries.length; i++) {
+  const observer = new IntersectionObserver(function(entries) {
+    for (let i = 0; i < entries.length; i++) {
       if (!entries[i].isIntersecting) { continue; }
-      var card = entries[i].target;
+      const card = entries[i].target;
       observer.unobserve(card);
       enqueue(card);
     }
   }, { rootMargin: "200px" });
 
-  for (var i = 0; i < items.length; i++) {
-    var card = buildPlaceholderCard(items[i]);
+  for (let i = 0; i < items.length; i++) {
+    const card = buildPlaceholderCard(items[i]);
     grid.appendChild(card);
     observer.observe(card);
   }

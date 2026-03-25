@@ -17,15 +17,15 @@ const tierMap = { 1: 20, 2: 30, 3: 40 };
 
 /* Popover focus */
 function initPopoverFocus() {
-  var popovers = document.querySelectorAll('nav [popover]');
-  for (var i = 0; i < popovers.length; i++) {
+  const popovers = document.querySelectorAll('nav [popover]');
+  for (let i = 0; i < popovers.length; i++) {
     (function(pop) {
       pop.addEventListener('toggle', function(evt) {
         if (evt.newState === 'open') {
-          var first = pop.querySelector('a');
+          const first = pop.querySelector('a');
           if (first) { first.focus(); }
         } else {
-          var trigger = document.querySelector('[popovertarget="' + pop.id + '"]');
+          const trigger = document.querySelector('[popovertarget="' + pop.id + '"]');
           if (trigger) { trigger.focus(); }
         }
       });
@@ -316,14 +316,14 @@ function makeCard(item, cssClass, subcategoryId) {
       '</section>' +
     '</div>';
 
-  var closeBtn = card.querySelector('.card-close');
+  const closeBtn = card.querySelector('.card-close');
   closeBtn.addEventListener('click', function(e) {
     e.stopPropagation();
     card.classList.remove('is-hovered');
     closeBtn.blur();
   });
 
-  var cardThumb = card.querySelector('.card-thumb');
+  const cardThumb = card.querySelector('.card-thumb');
   cardThumb.addEventListener('click', function() {
     if (!card.classList.contains('is-hovered')) {
       activateCard();
@@ -534,10 +534,10 @@ function makeCard(item, cssClass, subcategoryId) {
     card.classList.add('is-hovered');
     loadDetail();
     requestAnimationFrame(function() {
-      var footer = document.querySelector('footer');
-      var inner = card.querySelector('.card-inner');
+      const footer = document.querySelector('footer');
+      const inner = card.querySelector('.card-inner');
       if (inner && footer && inner.getBoundingClientRect().bottom > footer.getBoundingClientRect().top) {
-        var mainRect = document.querySelector('main').getBoundingClientRect();
+        const mainRect = document.querySelector('main').getBoundingClientRect();
         card.classList.add('expand-up');
         card.style.setProperty('--expand-bottom', (rect.bottom - mainRect.bottom) + 'px');
       }
@@ -895,7 +895,7 @@ async function startPage() {
     applyDensity(Number(slider.value));
     showCards(currentTier);
 
-    var overlay = document.getElementById("loading-overlay");
+    const overlay = document.getElementById("loading-overlay");
     if (overlay !== null) {
       overlay.classList.add("hidden");
     }
@@ -942,11 +942,11 @@ document.querySelector('span.more').addEventListener('click', function() {
   slider.dispatchEvent(new Event('input'));
 });
 
-var filterToggle = document.getElementById('filter-toggle');
+const filterToggle = document.getElementById('filter-toggle');
 if (filterToggle) {
   filterToggle.addEventListener('click', function() {
-    var filterList = document.getElementById('filter-groups');
-    var isOpen = filterList.classList.toggle('open');
+    const filterList = document.getElementById('filter-groups');
+    const isOpen = filterList.classList.toggle('open');
     if (isOpen) {
       filterToggle.setAttribute('aria-expanded', 'true');
     } else {

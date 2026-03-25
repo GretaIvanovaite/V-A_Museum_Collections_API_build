@@ -292,7 +292,7 @@ const MATERIAL_GROUPS = [
 
 /* Material group */
 function getMaterialGroup(id) {
-  for (var i = 0; i < MATERIAL_GROUPS.length; i++) {
+  for (let i = 0; i < MATERIAL_GROUPS.length; i++) {
     if (MATERIAL_GROUPS[i].ids.indexOf(id) !== -1) {
       return MATERIAL_GROUPS[i];
     }
@@ -338,7 +338,7 @@ const CATEGORY_GROUPS = [
 ];
 
 function getCategoryGroup(id) {
-  for (var i = 0; i < CATEGORY_GROUPS.length; i++) {
+  for (let i = 0; i < CATEGORY_GROUPS.length; i++) {
     if (CATEGORY_GROUPS[i].ids.indexOf(id) !== -1) {
       return CATEGORY_GROUPS[i];
     }
@@ -369,7 +369,7 @@ const COLLECTION_GROUPS = [
 ];
 
 function getCollectionGroup(code) {
-  for (var i = 0; i < COLLECTION_GROUPS.length; i++) {
+  for (let i = 0; i < COLLECTION_GROUPS.length; i++) {
     if (COLLECTION_GROUPS[i].ids.indexOf(code) !== -1) {
       return COLLECTION_GROUPS[i];
     }
@@ -400,7 +400,7 @@ const ORIGIN_GROUPS = [
 ];
 
 function getOriginGroup(id) {
-  for (var i = 0; i < ORIGIN_GROUPS.length; i++) {
+  for (let i = 0; i < ORIGIN_GROUPS.length; i++) {
     if (ORIGIN_GROUPS[i].ids.indexOf(id) !== -1) {
       return ORIGIN_GROUPS[i];
     }
@@ -480,7 +480,7 @@ const TECHNIQUE_GROUPS = [
 ];
 
 function getTechniqueGroup(id) {
-  for (var i = 0; i < TECHNIQUE_GROUPS.length; i++) {
+  for (let i = 0; i < TECHNIQUE_GROUPS.length; i++) {
     if (TECHNIQUE_GROUPS[i].ids.indexOf(id) !== -1) {
       return TECHNIQUE_GROUPS[i];
     }
@@ -596,23 +596,23 @@ const TECHNIQUES = {
 
 function normalizeTechnique(technique, id) {
   if (id) {
-    var group = getTechniqueGroup(id);
+    const group = getTechniqueGroup(id);
     if (group) { return group.name; }
   }
-  var lower = technique.toLowerCase().trim();
+  const lower = technique.toLowerCase().trim();
   if (TECHNIQUES[lower]) { return TECHNIQUES[lower]; }
   return lower.charAt(0).toUpperCase() + lower.slice(1);
 }
 
 function normalizeCollection(code) {
-  var group = getCollectionGroup(code);
+  const group = getCollectionGroup(code);
   if (group) return group.name;
   return COLLECTIONS[code] || code;
 }
 
 function normalizeCategory(category, id) {
   if (id) {
-    var group = getCategoryGroup(id);
+    const group = getCategoryGroup(id);
     if (group) return group.name;
   }
   const lower = category.toLowerCase().trim();
@@ -621,7 +621,7 @@ function normalizeCategory(category, id) {
 
 function normalizePlace(place, id) {
   if (id) {
-    var group = getOriginGroup(id);
+    const group = getOriginGroup(id);
     if (group) return group.name;
   }
   const lower = place.toLowerCase().trim();
@@ -630,11 +630,11 @@ function normalizePlace(place, id) {
 
 /* Merge groups */
 function mergeGroups(items, getGroupFn) {
-  var seenGroupNames = {};
-  var result = [];
-  for (var i = 0; i < items.length; i++) {
-    var item = items[i];
-    var group = null;
+  const seenGroupNames = {};
+  const result = [];
+  for (let i = 0; i < items.length; i++) {
+    const item = items[i];
+    let group = null;
     if (typeof getGroupFn === 'function') { group = getGroupFn(item.id); }
     if (group) {
       if (seenGroupNames[group.name]) { continue; }
@@ -656,7 +656,7 @@ function normalizeAssociation(association) {
 
 /* Nav popovers */
 
-var NAV_POPOVER_CONFIG = [
+const NAV_POPOVER_CONFIG = [
   {id: 'coll-menu', field: 'collection', type: 'collections', getGroupFn: getCollectionGroup},
   {id: 'cat-menu',  field: 'category',   type: 'categories',  getGroupFn: getCategoryGroup},
   {id: 'mat-menu',  field: 'material',   type: 'materials',   getGroupFn: getMaterialGroup},
@@ -671,19 +671,19 @@ function toSentenceCase(str) {
 
 /* Browse prefix */
 function getBrowsePrefix() {
-  var parts = window.location.pathname.split('/');
+  const parts = window.location.pathname.split('/');
   if (parts.length <= 2) { return 'browse/'; }
   return '../';
 }
 
 async function fetchNavItems(field, getGroupFn) {
   try {
-    var response = await fetch('https://api.vam.ac.uk/v2/objects/clusters/' + field + '/search?cluster_size=50');
-    var data = await response.json();
-    var records = [];
+    const response = await fetch('https://api.vam.ac.uk/v2/objects/clusters/' + field + '/search?cluster_size=50');
+    const data = await response.json();
+    let records = [];
     if (Array.isArray(data)) { records = data; }
-    var items = [];
-    for (var i = 0; i < records.length; i++) {
+    const items = [];
+    for (let i = 0; i < records.length; i++) {
       items.push({id: records[i].id, ids: [records[i].id], name: records[i].value});
     }
     return mergeGroups(items, getGroupFn);
@@ -693,19 +693,19 @@ async function fetchNavItems(field, getGroupFn) {
 }
 
 function fillNavPopover(ul, items, type) {
-  var lis = ul.querySelectorAll('li');
-  var hrLi = lis[lis.length - 2];
-  for (var i = lis.length - 3; i >= 1; i--) {
+  const lis = ul.querySelectorAll('li');
+  const hrLi = lis[lis.length - 2];
+  for (let i = lis.length - 3; i >= 1; i--) {
     lis[i].remove();
   }
-  var prefix = getBrowsePrefix();
-  var limit;
+  const prefix = getBrowsePrefix();
+  let limit;
   if (items.length < 5) { limit = items.length; } else { limit = 5; }
-  for (var j = 0; j < limit; j++) {
-    var li = document.createElement('li');
-    var a = document.createElement('a');
-    var nIds = [];
-    for (var ni = 0; ni < items[j].ids.length; ni++) { nIds.push(encodeURIComponent(items[j].ids[ni])); }
+  for (let j = 0; j < limit; j++) {
+    const li = document.createElement('li');
+    const a = document.createElement('a');
+    const nIds = [];
+    for (let ni = 0; ni < items[j].ids.length; ni++) { nIds.push(encodeURIComponent(items[j].ids[ni])); }
     a.href = prefix + type + '/property.html?id=' + nIds.join(',') + '&name=' + encodeURIComponent(items[j].name);
     a.textContent = items[j].name;
     li.appendChild(a);
@@ -714,11 +714,11 @@ function fillNavPopover(ul, items, type) {
 }
 
 async function populateNavPopovers() {
-  for (var i = 0; i < NAV_POPOVER_CONFIG.length; i++) {
-    var cfg = NAV_POPOVER_CONFIG[i];
-    var ul = document.getElementById(cfg.id);
+  for (let i = 0; i < NAV_POPOVER_CONFIG.length; i++) {
+    const cfg = NAV_POPOVER_CONFIG[i];
+    const ul = document.getElementById(cfg.id);
     if (!ul) { continue; }
-    var items = await fetchNavItems(cfg.field, cfg.getGroupFn);
+    const items = await fetchNavItems(cfg.field, cfg.getGroupFn);
     if (items.length > 0) { fillNavPopover(ul, items, cfg.type); }
   }
 }
@@ -726,8 +726,8 @@ async function populateNavPopovers() {
 document.addEventListener('DOMContentLoaded', function() {
   populateNavPopovers();
   /* Inert closed popovers */
-  var navPopovers = document.querySelectorAll('nav [popover]');
-  for (var i = 0; i < navPopovers.length; i++) {
+  const navPopovers = document.querySelectorAll('nav [popover]');
+  for (let i = 0; i < navPopovers.length; i++) {
     navPopovers[i].setAttribute('inert', '');
     (function(pop) {
       pop.addEventListener('toggle', function(evt) {

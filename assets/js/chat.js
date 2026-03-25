@@ -1,20 +1,20 @@
 (function() {
-  var VA_API_BASE = 'https://api.vam.ac.uk/v2';
-  var IMAGE_CDN_CHAT = 'https://framemark.vam.ac.uk/collections';
-  var HF_MODEL = '/.netlify/functions/hf-chat';
+  const VA_API_BASE = 'https://api.vam.ac.uk/v2';
+  const IMAGE_CDN_CHAT = 'https://framemark.vam.ac.uk/collections';
+  const HF_MODEL = '/.netlify/functions/hf-chat';
   /*var HF_MODEL = 'https://router.huggingface.co/v1/chat/completions';*/
 
-  var dialog     = document.getElementById('ai-chat');
-  var trigger    = document.querySelector('.chat-trigger');
-  var log        = null;
+  const dialog     = document.getElementById('ai-chat');
+  const trigger    = document.querySelector('.chat-trigger');
+  let log        = null;
   if (dialog) { log = dialog.querySelector('[role="log"]'); }
-  var form       = null;
+  let form       = null;
   if (dialog) { form = dialog.querySelector('form'); }
-  var input      = null;
+  let input      = null;
   if (dialog) { input = dialog.querySelector('#chat-input'); }
-  var typingEl   = null;
-  var chatLog    = [];
-  var STORAGE_KEY = 'va-chat-log';
+  let typingEl   = null;
+  let chatLog    = [];
+  const STORAGE_KEY = 'va-chat-log';
 
   if (!dialog || !log || !form) { return; }
 
@@ -40,7 +40,7 @@
   function expandInput() {
     if (!input) { return; }
     input.style.height = 'auto';
-    var maxH = Math.round(dialog.clientHeight * 0.4);
+    const maxH = Math.round(dialog.clientHeight * 0.4);
     input.style.height = Math.min(input.scrollHeight, maxH) + 'px';
   }
 
@@ -62,13 +62,13 @@
 
   function restoreHistory() {
     try {
-      var saved = sessionStorage.getItem(STORAGE_KEY);
+      const saved = sessionStorage.getItem(STORAGE_KEY);
       if (!saved) { return; }
-      var history = JSON.parse(saved);
+      const history = JSON.parse(saved);
       if (!Array.isArray(history) || history.length === 0) { return; }
       chatLog = history;
-      for (var i = 0; i < history.length; i++) {
-        var entry = history[i];
+      for (let i = 0; i < history.length; i++) {
+        const entry = history[i];
         if (entry.kind === 'message') { addMessage(entry.role, entry.text, true); }
         else if (entry.kind === 'cards') { addCardMessage(entry.records, true, entry.reason || ''); }
       }
@@ -79,7 +79,7 @@
   /* Message helpers */
 
   function addMessage(role, text, noSave) {
-    var p = document.createElement('p');
+    const p = document.createElement('p');
     p.className = 'chat-message chat-message-' + role;
     if (role === 'assistant') {
       p.innerHTML =
@@ -98,11 +98,11 @@
 
   function addCardMessage(records, noSave, reason) {
     if (!records || records.length === 0) { return; }
-    var wrapper = document.createElement('div');
+    const wrapper = document.createElement('div');
     wrapper.className = 'chat-results';
-    for (var i = 0; i < records.length; i++) {
-      var r = records[i];
-      var title;
+    for (let i = 0; i < records.length; i++) {
+      const r = records[i];
+      let title;
       if (r._primaryTitle) {
         title = r._primaryTitle;
       } else if (r.objectType) {
@@ -110,38 +110,38 @@
       } else {
         title = 'Untitled';
       }
-      var href = resolveDetailsPath() + 'details.html?id=' + r.systemNumber;
-      var card = document.createElement('a');
+      const href = resolveDetailsPath() + 'details.html?id=' + r.systemNumber;
+      const card = document.createElement('a');
       card.href = href;
       card.className = 'chat-result-card';
       card.target = '_self';
       if (r._primaryImageId) {
-        var img = document.createElement('img');
+        const img = document.createElement('img');
         img.src = IMAGE_CDN_CHAT + '/' + r._primaryImageId + '/full/!200,200/0/default.jpg';
         img.alt = '';
         img.loading = 'lazy';
         card.appendChild(img);
       }
-      var info = document.createElement('span');
+      const info = document.createElement('span');
       info.className = 'chat-result-info';
-      var titleEl = document.createElement('span');
+      const titleEl = document.createElement('span');
       titleEl.className = 'chat-result-title';
       titleEl.textContent = title;
       info.appendChild(titleEl);
       if (r._primaryDate) {
-        var dateEl = document.createElement('span');
+        const dateEl = document.createElement('span');
         dateEl.className = 'chat-result-meta';
         dateEl.textContent = r._primaryDate;
         info.appendChild(dateEl);
       }
       if (r._primaryMaker && r._primaryMaker.name) {
-        var makerEl = document.createElement('span');
+        const makerEl = document.createElement('span');
         makerEl.className = 'chat-result-meta';
         makerEl.textContent = r._primaryMaker.name;
         info.appendChild(makerEl);
       }
       if (r._primaryPlace) {
-        var placeEl = document.createElement('span');
+        const placeEl = document.createElement('span');
         placeEl.className = 'chat-result-meta';
         placeEl.textContent = r._primaryPlace;
         info.appendChild(placeEl);
@@ -174,37 +174,37 @@
   }
 
   function escapeHtml(str) {
-    var div = document.createElement('div');
+    const div = document.createElement('div');
     div.appendChild(document.createTextNode(str));
     return div.innerHTML;
   }
 
   /* Card context */
 
-  var chatCards = {};
+  const chatCards = {};
 
   function extractCardData(article) {
     try {
-      var inner = article.querySelector('.card-inner');
+      const inner = article.querySelector('.card-inner');
       if (!inner) { return null; }
-      var data = {};
-      var titleEl = inner.querySelector('.card-link');
+      const data = {};
+      const titleEl = inner.querySelector('.card-link');
       if (titleEl) { data.title = titleEl.textContent.trim(); }
-      var dts = inner.querySelectorAll('dl.metadata dt');
-      for (var i = 0; i < dts.length; i++) {
-        var label = dts[i].textContent.trim().toLowerCase();
-        var values = [];
-        var dd = dts[i].nextElementSibling;
+      const dts = inner.querySelectorAll('dl.metadata dt');
+      for (let i = 0; i < dts.length; i++) {
+        const label = dts[i].textContent.trim().toLowerCase();
+        const values = [];
+        let dd = dts[i].nextElementSibling;
         while (dd && dd.tagName === 'DD') { values.push(dd.textContent.trim()); dd = dd.nextElementSibling; }
         if (label === 'collection') { data.collection = values.join(', '); }
         if (label === 'categories') { data.categories = values.join(', '); }
         if (label === 'origin') { data.origin = values.join(', '); }
       }
-      var dateEl = inner.querySelector('.date time');
+      const dateEl = inner.querySelector('.date time');
       if (dateEl) { data.date = dateEl.textContent.trim(); }
-      var creatorEl = inner.querySelector('.creator');
+      const creatorEl = inner.querySelector('.creator');
       if (creatorEl) { data.maker = creatorEl.textContent.replace(/^[^:]+:\s*/, '').trim(); }
-      var descEl = inner.querySelector('.detail-text');
+      const descEl = inner.querySelector('.detail-text');
       if (descEl) { data.description = descEl.textContent.trim(); }
       if (data.title) { return data; }
       return null;
@@ -212,17 +212,17 @@
   }
 
   function observeCards() {
-    var grid = document.querySelector('.objects-grid');
+    const grid = document.querySelector('.objects-grid');
     if (!grid) { return; }
-    var mo = new MutationObserver(function(mutations) {
-      for (var i = 0; i < mutations.length; i++) {
-        var m = mutations[i];
+    const mo = new MutationObserver(function(mutations) {
+      for (let i = 0; i < mutations.length; i++) {
+        const m = mutations[i];
         if (m.type === 'attributes' && m.attributeName === 'class' && m.target.tagName === 'ARTICLE') {
           if (m.target.classList.contains('is-hovered')) {
-            var articles = Array.from(grid.querySelectorAll('article'));
-            var idx = articles.indexOf(m.target);
+            const articles = Array.from(grid.querySelectorAll('article'));
+            const idx = articles.indexOf(m.target);
             if (idx >= 0) {
-              var data = extractCardData(m.target);
+              const data = extractCardData(m.target);
               if (data) { chatCards[idx] = data; }
             }
           }
@@ -236,7 +236,7 @@
 
   /* System prompt */
 
-  var VA_CATALOGUE =
+  const VA_CATALOGUE =
     'This site has four distinct browsing pathways — understand each clearly: ' +
     '(1) COLLECTION: the curatorial department that owns the object, e.g. "Prints, Drawings & Paintings" or "East Asia". An object belongs to exactly one collection. The following are the collections browsable in this prototype (filtered to objects with images — this is not the full V&A catalogue, so do not make absolute claims like "smallest" or "largest" across the whole museum). Browsable collections with live object counts: Prints, Drawings & Paintings (309,865), East Asia (64,347), Ceramics (55,300), South & South East Asia (39,395), Metalwork (24,420), Department of Photography (23,961), V&A Wedgwood Collection (17,650), Middle East (13,447), Young V&A (10,301), Furniture and Woodwork (9,523), Sculpture (8,079), National Art Library (2,612), Design, Architecture & Digital (856). ' +
     '(2) CATEGORY: the type or subject of the object, e.g. "Prints", "Clothing", "Sculpture". An object can belong to multiple categories. Browsable categories with live object counts: Prints (104,369), Designs (89,079), Clothing (32,056), Metalwork (31,095), Womenswear (31,016), Architecture (23,374), Paintings (19,521), Porcelain (17,941), Accessories (17,041), Theatre (16,819), Religion (13,139), Topography (12,621), India Museum (11,899), Sculpture (11,213), Christianity (10,832), Children & Childhood (10,046), Tourism & Travel (8,928), Illustration (8,818), Europeana Fashion Project (8,533), Glass (6,425), Wall coverings (4,588), Books (4,051), Printmaking techniques (1,198). ' +
@@ -245,8 +245,8 @@
     'When suggesting how to explore further, use the correct pathway term (collection / category / material / origin) so the user knows which browse filter to use.';
 
   function buildSystemPrompt() {
-    var ctx = window.chatContext || {};
-    var base = 'You are a knowledgeable and friendly museum guide for the Victoria and Albert Museum (V&A) in London. Always speak in first person — use "I", "I found", "I came across", "I think you\'d enjoy". Never say "the search results" or refer to yourself in third person. ' +
+    const ctx = window.chatContext || {};
+    const base = 'You are a knowledgeable and friendly museum guide for the Victoria and Albert Museum (V&A) in London. Always speak in first person — use "I", "I found", "I came across", "I think you\'d enjoy". Never say "the search results" or refer to yourself in third person. ' +
       'The V&A collection includes decorative arts, fashion, textiles, furniture, sculpture, ceramics, glass, metalwork, jewellery, photography, prints, drawings, and Asian art — primarily spanning the medieval period to the mid-20th century. ' +
       'It does NOT include purely fine art oil paintings (those are at the National Gallery), works from other museums, most living contemporary artists, or objects not in the V&A permanent collection. ' +
       'Keep all responses SHORT — 2 to 3 sentences maximum. Never use bullet points or numbered lists. Never describe individual objects in detail; the object cards handle that. ' +
@@ -255,7 +255,7 @@
       VA_CATALOGUE;
 
     if (ctx.page === 'details' && ctx.title) {
-      var context = 'The user is currently viewing: "' + ctx.title + '"';
+      let context = 'The user is currently viewing: "' + ctx.title + '"';
       if (ctx.objectType) { context += ', a ' + ctx.objectType; }
       if (ctx.date) { context += ' dating from ' + ctx.date; }
       if (ctx.maker) { context += ', made by ' + ctx.maker; }
@@ -271,18 +271,18 @@
       return base + ' The user is currently browsing the ' + ctx.type + ' page for "' + ctx.name + '" in the V&A collection.';
     }
 
-    var rawKeys = Object.keys(chatCards);
-    var knownIdxs = [];
-    for (var ki = 0; ki < rawKeys.length; ki++) {
+    const rawKeys = Object.keys(chatCards);
+    const knownIdxs = [];
+    for (let ki = 0; ki < rawKeys.length; ki++) {
       knownIdxs.push(Number(rawKeys[ki]));
     }
     knownIdxs.sort(function(a, b) { return a - b; });
     if (knownIdxs.length > 0) {
-      var cardParts = [];
-      for (var ci = 0; ci < knownIdxs.length; ci++) {
-        var idx = knownIdxs[ci];
-        var c = chatCards[idx];
-        var desc = 'Tile ' + (idx + 1) + ': "' + c.title + '"';
+      const cardParts = [];
+      for (let ci = 0; ci < knownIdxs.length; ci++) {
+        const idx = knownIdxs[ci];
+        const c = chatCards[idx];
+        let desc = 'Tile ' + (idx + 1) + ': "' + c.title + '"';
         if (c.maker) { desc += ' by ' + c.maker; }
         if (c.date) { desc += ' (' + c.date + ')'; }
         if (c.collection) { desc += ', ' + c.collection + ' collection'; }
@@ -291,7 +291,7 @@
         if (c.description) { desc += ', "' + c.description + '"'; }
         cardParts.push(desc);
       }
-      var cardList = cardParts.join(' | ');
+      const cardList = cardParts.join(' | ');
       return base + ' The user is exploring the V&A Museum collection. Known tiles on screen: ' + cardList + '.';
     }
 
@@ -300,20 +300,20 @@
 
   /* Resolve path */
   function resolveDetailsPath() {
-    var depth = (window.location.pathname.match(/\//g) || []).length - 1;
-    var prefix = '';
-    for (var i = 0; i < depth - 1; i++) { prefix += '../'; }
+    const depth = (window.location.pathname.match(/\//g) || []).length - 1;
+    let prefix = '';
+    for (let i = 0; i < depth - 1; i++) { prefix += '../'; }
     return prefix;
   }
 
   /* VA search */
 
-  var FIELDS = 'systemNumber,_primaryTitle,_primaryImageId,objectType,_primaryDate,_primaryMaker,_primaryPlace';
+  const FIELDS = 'systemNumber,_primaryTitle,_primaryImageId,objectType,_primaryDate,_primaryMaker,_primaryPlace';
 
   function findGroupId(groups, query) {
     if (!groups) { return null; }
-    var lower = query.toLowerCase().trim();
-    for (var i = 0; i < groups.length; i++) {
+    const lower = query.toLowerCase().trim();
+    for (let i = 0; i < groups.length; i++) {
       if (groups[i].name.toLowerCase() === lower) {
         return groups[i].ids[0];
       }
@@ -322,9 +322,9 @@
   }
 
   function searchVA(query, filterType, extraQuery) {
-    var url;
-    var param = null;
-    var id = null;
+    let url;
+    let param = null;
+    let id = null;
 
     if (filterType === 'place') {
       id = typeof ORIGIN_GROUPS !== 'undefined' ? findGroupId(ORIGIN_GROUPS, query) : null;
@@ -342,7 +342,7 @@
       if (extraQuery) { url += '&q=' + encodeURIComponent(extraQuery); }
       url += '&page_size=3&images_exist=1&fields=' + FIELDS;
     } else {
-      var fullQuery = extraQuery ? query + ' ' + extraQuery : query;
+      const fullQuery = extraQuery ? query + ' ' + extraQuery : query;
       url = VA_API_BASE + '/objects/search?q=' + encodeURIComponent(fullQuery) +
         '&page_size=3&images_exist=1&fields=' + FIELDS;
     }
@@ -356,7 +356,7 @@
   /* AI engine */
 
   function hfFetch(messages, maxTokens, temperature) {
-    var token = '';
+    let token = '';
     if (typeof HUGGING_FACE_TOKEN !== 'undefined') { token = HUGGING_FACE_TOKEN; }
     return fetch(HF_MODEL, {
       method: 'POST',
@@ -378,10 +378,10 @@
   }
 
   function askAI(userMessage) {
-    var systemPrompt;
+    let systemPrompt;
     try { systemPrompt = buildSystemPrompt(); } catch(e) { systemPrompt = 'You are a knowledgeable museum guide for the Victoria and Albert Museum in London.'; }
 
-    var intentInstruction =
+    const intentInstruction =
       'You are an intent classifier for a museum collection website. Decide if the user wants to find or see museum objects.\n' +
       'If yes, output these lines (QUERY line is optional):\n' +
       'SEARCH: [the single most relevant search term — a place name, material name, category name, or keyword]\n' +
@@ -400,7 +400,7 @@
       [{ role: 'system', content: intentInstruction }, { role: 'user', content: userMessage }],
       80, 0.1
     ).then(function(intent) {
-      var searchMatch = intent.match(/SEARCH:\s*(.+)/i);
+      const searchMatch = intent.match(/SEARCH:\s*(.+)/i);
       if (!searchMatch) {
         return hfFetch(
           [{ role: 'system', content: systemPrompt }, { role: 'user', content: userMessage }],
@@ -408,20 +408,20 @@
         ).then(function(text) { return { text: text, records: [], reason: '' }; });
       }
 
-      var query = searchMatch[1].split('\n')[0].trim();
-      var filterMatch = intent.match(/FILTER:\s*(.+)/i);
-      var filterType = filterMatch ? filterMatch[1].split('\n')[0].trim().toLowerCase() : 'general';
-      var extraMatch = intent.match(/QUERY:\s*(.+)/i);
-      var extraQuery = extraMatch ? extraMatch[1].split('\n')[0].trim() : '';
-      var reasonMatch = intent.match(/REASON:\s*(.+)/i);
-      var reason = '';
+      const query = searchMatch[1].split('\n')[0].trim();
+      const filterMatch = intent.match(/FILTER:\s*(.+)/i);
+      const filterType = filterMatch ? filterMatch[1].split('\n')[0].trim().toLowerCase() : 'general';
+      const extraMatch = intent.match(/QUERY:\s*(.+)/i);
+      const extraQuery = extraMatch ? extraMatch[1].split('\n')[0].trim() : '';
+      const reasonMatch = intent.match(/REASON:\s*(.+)/i);
+      let reason = '';
       if (reasonMatch) { reason = reasonMatch[1].split('\n')[0].trim(); }
 
       return searchVA(query, filterType, extraQuery).then(function(records) {
         /* Deduplicate by systemNumber */
-        var seen = {};
-        var unique = [];
-        for (var di = 0; di < records.length; di++) {
+        const seen = {};
+        const unique = [];
+        for (let di = 0; di < records.length; di++) {
           if (!seen[records[di].systemNumber]) {
             seen[records[di].systemNumber] = true;
             unique.push(records[di]);
@@ -429,13 +429,13 @@
         }
         records = unique;
 
-        var resultsSummary;
+        let resultsSummary;
         if (records && records.length > 0) {
-          var descs = [];
-          for (var ri = 0; ri < records.length; ri++) {
-            var rItem = records[ri];
-            var rTitle = rItem._primaryTitle || rItem.objectType || 'Untitled';
-            var desc = '"' + rTitle + '"';
+          const descs = [];
+          for (let ri = 0; ri < records.length; ri++) {
+            const rItem = records[ri];
+            const rTitle = rItem._primaryTitle || rItem.objectType || 'Untitled';
+            let desc = '"' + rTitle + '"';
             if (rItem._primaryDate) { desc += ' (' + rItem._primaryDate + ')'; }
             if (rItem._primaryMaker && rItem._primaryMaker.name) { desc += ' by ' + rItem._primaryMaker.name; }
             if (rItem._primaryPlace) { desc += ', origin: ' + rItem._primaryPlace; }
@@ -472,7 +472,7 @@
   form.addEventListener('submit', function(e) {
     e.preventDefault();
     if (!input) { return; }
-    var userText = input.value.trim();
+    const userText = input.value.trim();
     if (!userText) { return; }
     input.value = '';
     input.style.height = 'auto';

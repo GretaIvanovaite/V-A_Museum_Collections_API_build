@@ -607,31 +607,6 @@ nav[aria-label="Breadcrumb"] [aria-current="page"] {
   color: var(--color-text-primary);
 }
 
-/* BROWSE ALL GRID */
-
-.browse-cards a {
-  border-radius: var(--radius-m);
-  background-color: var(--color-bg-card);
-  box-shadow: var(--shadow-card);
-  color: var(--color-text-white);
-}
-
-.browse-cards a:hover,
-.browse-cards a:focus-visible {
-  box-shadow: var(--shadow-hover);
-}
-
-.browse-cards a:focus-visible {
-  outline: 2px solid var(--color-primary-teal);
-  outline-offset: 2px;
-}
-
-.browse-cards a .card-label {
-  background: linear-gradient(transparent, rgba(31, 38, 50, 0.8));
-  font-size: var(--font-size-body);
-  font-weight: var(--font-weight-bold);
-}
-
 /* BROWSE LANDING PAGE */
 
 .browse-collection-card {
@@ -863,12 +838,6 @@ section[aria-labelledby="museum-heading"] details > summary {
   box-shadow: var(--shadow-card);
 }
 
-.quick-facts h2 {
-  font-size: var(--font-size-h3);
-  color: var(--color-text-primary);
-  border-bottom: var(--border-width-thin) solid var(--color-divider-main);
-}
-
 .quick-facts dt {
   font-size: var(--font-size-small);
   font-weight: var(--font-weight-bold);
@@ -898,46 +867,6 @@ section[aria-labelledby="museum-heading"] details > summary {
   border-radius: var(--radius-xs);
 }
 
-/* REFINE SEARCH */
-
-aside[aria-label="Refine search"] {
-  background-color: var(--color-bg-card);
-  border-radius: var(--radius-m);
-  border: var(--border-width-thin) solid var(--color-border-card);
-  box-shadow: var(--shadow-card);
-}
-
-aside[aria-label="Refine search"] h2 {
-  font-size: var(--font-size-h3);
-  border-bottom: var(--border-width-thin) solid var(--color-divider-main);
-  color: var(--color-text-primary);
-}
-
-aside[aria-label="Refine search"] details {
-  border-bottom: var(--border-width-thin) solid var(--color-divider-main);
-}
-
-aside[aria-label="Refine search"] details > summary {
-  font-size: var(--font-size-body);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text-primary);
-}
-
-aside[aria-label="Refine search"] label {
-  font-size: var(--font-size-body);
-  color: var(--color-text-primary);
-  cursor: pointer;
-}
-
-aside[aria-label="Refine search"] label:hover {
-  color: var(--color-text-teal);
-}
-
-aside[aria-label="Refine search"] input[type="checkbox"] {
-  accent-color: var(--color-primary-teal);
-  cursor: pointer;
-}
-
 /* CARD CLOSE BUTTON */
 
 .card-close {
@@ -952,33 +881,6 @@ aside[aria-label="Refine search"] input[type="checkbox"] {
 .card-close:focus-visible {
   color: var(--color-text-primary);
   background-color: var(--color-bg-slider);
-}
-
-/* FILTER TAG */
-
-.filter-tag {
-  background-color: var(--color-bg-clickable);
-  border: var(--border-width-thin) solid var(--color-border-card);
-  border-radius: var(--radius-pill);
-  font-size: var(--font-size-small);
-  color: var(--color-text-primary);
-}
-
-.filter-tag button {
-  color: var(--color-text-secondary);
-  font-size: var(--font-size-body);
-  line-height: 1;
-}
-
-.filter-tag button:hover,
-.filter-tag button:focus-visible {
-  color: var(--color-accent-brown);
-}
-
-.filter-tag button:focus-visible {
-  outline: 2px solid var(--color-accent-brown);
-  outline-offset: 2px;
-  border-radius: var(--radius-xs);
 }
 
 /* AI CHAT BUTTON */
