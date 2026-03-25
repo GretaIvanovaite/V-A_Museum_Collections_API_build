@@ -603,6 +603,7 @@ nav[aria-label="Breadcrumb"] li + li::before {
   flex-direction: row;
   align-items: center;
   gap: var(--space-xs);
+  min-width: 0;
 }
 
 .thumb-nav-btn {
