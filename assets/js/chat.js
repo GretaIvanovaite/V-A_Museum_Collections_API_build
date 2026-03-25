@@ -1,7 +1,8 @@
 (function() {
   var VA_API_BASE = 'https://api.vam.ac.uk/v2';
   var IMAGE_CDN_CHAT = 'https://framemark.vam.ac.uk/collections';
-  var HF_MODEL = 'https://router.huggingface.co/v1/chat/completions';
+  var HF_MODEL = '/.netlify/functions/hf-chat';
+  /*var HF_MODEL = 'https://router.huggingface.co/v1/chat/completions';*/
 
   var dialog     = document.getElementById('ai-chat');
   var trigger    = document.querySelector('.chat-trigger');
