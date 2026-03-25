@@ -1140,13 +1140,15 @@ dialog#ai-chat form button[type="submit"] {
   border-radius: var(--radius-s);
   overflow: hidden;
   text-decoration: none;
+  padding-left: var(--space-s);
 }
 
 .chat-result-card img {
-  width: 4rem;
-  height: 4rem;
+  width: 5rem;
+  height: 5rem;
   object-fit: cover;
   flex-shrink: 0;
+  border-radius: var(--radius-xs);
 }
 
 .chat-result-info {

@@ -24,6 +24,7 @@
   dialog.addEventListener('toggle', function(evt) {
     if (evt.newState === 'open') {
       if (trigger) { trigger.setAttribute('aria-label', 'Close Museum helper chat'); }
+      log.scrollTop = log.scrollHeight;
       if (input) { input.focus(); }
     } else {
       if (trigger) { trigger.setAttribute('aria-label', 'Open Museum helper chat'); }
@@ -116,22 +117,34 @@
       if (r._primaryImageId) {
         var img = document.createElement('img');
         img.src = IMAGE_CDN_CHAT + '/' + r._primaryImageId + '/full/!200,200/0/default.jpg';
-        img.alt = title;
+        img.alt = '';
         img.loading = 'lazy';
         card.appendChild(img);
       }
       var info = document.createElement('span');
       info.className = 'chat-result-info';
-      if (reason) {
-        var reasonEl = document.createElement('span');
-        reasonEl.className = 'chat-result-reason';
-        reasonEl.textContent = reason;
-        info.appendChild(reasonEl);
-      }
       var titleEl = document.createElement('span');
       titleEl.className = 'chat-result-title';
       titleEl.textContent = title;
       info.appendChild(titleEl);
+      if (r._primaryDate) {
+        var dateEl = document.createElement('span');
+        dateEl.className = 'chat-result-meta';
+        dateEl.textContent = r._primaryDate;
+        info.appendChild(dateEl);
+      }
+      if (r._primaryMaker && r._primaryMaker.name) {
+        var makerEl = document.createElement('span');
+        makerEl.className = 'chat-result-meta';
+        makerEl.textContent = r._primaryMaker.name;
+        info.appendChild(makerEl);
+      }
+      if (r._primaryPlace) {
+        var placeEl = document.createElement('span');
+        placeEl.className = 'chat-result-meta';
+        placeEl.textContent = r._primaryPlace;
+        info.appendChild(placeEl);
+      }
       card.appendChild(info);
       wrapper.appendChild(card);
     }
@@ -235,9 +248,7 @@
     var base = 'You are a knowledgeable and friendly museum guide for the Victoria and Albert Museum (V&A) in London. ' +
       'The V&A collection includes decorative arts, fashion, textiles, furniture, sculpture, ceramics, glass, metalwork, jewellery, photography, prints, drawings, and Asian art — primarily spanning the medieval period to the mid-20th century. ' +
       'It does NOT include purely fine art oil paintings (those are at the National Gallery), works from other museums, most living contemporary artists, or objects not in the V&A permanent collection. ' +
-      'Always explain the historical significance of items and artists. ' +
-      'Suggest related topics the user might find interesting. ' +
-      'Keep responses concise and engaging. ' +
+      'Keep all responses SHORT — 2 to 3 sentences maximum. Never use bullet points or numbered lists. Never describe individual objects in detail; the object cards handle that. ' +
       'Only describe objects that were actually found — never invent or promise items that do not exist. ' +
       'Do not make up facts. If you are unsure, say so. ' +
       VA_CATALOGUE;
@@ -296,9 +307,34 @@
 
   /* VA search */
 
-  function searchVA(query) {
-    var url = VA_API_BASE + '/objects/search?q=' + encodeURIComponent(query) +
-      '&page_size=3&images_exist=1&fields=systemNumber,_primaryTitle,_primaryImageId,objectType,_primaryDate';
+  var FIELDS = 'systemNumber,_primaryTitle,_primaryImageId,objectType,_primaryDate,_primaryMaker,_primaryPlace';
+
+  function findOriginId(query) {
+    if (typeof ORIGIN_GROUPS === 'undefined') { return null; }
+    var lower = query.toLowerCase().trim();
+    for (var i = 0; i < ORIGIN_GROUPS.length; i++) {
+      if (ORIGIN_GROUPS[i].name.toLowerCase() === lower) {
+        return ORIGIN_GROUPS[i].ids[0];
+      }
+    }
+    return null;
+  }
+
+  function searchVA(query, filterType) {
+    var url;
+    if (filterType === 'place') {
+      var placeId = findOriginId(query);
+      if (placeId) {
+        url = VA_API_BASE + '/objects/search?id_place=' + encodeURIComponent(placeId) +
+          '&page_size=3&images_exist=1&fields=' + FIELDS;
+      } else {
+        url = VA_API_BASE + '/objects/search?q=' + encodeURIComponent(query) +
+          '&page_size=3&images_exist=1&fields=' + FIELDS;
+      }
+    } else {
+      url = VA_API_BASE + '/objects/search?q=' + encodeURIComponent(query) +
+        '&page_size=3&images_exist=1&fields=' + FIELDS;
+    }
     return fetch(url)
       .then(function(res) { return res.json(); })
       .then(function(data) { return data.records || []; })
@@ -333,24 +369,35 @@
     var systemPrompt;
     try { systemPrompt = buildSystemPrompt(); } catch(e) { systemPrompt = 'You are a knowledgeable museum guide for the Victoria and Albert Museum in London.'; }
 
-    var intentInstruction = systemPrompt +
-      ' If the user asks you to find, show, or search for objects, respond with ONLY two lines — line 1: "SEARCH: [search term]", line 2: "REASON: [brief phrase]" — and nothing else. For all other questions respond normally.';
+    var intentInstruction =
+      'You are an intent classifier. Read the user message and decide if they want to see, find, show, browse, explore, discover, suggest, recommend, or look at museum objects or artworks. ' +
+      'If yes, output EXACTLY three lines and nothing else:\n' +
+      'SEARCH: [the place name, material, or topic to search for]\n' +
+      'FILTER: [place, material, category, or general — use "place" when the user asks for objects from or made in a location]\n' +
+      'REASON: [brief phrase describing what kind of objects]\n' +
+      'If the message is a greeting, factual question, or general conversation, output EXACTLY: CHAT\n' +
+      'Output nothing else. No explanation. No extra text.';
 
     return hfFetch(
       [{ role: 'system', content: intentInstruction }, { role: 'user', content: userMessage }],
-      80, 0.3
+      60, 0.1
     ).then(function(intent) {
       var searchMatch = intent.match(/SEARCH:\s*(.+)/i);
       if (!searchMatch) {
-        return { text: intent, records: [], reason: '' };
+        return hfFetch(
+          [{ role: 'system', content: systemPrompt }, { role: 'user', content: userMessage }],
+          200, 0.7
+        ).then(function(text) { return { text: text, records: [], reason: '' }; });
       }
 
       var query = searchMatch[1].split('\n')[0].trim();
+      var filterMatch = intent.match(/FILTER:\s*(.+)/i);
+      var filterType = filterMatch ? filterMatch[1].split('\n')[0].trim().toLowerCase() : 'general';
       var reasonMatch = intent.match(/REASON:\s*(.+)/i);
       var reason = '';
       if (reasonMatch) { reason = reasonMatch[1].split('\n')[0].trim(); }
 
-      return searchVA(query).then(function(records) {
+      return searchVA(query, filterType).then(function(records) {
         var resultsSummary;
         if (records && records.length > 0) {
           var titles = [];
@@ -372,7 +419,7 @@
           { role: 'user', content: userMessage },
           { role: 'assistant', content: intent },
           { role: 'user', content: resultsSummary }
-        ], 400, 0.7).then(function(finalText) {
+        ], 200, 0.7).then(function(finalText) {
           return { text: finalText, records: records || [], reason: reason };
         });
       });

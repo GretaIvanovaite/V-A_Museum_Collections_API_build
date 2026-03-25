@@ -1131,7 +1131,7 @@ dialog#ai-chat form button[type="submit"]:focus-visible {
   color: var(--color-text-primary);
 }
 
-.chat-result-reason {
+.chat-result-meta {
   font-size: var(--font-size-small);
   color: var(--color-text-secondary);
 }
