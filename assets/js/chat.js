@@ -1,8 +1,8 @@
 (function() {
   var VA_API_BASE = 'https://api.vam.ac.uk/v2';
   var IMAGE_CDN_CHAT = 'https://framemark.vam.ac.uk/collections';
-  var HF_MODEL = '/.netlify/functions/hf-chat';
-  /*var HF_MODEL = 'https://router.huggingface.co/v1/chat/completions';*/
+  /*var HF_MODEL = '/.netlify/functions/hf-chat';*/
+  var HF_MODEL = 'https://router.huggingface.co/v1/chat/completions';
 
   var dialog     = document.getElementById('ai-chat');
   var trigger    = document.querySelector('.chat-trigger');
@@ -246,7 +246,7 @@
 
   function buildSystemPrompt() {
     var ctx = window.chatContext || {};
-    var base = 'You are a knowledgeable and friendly museum guide for the Victoria and Albert Museum (V&A) in London. ' +
+    var base = 'You are a knowledgeable and friendly museum guide for the Victoria and Albert Museum (V&A) in London. Always speak in first person — use "I", "I found", "I came across", "I think you\'d enjoy". Never say "the search results" or refer to yourself in third person. ' +
       'The V&A collection includes decorative arts, fashion, textiles, furniture, sculpture, ceramics, glass, metalwork, jewellery, photography, prints, drawings, and Asian art — primarily spanning the medieval period to the mid-20th century. ' +
       'It does NOT include purely fine art oil paintings (those are at the National Gallery), works from other museums, most living contemporary artists, or objects not in the V&A permanent collection. ' +
       'Keep all responses SHORT — 2 to 3 sentences maximum. Never use bullet points or numbered lists. Never describe individual objects in detail; the object cards handle that. ' +
@@ -310,32 +310,43 @@
 
   var FIELDS = 'systemNumber,_primaryTitle,_primaryImageId,objectType,_primaryDate,_primaryMaker,_primaryPlace';
 
-  function findOriginId(query) {
-    if (typeof ORIGIN_GROUPS === 'undefined') { return null; }
+  function findGroupId(groups, query) {
+    if (!groups) { return null; }
     var lower = query.toLowerCase().trim();
-    for (var i = 0; i < ORIGIN_GROUPS.length; i++) {
-      if (ORIGIN_GROUPS[i].name.toLowerCase() === lower) {
-        return ORIGIN_GROUPS[i].ids[0];
+    for (var i = 0; i < groups.length; i++) {
+      if (groups[i].name.toLowerCase() === lower) {
+        return groups[i].ids[0];
       }
     }
     return null;
   }
 
-  function searchVA(query, filterType) {
+  function searchVA(query, filterType, extraQuery) {
     var url;
+    var param = null;
+    var id = null;
+
     if (filterType === 'place') {
-      var placeId = findOriginId(query);
-      if (placeId) {
-        url = VA_API_BASE + '/objects/search?id_place=' + encodeURIComponent(placeId) +
-          '&page_size=3&images_exist=1&fields=' + FIELDS;
-      } else {
-        url = VA_API_BASE + '/objects/search?q=' + encodeURIComponent(query) +
-          '&page_size=3&images_exist=1&fields=' + FIELDS;
-      }
+      id = typeof ORIGIN_GROUPS !== 'undefined' ? findGroupId(ORIGIN_GROUPS, query) : null;
+      if (id) { param = 'id_place'; }
+    } else if (filterType === 'material') {
+      id = typeof MATERIAL_GROUPS !== 'undefined' ? findGroupId(MATERIAL_GROUPS, query) : null;
+      if (id) { param = 'id_material'; }
+    } else if (filterType === 'category') {
+      id = typeof CATEGORY_GROUPS !== 'undefined' ? findGroupId(CATEGORY_GROUPS, query) : null;
+      if (id) { param = 'id_category'; }
+    }
+
+    if (param && id) {
+      url = VA_API_BASE + '/objects/search?' + param + '=' + encodeURIComponent(id);
+      if (extraQuery) { url += '&q=' + encodeURIComponent(extraQuery); }
+      url += '&page_size=3&images_exist=1&fields=' + FIELDS;
     } else {
-      url = VA_API_BASE + '/objects/search?q=' + encodeURIComponent(query) +
+      var fullQuery = extraQuery ? query + ' ' + extraQuery : query;
+      url = VA_API_BASE + '/objects/search?q=' + encodeURIComponent(fullQuery) +
         '&page_size=3&images_exist=1&fields=' + FIELDS;
     }
+
     return fetch(url)
       .then(function(res) { return res.json(); })
       .then(function(data) { return data.records || []; })
@@ -371,17 +382,23 @@
     try { systemPrompt = buildSystemPrompt(); } catch(e) { systemPrompt = 'You are a knowledgeable museum guide for the Victoria and Albert Museum in London.'; }
 
     var intentInstruction =
-      'You are an intent classifier. Read the user message and decide if they want to see, find, show, browse, explore, discover, suggest, recommend, or look at museum objects or artworks. ' +
-      'If yes, output EXACTLY three lines and nothing else:\n' +
-      'SEARCH: [the place name, material, or topic to search for]\n' +
-      'FILTER: [place, material, category, or general — use "place" when the user asks for objects from or made in a location]\n' +
-      'REASON: [brief phrase describing what kind of objects]\n' +
-      'If the message is a greeting, factual question, or general conversation, output EXACTLY: CHAT\n' +
-      'Output nothing else. No explanation. No extra text.';
+      'You are an intent classifier for a museum collection website. Decide if the user wants to find or see museum objects.\n' +
+      'If yes, output these lines (QUERY line is optional):\n' +
+      'SEARCH: [the single most relevant search term — a place name, material name, category name, or keyword]\n' +
+      'FILTER: [choose ONE: place / material / category / general]\n' +
+      'QUERY: [only include this line if there are additional descriptive keywords beyond the main filter term — e.g. for "wood with ornamental elements" output QUERY: ornamental]\n' +
+      'REASON: [brief phrase describing what kind of objects]\n\n' +
+      'Rules for FILTER:\n' +
+      '- Use "place" when the message contains phrases like: from, made in, created in, origin, comes from, produced in (e.g. "objects from Japan" → SEARCH: Japan, FILTER: place)\n' +
+      '- Use "material" when the message contains phrases like: made of, made from, made with, out of, material, using (e.g. "things made of silk" → SEARCH: silk, FILTER: material)\n' +
+      '- Use "category" when the user names a type of object with no specific material or place phrase (e.g. "show me jewellery" → SEARCH: jewellery, FILTER: category)\n' +
+      '- Use "general" as a fallback for all other object searches\n\n' +
+      'If the message is a greeting, a factual question, general conversation, or too vague (no specific material, place, or topic named), output EXACTLY: CHAT\n' +
+      'Output nothing else.';
 
     return hfFetch(
       [{ role: 'system', content: intentInstruction }, { role: 'user', content: userMessage }],
-      60, 0.1
+      80, 0.1
     ).then(function(intent) {
       var searchMatch = intent.match(/SEARCH:\s*(.+)/i);
       if (!searchMatch) {
@@ -394,23 +411,37 @@
       var query = searchMatch[1].split('\n')[0].trim();
       var filterMatch = intent.match(/FILTER:\s*(.+)/i);
       var filterType = filterMatch ? filterMatch[1].split('\n')[0].trim().toLowerCase() : 'general';
+      var extraMatch = intent.match(/QUERY:\s*(.+)/i);
+      var extraQuery = extraMatch ? extraMatch[1].split('\n')[0].trim() : '';
       var reasonMatch = intent.match(/REASON:\s*(.+)/i);
       var reason = '';
       if (reasonMatch) { reason = reasonMatch[1].split('\n')[0].trim(); }
 
-      return searchVA(query, filterType).then(function(records) {
+      return searchVA(query, filterType, extraQuery).then(function(records) {
+        /* Deduplicate by systemNumber */
+        var seen = {};
+        var unique = [];
+        for (var di = 0; di < records.length; di++) {
+          if (!seen[records[di].systemNumber]) {
+            seen[records[di].systemNumber] = true;
+            unique.push(records[di]);
+          }
+        }
+        records = unique;
+
         var resultsSummary;
         if (records && records.length > 0) {
-          var titles = [];
+          var descs = [];
           for (var ri = 0; ri < records.length; ri++) {
             var rItem = records[ri];
-            var rTitle;
-            if (rItem._primaryTitle) { rTitle = rItem._primaryTitle; }
-            else if (rItem.objectType) { rTitle = rItem.objectType; }
-            else { rTitle = 'Untitled'; }
-            titles.push('"' + rTitle + '"');
+            var rTitle = rItem._primaryTitle || rItem.objectType || 'Untitled';
+            var desc = '"' + rTitle + '"';
+            if (rItem._primaryDate) { desc += ' (' + rItem._primaryDate + ')'; }
+            if (rItem._primaryMaker && rItem._primaryMaker.name) { desc += ' by ' + rItem._primaryMaker.name; }
+            if (rItem._primaryPlace) { desc += ', origin: ' + rItem._primaryPlace; }
+            descs.push(desc);
           }
-          resultsSummary = 'The search returned ' + records.length + ' result(s): ' + titles.join(', ') + '. Write your response to the user based only on what was actually found.';
+          resultsSummary = 'I found ' + records.length + ' result(s): ' + descs.join('; ') + '. Write a short personal response in first person (e.g. "I found...", "I came across...") based only on these exact facts — do not invent dates, makers, or descriptions.';
         } else {
           resultsSummary = 'The search returned no results for "' + query + '". Let the user know and suggest alternative search terms or topics.';
         }
