@@ -1,8 +1,11 @@
 (function() {
   const VA_API_BASE = 'https://api.vam.ac.uk/v2';
   const IMAGE_CDN_CHAT = 'https://framemark.vam.ac.uk/collections';
+  /* AI endpoint — swap these two lines when running locally:
+   * LIVE (Netlify): keep the const line active, leave the var line commented out.
+   * LOCAL: comment out the const line below and uncomment the var line beneath it. */
   const HF_MODEL = '/.netlify/functions/hf-chat';
-  /*var HF_MODEL = 'https://router.huggingface.co/v1/chat/completions';*/
+  /* var HF_MODEL = 'https://router.huggingface.co/v1/chat/completions'; */
 
   const dialog     = document.getElementById('ai-chat');
   const trigger    = document.querySelector('.chat-trigger');
