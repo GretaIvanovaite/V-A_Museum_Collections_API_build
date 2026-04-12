@@ -1,6 +1,14 @@
 # C&A Collections — V&A Museum Collections Prototype
 
-A final year undergraduate project for the BSc Web Design, Development and Analytics degree at Edge Hill University (CIS3425). The prototype is a redesigned browsing interface for the Victoria and Albert Museum's collections, built against the V&A Collections API. It allows users to explore museum objects by origin, collection, and theme, and includes an AI-powered conversational assistant for collection discovery.
+**Author:** Greta Ivanovaite | Student Number: 25393081  
+**Module:** CIS3425 - Research and Development Project  
+**Institution:** Edge Hill University, 2025-26
+
+*This project is submitted in partial fulfilment of the requirements for the BSc Honours Web Design, Development and Analytics Degree at Edge Hill University.*
+
+---
+
+A final year undergraduate project for the BSc Web Design, Development and Analytics degree at Edge Hill University (CIS3425). The prototype is a redesigned browsing interface for the Victoria and Albert Museum's collections, built against the [V&A Collections API](https://api.vam.ac.uk/v2). It allows users to explore museum objects by origin, collection, and theme, and includes an AI-powered conversational assistant for collection discovery.
 
 ---
 
@@ -10,7 +18,7 @@ The prototype is deployed and fully functional at:
 
 **https://collectionsarchives.netlify.app/**
 
-> The interface is optimised for desktop displays (1280px and wider). JavaScript must be enabled in your browser for the prototype to fetch and render live museum data.
+> JavaScript must be enabled in your browser for the prototype to fetch and render live museum data.
 
 ---
 
